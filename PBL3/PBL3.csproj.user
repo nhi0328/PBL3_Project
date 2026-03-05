@@ -1,0 +1,45 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup />
+  <ItemGroup>
+    <Compile Update="App.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="MainWindow.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Page10.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Page11.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Page12.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Page2.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Page3.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Page4.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Page5.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Page6.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Page7.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Page8.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Page9.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
+</Project>

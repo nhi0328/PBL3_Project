@@ -1,0 +1,279 @@
+﻿<Page x:Class="PBL3.Page3"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:PBL3"
+      mc:Ignorable="d" 
+      d:DesignHeight="792.8" d:DesignWidth="1536"
+      Title="Đăng Ký" Background="White">
+
+    <Page.Resources>
+        <Style x:Key="TextBoxWithPlaceholder" TargetType="{x:Type TextBox}">
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Foreground" Value="#333"/>
+            <Setter Property="FontSize" Value="20"/>
+            <Setter Property="FontFamily" Value="Calibri"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type TextBox}">
+                        <Grid>
+                            <ScrollViewer x:Name="PART_ContentHost"/>
+                            <TextBlock Text="{TemplateBinding Tag}" x:Name="Placeholder" 
+                                       Foreground="Gray" VerticalAlignment="Center" 
+                                       IsHitTestVisible="False" Visibility="Collapsed"/>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="Text" Value="">
+                                <Setter TargetName="Placeholder" Property="Visibility" Value="Visible"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Page.Resources>
+
+    <Grid>
+        <Button Content="&lt; Quay lại" HorizontalAlignment="Left" VerticalAlignment="Top" 
+                Margin="30" Background="Transparent" BorderThickness="0" FontSize="20" Cursor="Hand" 
+                Click="BtnBack_Click">
+            <Button.Style>
+                <Style TargetType="Button">
+                    <Setter Property="Foreground" Value="Gray"/>
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="Button">
+                                <Border Background="Transparent">
+                                    <ContentPresenter HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                                </Border>
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter Property="Foreground" Value="#C62828"/>
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </Button.Style>
+        </Button>
+
+        <Viewbox Stretch="Uniform" VerticalAlignment="Center" HorizontalAlignment="Center">
+            <StackPanel Width="500" Margin="60">
+
+                <TextBlock Text="ĐĂNG KÝ" FontSize="60" FontFamily="Calibri" Foreground="Black"
+                           HorizontalAlignment="Center" Margin="0,0,0,20"/>
+
+                <TextBlock Text="Họ và tên" Foreground="#333" FontSize="16" Margin="0,0,0,5"/>
+                <Grid Margin="0,0,0,15">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="20"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Border Background="White" CornerRadius="10" BorderBrush="#EEE" BorderThickness="1" Height="50">
+                        <Border.Effect>
+                            <DropShadowEffect BlurRadius="10" Opacity="0.1" ShadowDepth="2"/>
+                        </Border.Effect>
+                        <TextBox x:Name="txtHo" Tag="Họ" Margin="10,0" Style="{StaticResource TextBoxWithPlaceholder}"/>
+                    </Border>
+
+                    <Border Grid.Column="2" Background="White" CornerRadius="10" BorderBrush="#EEE" BorderThickness="1" Height="50">
+                        <Border.Effect>
+                            <DropShadowEffect BlurRadius="10" Opacity="0.1" ShadowDepth="2"/>
+                        </Border.Effect>
+                        <TextBox x:Name="txtTen" Tag="Tên" Margin="10,0" Style="{StaticResource TextBoxWithPlaceholder}"/>
+                    </Border>
+                </Grid>
+
+                <Grid Margin="0,0,0,15">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="20"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <StackPanel>
+                        <TextBlock Text="Ngày sinh" Margin="0,0,0,5" FontSize="16"/>
+                        <Border Background="White" CornerRadius="10" BorderBrush="#EEE" BorderThickness="1" Height="50">
+                            <Border.Effect>
+                                <DropShadowEffect BlurRadius="10" Opacity="0.1" ShadowDepth="2"/>
+                            </Border.Effect>
+                            <Grid>
+                                <Grid Margin="15,0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock x:Name="txtDateDisplay" FontFamily="Calibri" FontSize="20" Text="dd/mm/yyyy" VerticalAlignment="Center" Foreground="Gray"/>
+                                    <Viewbox Grid.Column="1" Width="30" Height="30" HorizontalAlignment="Right">
+                                        <Path Data="M19,19H5V8H19M16,1V3H8V1H6V3H5C3.89,3 3,3.89 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V5C21,3.89 20.1,3 19,1H18V3H16V1M17,12H12V17H17V12Z" Fill="#C62828"/>
+                                    </Viewbox>
+                                </Grid>
+                                <DatePicker x:Name="RealDatePicker" SelectedDateChanged="RealDatePicker_SelectedDateChanged" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Opacity="0" IsHitTestVisible="False"/>
+                                <Border Background="Transparent" Cursor="Hand" MouseLeftButtonDown="DateOverlay_Click"/>
+                            </Grid>
+                        </Border>
+                    </StackPanel>
+
+                    <StackPanel Grid.Column="2">
+                        <TextBlock Text="Giới tính" Margin="0,0,0,5" FontSize="16"/>
+                        <Border Background="White" CornerRadius="10" BorderBrush="#EEE" BorderThickness="1" Height="50">
+                            <Border.Effect>
+                                <DropShadowEffect BlurRadius="10" Opacity="0.1" ShadowDepth="2"/>
+                            </Border.Effect>
+                            <Grid>
+                                <ComboBox x:Name="RealComboBox" SelectedIndex="0" VerticalContentAlignment="Center" BorderThickness="0" FontFamily="Calibri" FontSize="20" Padding="10,0,0,0" Background="Transparent" Height="40" IsEditable="True" IsReadOnly="True" Text="Nam" Focusable="False">
+                                    <ComboBox.ItemContainerStyle>
+                                        <Style TargetType="ComboBoxItem">
+                                            <Setter Property="Height" Value="40"/>
+                                            <Setter Property="VerticalContentAlignment" Value="Center"/>
+                                            <Setter Property="Padding" Value="10,0"/>
+                                            <Setter Property="Background" Value="White"/>
+                                            <Setter Property="Foreground" Value="#333"/>
+                                            <Setter Property="Template">
+                                                <Setter.Value>
+                                                    <ControlTemplate TargetType="ComboBoxItem">
+                                                        <Border x:Name="bd" Background="{TemplateBinding Background}" BorderThickness="0" Padding="{TemplateBinding Padding}">
+                                                            <ContentPresenter VerticalAlignment="Center" HorizontalAlignment="Left"/>
+                                                        </Border>
+                                                        <ControlTemplate.Triggers>
+                                                            <Trigger Property="IsMouseOver" Value="True">
+                                                                <Setter TargetName="bd" Property="Background" Value="#F5F5F5"/>
+                                                                <Setter Property="Cursor" Value="Hand"/>
+                                                            </Trigger>
+                                                            <Trigger Property="IsSelected" Value="True">
+                                                                <Setter TargetName="bd" Property="Background" Value="#E0E0E0"/>
+                                                                <Setter Property="FontWeight" Value="SemiBold"/>
+                                                            </Trigger>
+                                                        </ControlTemplate.Triggers>
+                                                    </ControlTemplate>
+                                                </Setter.Value>
+                                            </Setter>
+                                        </Style>
+                                    </ComboBox.ItemContainerStyle>
+                                    <ComboBoxItem Content="Nam"/>
+                                    <ComboBoxItem Content="Nữ"/>
+                                    <ComboBoxItem Content="Khác"/>
+                                </ComboBox>
+                                <Border Width="40" HorizontalAlignment="Right" Background="White" Margin="2" IsHitTestVisible="False"/>
+                                <Viewbox HorizontalAlignment="Right" Width="10" Height="15" Margin="0,0,15,0" IsHitTestVisible="False">
+                                    <Path Data="M0,0 L5,5 L10,0" Stroke="Gray" StrokeThickness="2" StrokeEndLineCap="Round" StrokeStartLineCap="Round"/>
+                                </Viewbox>
+                                <Border Background="Transparent" Cursor="Hand" MouseLeftButtonDown="GenderOverlay_Click"/>
+                            </Grid>
+                        </Border>
+                    </StackPanel>
+                </Grid>
+
+                <TextBlock Text="Số CCCD" Margin="0,0,0,5" FontSize="16"/>
+                <Border Background="White" CornerRadius="10" BorderBrush="#EEE" BorderThickness="1" Height="50" Margin="0,0,0,5">
+                    <Border.Effect>
+                        <DropShadowEffect BlurRadius="10" Opacity="0.1" ShadowDepth="2"/>
+                    </Border.Effect>
+                    <TextBox x:Name="txtCCCD" Tag="Nhập số CCCD" Margin="10,0" Style="{StaticResource TextBoxWithPlaceholder}"/>
+                </Border>
+                <StackPanel Orientation="Horizontal" Margin="0,0,0,10" Visibility="Visible">
+                    <TextBlock Text="⚠" Foreground="Orange" Margin="0,0,5,0" FontSize="14"/>
+                    <TextBlock Text="Số CCCD này đã được sử dụng" Foreground="Orange" FontSize="14"/>
+                </StackPanel>
+
+                <TextBlock Text="Mật khẩu" Margin="0,0,0,5" FontSize="16"/>
+                <Border Background="White" CornerRadius="10" BorderBrush="#EEE" BorderThickness="1" Height="50" Margin="0,0,0,10">
+                    <Border.Effect>
+                        <DropShadowEffect BlurRadius="10" Opacity="0.1" ShadowDepth="2"/>
+                    </Border.Effect>
+                    <Grid>
+                        <TextBlock Text="Nhập mật khẩu" FontFamily="Calibri" FontSize="20" x:Name="Pass1Place" Foreground="Gray" VerticalAlignment="Center" Margin="15,0" IsHitTestVisible="False" Panel.ZIndex="0"/>
+                        <PasswordBox x:Name="Pass1" VerticalContentAlignment="Center" Margin="10,0,40,0" BorderThickness="0" Background="Transparent" Panel.ZIndex="1" PasswordChanged="Pass1_PasswordChanged"/>
+                        <TextBox x:Name="txtVisiblePass1" VerticalContentAlignment="Center" Margin="10,0,40,0" BorderThickness="0" Background="Transparent" Panel.ZIndex="1" FontFamily="Calibri" FontSize="20" Visibility="Collapsed" TextChanged="TxtVisiblePass1_TextChanged"/>
+                        <Button HorizontalAlignment="Right" Margin="0,0,10,0" Width="30" Height="30" Background="Transparent" BorderThickness="0" Cursor="Hand" Panel.ZIndex="2" Click="BtnTogglePass1_Click">
+                            <Button.Template>
+                                <ControlTemplate TargetType="Button">
+                                    <Border Background="Transparent">
+                                        <Viewbox Width="20" Height="20">
+                                            <Path x:Name="IconEye1" Fill="Gray" Data="M12,9A3,3 0 0,0 9,12A3,3 0 0,0 12,15A3,3 0 0,0 15,12A3,3 0 0,0 12,9M12,17A5,5 0 0,1 7,12A5,5 0 0,1 12,7A5,5 0 0,1 17,12A5,5 0 0,1 12,17M12,4.5C7,4.5 2.73,7.61 1,12C2.73,16.39 7,19.5 12,19.5C17,19.5 21.27,16.39 23,12C21.27,7.61 17,4.5 12,4.5Z"/>
+                                        </Viewbox>
+                                    </Border>
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter TargetName="IconEye1" Property="Fill" Value="#333"/>
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Button.Template>
+                        </Button>
+                    </Grid>
+                </Border>
+
+                <Border Background="White" CornerRadius="10" BorderBrush="#EEE" BorderThickness="1" Height="50" Margin="0,0,0,20">
+                    <Border.Effect>
+                        <DropShadowEffect BlurRadius="10" Opacity="0.1" ShadowDepth="2"/>
+                    </Border.Effect>
+                    <Grid>
+                        <TextBlock Text="Nhập lại mật khẩu" FontFamily="Calibri" FontSize="20" x:Name="Pass2Place" Foreground="Gray" VerticalAlignment="Center" Margin="15,0" IsHitTestVisible="False" Panel.ZIndex="0"/>
+                        <PasswordBox x:Name="Pass2" VerticalContentAlignment="Center" Margin="10,0,40,0" BorderThickness="0" Background="Transparent" Panel.ZIndex="1" PasswordChanged="Pass2_PasswordChanged"/>
+                        <TextBox x:Name="txtVisiblePass2" VerticalContentAlignment="Center" Margin="10,0,40,0" BorderThickness="0" Background="Transparent" Panel.ZIndex="1" FontFamily="Calibri" FontSize="20" Visibility="Collapsed" TextChanged="TxtVisiblePass2_TextChanged"/>
+                        <Button HorizontalAlignment="Right" Margin="0,0,10,0" Width="30" Height="30" Background="Transparent" BorderThickness="0" Cursor="Hand" Panel.ZIndex="2" Click="BtnTogglePass2_Click">
+                            <Button.Template>
+                                <ControlTemplate TargetType="Button">
+                                    <Border Background="Transparent">
+                                        <Viewbox Width="20" Height="20">
+                                            <Path x:Name="IconEye2" Fill="Gray" Data="M12,9A3,3 0 0,0 9,12A3,3 0 0,0 12,15A3,3 0 0,0 15,12A3,3 0 0,0 12,9M12,17A5,5 0 0,1 7,12A5,5 0 0,1 12,7A5,5 0 0,1 17,12A5,5 0 0,1 12,17M12,4.5C7,4.5 2.73,7.61 1,12C2.73,16.39 7,19.5 12,19.5C17,19.5 21.27,16.39 23,12C21.27,7.61 17,4.5 12,4.5Z"/>
+                                        </Viewbox>
+                                    </Border>
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter TargetName="IconEye2" Property="Fill" Value="#333"/>
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Button.Template>
+                        </Button>
+                    </Grid>
+                </Border>
+
+                <CheckBox Content="Tôi đồng ý với điều khoản sử dụng" Margin="0,0,0,10" FontSize="14" VerticalContentAlignment="Center"/>
+
+                <Button Content="ĐĂNG KÝ" Click="BtnRegister_Click" Height="50" FontWeight="Bold" FontSize="18" Cursor="Hand">
+                    <Button.Style>
+                        <Style TargetType="Button">
+                            <Setter Property="Background" Value="#C52323"/>
+                            <Setter Property="Foreground" Value="White"/>
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="Button">
+                                        <Border x:Name="border" Background="{TemplateBinding Background}" CornerRadius="10">
+                                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                        </Border>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter TargetName="border" Property="Background" Value="#A00000"/>
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </Button.Style>
+                </Button>
+
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,15,0,0">
+                    <TextBlock Text="Đã có tài khoản? " FontFamily="Calibri" Foreground="Gray" FontSize="16"/>
+                    <Button Content="Đăng nhập" FontFamily="Calibri" FontSize="20" Cursor="Hand" Click="BtnLogin_Click">
+                        <Button.Template>
+                            <ControlTemplate TargetType="Button">
+                                <TextBlock Text="{TemplateBinding Content}" Foreground="#C52323" FontWeight="Bold" FontSize="16"/>
+                            </ControlTemplate>
+                        </Button.Template>
+                    </Button>
+                </StackPanel>
+
+            </StackPanel>
+        </Viewbox>
+    </Grid>
+</Page>
