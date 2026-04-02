@@ -97,7 +97,7 @@ namespace PBL3
                 {
                     if (identifier == "admin1" || identifier == "admin2" || identifier == "admin3" || identifier == "admin4")
                     {
-                        // ĐÃ FIX: Truyền đủ 3 tham số (ID, Name, Password)
+                        // ĐÃ FIX: Truyền đủ 3 tham sẽ (ID, Name, Password)
                         loggedInUser = new Admin(identifier, "Quản trị viên " + identifier[5..], "admin");
                     }
                 }

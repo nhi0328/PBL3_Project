@@ -60,7 +60,7 @@ namespace PBL3
                 // 3.1. Kiểm tra trùng CCCD
                 if (db.Users.Any(u => u.Cccd == cccd))
                 {
-                    MessageBox.Show("Số CCCD này đã được đăng ký!");
+                    MessageBox.Show("sẽ CCCD này đã được đăng ký!");
                     return; // Khi return ở đây, db sẽ tự động được giải phóng (Dispose)
                 }
 

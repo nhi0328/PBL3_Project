@@ -147,8 +147,6 @@ namespace PBL3
         private void btnSearch_Click(object sender, RoutedEventArgs e)
         {
             string keyword = txtIdentifier.Text;
-            MessageBox.Show($"Đang tìm kiếm luật với từ khóa: {keyword}");
-            // Viết logic tìm kiếm SQL ở đây...
         }
     }
 }
