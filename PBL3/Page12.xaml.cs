@@ -17,23 +17,22 @@ namespace PBL3
 {
     public partial class Page12 : Page
     {
+        private readonly Officer _currentUser;
         // Constructor mặc định
         public Page12()
         {
             InitializeComponent();
         }
 
-        // Biến lưu User đang đăng nhập (Nên truyền từ trang Đăng nhập qua)
-        private User _currentUser;
-
-        public Page12(User user)
+        public Page12(Officer user) : this()
         {
-            InitializeComponent();
             _currentUser = user;
 
+            // Bảng Officer hiện tại chỉ có OfficerId, CCCD và Password.
+            // Để hiển thị, ta sẽ dùng thẳng Mã cán bộ (OfficerId).
             if (_currentUser != null)
             {
-                txtUserName.Text = _currentUser.FullName;
+                txtUserName.Text = $"Cán bộ: {_currentUser.OfficerId}";
             }
         }
 

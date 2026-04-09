@@ -1,4 +1,4 @@
-﻿using Microsoft.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 using PBL3.Models;
 using System;
 using System.Threading.Tasks;
@@ -59,15 +59,16 @@ namespace PBL3
 
     public partial class Page25 : Page
     {
-        private User _currentUser;
-        private string _targetCccd;
-        private string connectionString = @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=TrafficSafetyDB;Integrated Security=True";
+        private readonly Officer _currentUser;
+        private readonly string _targetCccd;
 
+        // Constructor mặc định
         public Page25()
         {
             InitializeComponent();
         }
 
+        // Constructor test không có Officer
         public Page25(string cccd)
         {
             InitializeComponent();
@@ -75,7 +76,8 @@ namespace PBL3
             this.Loaded += Page25_Loaded;
         }
 
-        public Page25(User user, string cccd)
+        // Constructor chính
+        public Page25(Officer user, string cccd)
         {
             InitializeComponent();
             _currentUser = user;
@@ -83,7 +85,7 @@ namespace PBL3
 
             if (_currentUser != null)
             {
-                txtUserName.Text = _currentUser.FullName;
+                txtUserName.Text = $"Cán bộ: {_currentUser.OfficerId}";
             }
             this.Loaded += Page25_Loaded;
         }
@@ -100,98 +102,71 @@ namespace PBL3
 
             try
             {
-                var licenses = await Task.Run(() =>
+                using var db = new TrafficSafetyDBContext();
+
+                // Truy vấn danh sách bằng lái xe của người này
+                var dbLicenses = await Task.Run(() => db.DrivingLicenses.Where(l => l.Cccd == _targetCccd).ToList());
+
+                // Map sang danh sách hiển thị
+                var licensesList = dbLicenses.Select(l => new LicenseItem
                 {
-                    var list = new List<LicenseItem>();
-                    using (SqlConnection conn = new SqlConnection(connectionString))
-                    {
-                        conn.Open();
-                        string query = @"SELECT LICENSE_CLASS, LICENSE_NUMBER, POINTS, ISSUE_DATE, EXPIRY_DATE, STATUS FROM DRIVING_LICENSES WHERE CITIZEN_ID = @Cccd";
+                    LicenseClass = l.LicenseNumber ?? "",
+                    LicenseNo = l.LicenseId ?? "",
+                    Points = l.Points,
+                    Status = l.StatusText ?? "Chưa rõ",
+                    IssueDateStr = l.IssueDate != DateTime.MinValue ? l.IssueDate.ToString("dd/MM/yyyy") : "Chưa cập nhật",
+                    ExpiryDateStr = l.ExpiryDate.HasValue ? l.ExpiryDate.Value.ToString("dd/MM/yyyy") : "Không thời hạn"
+                }).ToList();
 
-                        using (SqlCommand cmd = new SqlCommand(query, conn))
-                        {
-                            cmd.Parameters.AddWithValue("@Cccd", _targetCccd);
-                            using (SqlDataReader reader = cmd.ExecuteReader())
-                            {
-                                while (reader.Read())
-                                {
-                                    var item = new LicenseItem
-                                    {
-                                        LicenseClass = reader.IsDBNull(0) ? "" : reader.GetString(0),
-                                        LicenseNo = reader.IsDBNull(1) ? "" : reader.GetString(1),
-                                        Points = reader.IsDBNull(2) ? 0 : reader.GetInt32(2),
-                                        Status = reader.IsDBNull(5) ? "" : reader.GetString(5)
-                                    };
-
-                                    if (!reader.IsDBNull(3))
-                                    {
-                                        item.IssueDateStr = reader.GetDateTime(3).ToString("dd/MM/yyyy");
-                                    }
-
-                                    if (!reader.IsDBNull(4))
-                                    {
-                                        item.ExpiryDateStr = reader.GetDateTime(4).ToString("dd/MM/yyyy");
-                                    }
-                                    else
-                                    {
-                                        item.ExpiryDateStr = "Không thểi hẨn";
-                                    }
-
-                                    list.Add(item);
-                                }
-                            }
-                        }
-                    }
-                    return list;
-                });
-
-                var icLicenses = this.FindName("icLicenses") as ItemsControl;
-                if (icLicenses != null)
+                // Đổ vào giao diện
+                if (this.FindName("icLicenses") is ItemsControl icLicenses)
                 {
-                    icLicenses.ItemsSource = new ObservableCollection<LicenseItem>(licenses);
+                    icLicenses.ItemsSource = new ObservableCollection<LicenseItem>(licensesList);
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Lỗi tải chi tiết GPLX: " + ex.Message);
+                new CustomMessageBox("Lỗi tải chi tiết GPLX: " + ex.Message, "Lỗi kết nối").ShowDialog();
             }
         }
 
         private void btnThemGplx_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("Chức năng thêm GPLX đang được cập nhật.");
+            NavigationService.Navigate(_currentUser != null ? new Page39(_currentUser, _targetCccd) : new Page39(_targetCccd));
         }
 
         private async void btnXoaGplx_Click(object sender, RoutedEventArgs e)
         {
-            Button btn = sender as Button;
-            if (btn != null && btn.CommandParameter != null)
+            if (sender is Button btn && btn.CommandParameter != null)
             {
                 string licenseNo = btn.CommandParameter.ToString();
-                var result = MessageBox.Show($"Bạn có chắc chắn muốn xoá GPLX sẽ {licenseNo}?", "Xác nhận", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+                var result = MessageBox.Show($"Bạn có chắc chắn muốn xoá vĩnh viễn Giấy phép lái xe số '{licenseNo}' không?", "Xác nhận xóa", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+
                 if (result == MessageBoxResult.Yes)
                 {
                     try
                     {
-                        await Task.Run(() =>
+                        // Dùng EF để xóa
+                        using var db = new TrafficSafetyDBContext();
+                        var licenseToDelete = db.DrivingLicenses.FirstOrDefault(l => l.LicenseId == licenseNo);
+
+                        if (licenseToDelete != null)
                         {
-                            using (SqlConnection conn = new SqlConnection(connectionString))
-                            {
-                                conn.Open();
-                                string query = "DELETE FROM DRIVING_LICENSES WHERE LICENSE_NUMBER = @LicenseNo";
-                                using (SqlCommand cmd = new SqlCommand(query, conn))
-                                {
-                                    cmd.Parameters.AddWithValue("@LicenseNo", licenseNo);
-                                    cmd.ExecuteNonQuery();
-                                }
-                            }
-                        });
-                        MessageBox.Show("Xoá GPLX thành công!");
-                        await LoadDataAsync();
+                            db.DrivingLicenses.Remove(licenseToDelete);
+                            await db.SaveChangesAsync();
+                            new CustomMessageBox("Đã xoá GPLX khỏi hệ thống thành công!", "Thông báo").ShowDialog();
+
+                            // Load lại giao diện
+                            await LoadDataAsync();
+                        }
+                        else
+                        {
+                            new CustomMessageBox("Không tìm thấy GPLX này để xóa. Có thể nó đã bị xóa trước đó.", "Lỗi").ShowDialog();
+                        }
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show("Lỗi khi Xoá GPLX: " + ex.Message);
+                        new CustomMessageBox("Lỗi khi Xoá GPLX: " + ex.Message, "Lỗi kết nối").ShowDialog();
                     }
                 }
             }
@@ -211,35 +186,8 @@ namespace PBL3
 
         private void UserButton_Click(object sender, RoutedEventArgs e)
         {
-            if (_currentUser == null) return;
-
-            Button btn = sender as Button;
-            if (btn != null && btn.ContextMenu != null)
+            if (sender is Button btn && btn.ContextMenu != null)
             {
-                // Access menu items through the ContextMenu.Items collection
-
-
-
-
-                if (_currentUser is Customer)
-                {
-
-
-
-                }
-                else if (_currentUser is Officer)
-                {
-
-
-
-                }
-                else if (_currentUser is Admin)
-                {
-
-
-
-                }
-
                 btn.ContextMenu.PlacementTarget = btn;
                 btn.ContextMenu.Placement = System.Windows.Controls.Primitives.PlacementMode.Bottom;
                 btn.ContextMenu.IsOpen = true;
@@ -247,13 +195,6 @@ namespace PBL3
         }
 
         private void MenuInfo_Click(object sender, RoutedEventArgs e) { }
-
-        private void MenuAdminUI_Click(object sender, RoutedEventArgs e)
-        {
-            NavigationService.Navigate(new Page9());
-        }
-
-        private void MenuOfficerUI_Click(object sender, RoutedEventArgs e) { }
 
         private void MenuLogout_Click(object sender, RoutedEventArgs e)
         {

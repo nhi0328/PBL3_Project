@@ -1,22 +1,58 @@
 using System;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PBL3.Models;
 
-public class Customer : User
+[Table("CUSTOMERS")]
+public class Customer
 {
-    public Customer() : base() { }
+    [Key]
+    [Column("CCCD")]
+    public string Cccd { get; set; } = string.Empty;
 
-    public Customer(string cccd, string n = "", string p = "", string email = "", DateTime dob = default, string gender = "", string pass = "")
-        : base(cccd, n, p, email, (dob == default ? new DateTime(2000, 1, 1) : dob), gender, pass)
+    [Required]
+    [Column("FULL_NAME")]
+    public string FullName { get; set; } = string.Empty;
+
+    [Column("GENDER")]
+    public string? Gender { get; set; }
+
+    [Column("DOB")]
+    public DateTime? Dob { get; set; }
+
+    [Column("EMAIL")]
+    public string? Email { get; set; }
+
+    [Column("PHONE")]
+    public string? Phone { get; set; }
+
+    [Required]
+    [Column("PASSWORD")]
+    public string Password { get; set; } = string.Empty;
+
+    [Column("AVATAR")]
+    public string? Avatar { get; set; }
+
+    public Customer() { }
+
+    public Customer(string cccd, string fullName, string gender, DateTime? dob, string email, string phone, string password)
     {
+        Cccd = cccd;
+        FullName = fullName;
+        Gender = gender;
+        Dob = dob;
+        Email = email;
+        Phone = phone;
+        Password = password;
     }
 
-    public override string GetRole()
+    public string GetRole()
     {
         return "CUSTOMER";
     }
 
-    public override string Display()
+    public string Display()
     {
         return $"[Công dân] {FullName} - CCCD: {Cccd}";
     }

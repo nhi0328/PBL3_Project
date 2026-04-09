@@ -5,7 +5,16 @@
     <Compile Update="App.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="ConfirmDeleteBox.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="CustomMessageBox.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="MainWindow.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="NotificationBellControl.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="Page10.xaml.cs">
@@ -20,10 +29,64 @@
     <Compile Update="Page2.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="Page27.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Page28.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Page29.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="Page3.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="Page30.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Page31.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Page32.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Page33.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Page34.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Page35.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Page36.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Page37.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Page38.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Page39.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="Page4.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Page40.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Page41.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Page42.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Page43.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Page44.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="Page5.xaml.cs">

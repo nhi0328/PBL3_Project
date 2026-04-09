@@ -1,58 +1,95 @@
 using System;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace PBL3.Models; // Đảm bảo đúng Namespace để xóa lỗi CS0246
+namespace PBL3.Models; 
 
-[Table("DRIVING_LICENSES")] // Ánh xạ đúng tên bảng trong SQL
+[Table("DRIVING_LICENSES")]
 public class DrivingLicense
 {
     [Key]
-    [Column("LICENSE_ID")] // Khớp với PK trong SQL
-    public string LicenseId { get; set; } = string.Empty;
+    [Column("LICENSE_NUMBER")]
+    public string LicenseNumber { get; set; } = string.Empty;
 
+    [Required]
     [Column("CCCD")]
-    public string CCCD { get; set; } = string.Empty;
+    public string Cccd { get; set; } = string.Empty;
 
-    [Column("VEHICLE_ID")]
-    public string VehicleId { get; set; } = string.Empty;
-
-    [Column("CLASS")]
-    public string LicenseClass { get; set; } = string.Empty;
+    [Column("LICENSE_ID")]
+    public string? LicenseId { get; set; } // Hạng GPLX (Ví dụ: A1, B2...)
 
     [Column("ISSUE_DATE")]
     public DateTime IssueDate { get; set; }
 
     [Column("EXPIRY_DATE")]
-    public DateTime ExpiryDate { get; set; } // Thuộc tính mới từ SQL
+    public DateTime? ExpiryDate { get; set; }
+    [NotMapped]
+    public string ExpiryDateText => ExpiryDate.HasValue ? ExpiryDate.Value.ToString("dd/MM/yyyy") : "Không thời hạn";
 
-    [Column("CUR_POINT")]
-    public int CurPoint { get; set; } // Điểm bằng lái hiện tại (dùng cho Trigger trừ điểm)
+    [Column("POINTS")]
+    public int Points { get; set; } // Điểm bằng lái hiện tại (dùng cho Trigger trừ điểm)
 
     [Column("STATUS")]
-    public string Status { get; set; } = string.Empty;
+    public int Status { get; set; } = 1;
+    [NotMapped]
+    public string StatusText
+    {
+        get
+        {
+            return Status switch
+            {
+                1 => "Đang hoạt động",
+                2 => "Tước bằng",
+                3 => "Hết hạn",
+                _ => "Không xác định"
+            };
+        }
+    }
+
+    [Column("DEMERIT_POINTS")]
+    public int DemeritPoints { get; set; } = 0; // Số điểm đã bị trừ do vi phạm
 
     // Navigation Properties - Mối quan hệ liên kết
-    [ForeignKey("CCCD")]
-    public virtual User User { get; set; }
+    [ForeignKey("Cccd")]
+    public virtual Customer? CustomerInfo { get; set; }
 
-    [ForeignKey("VehicleId")]
-    public virtual Vehicle Vehicle { get; set; }
 
     public DrivingLicense() { }
 
-    public DrivingLicense(string id, string cls, User user, DateTime expiry)
+    public DrivingLicense(string licenseNumber, string cccd, string licenseId, DateTime issueDate, DateTime expiryDate)
     {
-        this.LicenseId = id;
-        this.LicenseClass = cls;
-        this.User = user;
-        this.CCCD = user.Cccd; // Đổi .Id thành .Cccd
-        this.IssueDate = DateTime.Now;
-        this.ExpiryDate = expiry;
+        this.LicenseNumber = licenseNumber;
+        this.Cccd = cccd;
+        this.LicenseId = licenseId;
+        this.IssueDate = issueDate;
+        this.ExpiryDate = CalculateExpiryDate(licenseId, issueDate);
+
+        this.Points = 12;
+        this.Status = 1; // Mặc định khi mới tạo là 1: Đang hoạt động
+        this.DemeritPoints = 0;
+    }
+
+    private DateTime? CalculateExpiryDate(string? licenseId, DateTime issue)
+    {
+        if (string.IsNullOrEmpty(licenseId)) return null;
+
+        string type = licenseId.Trim().ToUpper();
+
+        // Phân loại các hạng bằng theo nhóm
+        string[] noExpiry = { "A1", "A", "B1" };
+        string[] tenYears = { "B", "C1" };
+        string[] fiveYears = { "C", "D1", "D2", "D", "BE", "C1E", "CE", "D1E", "D2E", "DE" };
+
+        if (noExpiry.Contains(type)) return null; // Vô thời hạn
+        if (tenYears.Contains(type)) return issue.AddYears(10); // Cộng 10 năm
+        if (fiveYears.Contains(type)) return issue.AddYears(5); // Cộng 5 năm
+
+        return null;
     }
 
     public string Display()
     {
-        return $"{LicenseId} | {LicenseClass} | Điểm: {CurPoint} | {Status}";
+        return $"GPLX: {LicenseNumber} | Hạng: {LicenseId} | CCCD: {Cccd} | Trạng thái: {StatusText}";
     }
 }

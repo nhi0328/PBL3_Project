@@ -11,7 +11,7 @@ using PBL3.Models;
 
 namespace PBL3.Migrations
 {
-    [DbContext(typeof(TrafficDbContext))]
+    [DbContext(typeof(TrafficSafetyDBContext))]
     [Migration("20260131194615_AddDobAndGender")]
     partial class AddDobAndGender
     {

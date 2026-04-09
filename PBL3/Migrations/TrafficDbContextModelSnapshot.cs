@@ -10,7 +10,7 @@ using PBL3.Models;
 
 namespace PBL3.Migrations
 {
-    [DbContext(typeof(TrafficDbContext))]
+    [DbContext(typeof(TrafficSafetyDBContext))]
     partial class TrafficDbContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)

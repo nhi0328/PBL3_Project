@@ -1,24 +1,27 @@
-﻿using System;
-using Microsoft.Data.SqlClient;
+using PBL3.Models;
+using System;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using PBL3.Models;
+using System.Windows.Navigation;
 
 namespace PBL3
 {
     public partial class Page21 : Page
     {
-        private User _currentUser;
-        private LuatItem _currentLuat;
-        private bool _isEditMode;
-        private string _originalTenLoi;
+        // CHỈ NHẬN OFFICER
+        private readonly Officer _currentUser;
+        private readonly LuatItem _currentLuat;
+        private readonly bool _isEditMode;
 
+        // Constructor mặc định
         public Page21()
         {
             InitializeComponent();
         }
 
-        public Page21(LuatItem luat, User user = null)
+        // Constructor chính nhận dữ liệu
+        public Page21(LuatItem luat, Officer user = null)
         {
             InitializeComponent();
             _currentUser = user;
@@ -26,13 +29,13 @@ namespace PBL3
 
             if (_currentUser != null)
             {
-                txtUserName.Text = _currentUser.FullName;
+                txtUserName.Text = $"Cán bộ: {_currentUser.OfficerId}";
             }
 
+            // NẾU CÓ TRUYỀN LUẬT SANG -> CHẾ ĐỘ CHỈNH SỬA
             if (_currentLuat != null)
             {
                 _isEditMode = true;
-                _originalTenLoi = _currentLuat.TenLoi;
                 txtTieuDe.Text = _currentLuat.TenLoi;
                 txtNghiDinh.Text = _currentLuat.CanCu;
                 txtNgayBanHanh.Text = _currentLuat.NgayBanHanh;
@@ -40,27 +43,25 @@ namespace PBL3
                 txtMucPhatXeMay.Text = _currentLuat.PhatTienXeMay;
                 txtMucPhatOto.Text = _currentLuat.PhatTienOto;
 
-                string truDiemNum = "";
-                if (!string.IsNullOrEmpty(_currentLuat.TruDiem))
-                {
-                    var splitted = _currentLuat.TruDiem.Split(' ');
-                    if (splitted.Length > 1) { truDiemNum = splitted[1]; }
-                    else { truDiemNum = _currentLuat.TruDiem; }
-                }
+                // Tách số từ chuỗi "Trừ X điểm"
+                string truDiemNum = string.Join("", (_currentLuat.TruDiem ?? "").Where(char.IsDigit));
                 txtTruDiem.Text = truDiemNum;
 
                 UpdateNoiDung();
             }
+            // NẾU KHÔNG CÓ -> CHẾ ĐỘ THÊM MỚI
             else
             {
                 _isEditMode = false;
             }
 
+            // Đăng ký sự kiện TextChanged để tự động cập nhật Nội dung
             txtMucPhatXeMay.TextChanged += (s, e) => UpdateNoiDung();
             txtMucPhatOto.TextChanged += (s, e) => UpdateNoiDung();
             txtTruDiem.TextChanged += (s, e) => UpdateNoiDung();
         }
 
+        // --- CẬP NHẬT TEXTBLOCK XEM TRƯỚC NỘI DUNG ---
         private void UpdateNoiDung()
         {
             string noidung = "";
@@ -79,127 +80,114 @@ namespace PBL3
             txtNoiDung.Text = noidung.TrimEnd();
         }
 
+        // --- NÚT LƯU LUẬT (DÙNG ENTITY FRAMEWORK) ---
         private void btnLuu_Click(object sender, RoutedEventArgs e)
         {
             if (string.IsNullOrWhiteSpace(txtTieuDe.Text))
             {
-                MessageBox.Show("Vui lòng nh?p Tiêu đề luật.", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Warning);
+                new CustomMessageBox("Vui lòng nhập Tiêu đề luật.", "Thông báo").ShowDialog();
                 return;
             }
 
             try
             {
-                string connectionString = @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=TrafficSafetyDB;Integrated Security=True";
-
-                using (SqlConnection conn = new SqlConnection(connectionString))
+                using (var db = new TrafficSafetyDBContext())
                 {
-                    conn.Open();
-                    using (SqlTransaction transaction = conn.BeginTransaction())
+                    TrafficLaw lawToSave;
+
+                    // 1. NẾU LÀ CHỈNH SỬA
+                    if (_isEditMode && _currentLuat != null)
                     {
-                        try
+                        lawToSave = db.TrafficLaws.FirstOrDefault(l => l.LawId == _currentLuat.LawId);
+                        if (lawToSave == null)
                         {
-                            if (_isEditMode)
-                            {
-                                // Xoá luật cũ (chi ti?t theo tên luật)
-                                string delQuery = @"
-                                    DELETE FROM TRAFFIC_LAW_DETAILS WHERE LAW_ID IN (SELECT LAW_ID FROM TRAFFIC_LAWS WHERE LAW_NAME = @OldTenLoi);
-                                    DELETE FROM TRAFFIC_LAWS WHERE LAW_NAME = @OldTenLoi;";
-                                using (SqlCommand cmdDel = new SqlCommand(delQuery, conn, transaction))
-                                {
-                                    cmdDel.Parameters.AddWithValue("@OldTenLoi", _originalTenLoi);
-                                    cmdDel.ExecuteNonQuery();
-                                }
-                            }
-
-                            // Thêm mới Xe máy
-                            if (!string.IsNullOrWhiteSpace(txtMucPhatXeMay.Text))
-                            {
-                                InsertLaw(conn, transaction, "Xe máy", txtMucPhatXeMay.Text);
-                            }
-
-                            // Thêm mới Ô tô
-                            if (!string.IsNullOrWhiteSpace(txtMucPhatOto.Text))
-                            {
-                                InsertLaw(conn, transaction, "Ô tô", txtMucPhatOto.Text);
-                            }
-
-                            transaction.Commit();
-                            MessageBox.Show("Đã lưu thông tin luật thành công!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
-
-                            if (NavigationService.CanGoBack)
-                            {
-                                NavigationService.GoBack();
-                            }
-                            else
-                            {
-                                NavigationService.Navigate(new Page13(_currentUser));
-                            }
+                            new CustomMessageBox("Không tìm thấy luật để cập nhật.", "Lỗi").ShowDialog();
+                            return;
                         }
-                        catch (Exception ex)
-                        {
-                            transaction.Rollback();
-                            MessageBox.Show("Lỗi khi lưu vào CSDL: " + ex.Message, "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
-                        }
+
+                        // Cập nhật tên luật
+                        lawToSave.LawName = txtTieuDe.Text;
+
+                        // Xóa sạch các chi tiết phạt cũ (Ô tô, Xe máy) để ghi đè cái mới
+                        var oldDetails = db.TrafficLawDetails.Where(d => d.LawId == lawToSave.LawId);
+                        db.TrafficLawDetails.RemoveRange(oldDetails);
                     }
+                    // 2. NẾU LÀ THÊM MỚI
+                    else
+                    {
+                        lawToSave = new TrafficLaw
+                        {
+                            LawName = txtTieuDe.Text
+                        };
+                        db.TrafficLaws.Add(lawToSave);
+                    }
+
+                    // Lưu thay đổi vào bảng TRAFFIC_LAWS trước để lấy LawId (Mã luật tự tăng)
+                    db.SaveChanges();
+
+                    // 3. THÊM CHI TIẾT MỨC PHẠT VÀO BẢNG TRAFFIC_LAW_DETAILS
+                    if (!string.IsNullOrWhiteSpace(txtMucPhatXeMay.Text))
+                    {
+                        db.TrafficLawDetails.Add(CreateLawDetail(lawToSave.LawId, "Xe máy", txtMucPhatXeMay.Text));
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(txtMucPhatOto.Text))
+                    {
+                        db.TrafficLawDetails.Add(CreateLawDetail(lawToSave.LawId, "Ô tô", txtMucPhatOto.Text));
+                    }
+
+                    // Lưu tất cả các thay đổi
+                    db.SaveChanges();
+
+                    new CustomMessageBox("Đã lưu thông tin luật thành công!", "Thông báo").ShowDialog();
+
+                    // Trở về trang trước
+                    if (NavigationService.CanGoBack) NavigationService.GoBack();
+                    else NavigationService.Navigate(new Page13(_currentUser));
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Lỗi k?t n?i CSDL: " + ex.Message, "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                new CustomMessageBox("Lỗi khi lưu vào CSDL: " + ex.Message, "Lỗi").ShowDialog();
             }
         }
 
-        private void InsertLaw(SqlConnection conn, SqlTransaction transaction, string vehicleType, string fineRange)
+        // --- HÀM TẠO ĐỐI TƯỢNG CHI TIẾT LUẬT (Hàm này nãy Nhi bị rớt mất nè) ---
+        private TrafficLawDetail CreateLawDetail(int lawId, string vehicleType, string fineAmount)
         {
-            string categoryId = vehicleType == "Xe máy" ? "2" : "1";
-
-            string queryLaw = @"INSERT INTO TRAFFIC_LAWS (LAW_NAME) OUTPUT INSERTED.LAW_ID VALUES (@Desc)";
-            int newLawId;
-            using (SqlCommand cmd = new SqlCommand(queryLaw, conn, transaction))
+            // Parse điểm trừ
+            int demeritPoints = 0;
+            if (int.TryParse(txtTruDiem.Text, out int points))
             {
-                cmd.Parameters.AddWithValue("@Desc", txtTieuDe.Text);
-                newLawId = (int)cmd.ExecuteScalar();
+                demeritPoints = points;
             }
 
-            string queryDetail = @"INSERT INTO TRAFFIC_LAW_DETAILS 
-                            (LAW_ID, VEHICLE_TYPE, FINE_AMOUNT, DEMERIT_POINTS, DECREE, ISSUE_DATE, EFFECTIVE_DATE) 
-                            VALUES (@LawId, @Type, @Fine, @Points, @Ref, @Issue, @Effective)";
+            // Parse Ngày (An toàn)
+            DateTime? issueDate = null;
+            if (DateTime.TryParseExact(txtNgayBanHanh.Text, "dd/MM/yyyy", null, System.Globalization.DateTimeStyles.None, out DateTime parsedIssue))
+                issueDate = parsedIssue;
 
-            using (SqlCommand cmd = new SqlCommand(queryDetail, conn, transaction))
+            DateTime? effectiveDate = null;
+            if (DateTime.TryParseExact(txtNgayHieuLuc.Text, "dd/MM/yyyy", null, System.Globalization.DateTimeStyles.None, out DateTime parsedEff))
+                effectiveDate = parsedEff;
+
+            return new TrafficLawDetail
             {
-                cmd.Parameters.AddWithValue("@LawId", newLawId);
-                cmd.Parameters.AddWithValue("@Type", categoryId);
-                cmd.Parameters.AddWithValue("@Fine", fineRange);
-
-                string points = string.IsNullOrWhiteSpace(txtTruDiem.Text) ? "Trừ 0 điểm" : $"Trừ {txtTruDiem.Text} điểm";
-                cmd.Parameters.AddWithValue("@Points", points);
-
-                cmd.Parameters.AddWithValue("@Ref", txtNghiDinh.Text ?? string.Empty);
-
-                if (DateTime.TryParseExact(txtNgayBanHanh.Text, "dd/MM/yyyy", null, System.Globalization.DateTimeStyles.None, out DateTime issueDate))
-                    cmd.Parameters.AddWithValue("@Issue", issueDate);
-                else
-                    cmd.Parameters.AddWithValue("@Issue", DBNull.Value);
-
-                if (DateTime.TryParseExact(txtNgayHieuLuc.Text, "dd/MM/yyyy", null, System.Globalization.DateTimeStyles.None, out DateTime effectiveDate))
-                    cmd.Parameters.AddWithValue("@Effective", effectiveDate);
-                else
-                    cmd.Parameters.AddWithValue("@Effective", DBNull.Value);
-
-                cmd.ExecuteNonQuery();
-            }
+                LawId = lawId,
+                CategoryId = null,
+                FineAmount = fineAmount,
+                DemeritPoints = demeritPoints,
+                Decree = txtNghiDinh.Text ?? string.Empty,
+                IssueDate = issueDate,
+                EffectiveDate = effectiveDate
+            };
         }
 
+        // --- CÁC NÚT ĐIỀU HƯỚNG BÊN DƯỚI & SIDEBAR ---
         private void btnHuy_Click(object sender, RoutedEventArgs e)
         {
-            if (NavigationService.CanGoBack)
-            {
-                NavigationService.GoBack();
-            }
-            else
-            {
-                NavigationService.Navigate(new Page13(_currentUser));
-            }
+            if (NavigationService.CanGoBack) NavigationService.GoBack();
+            else NavigationService.Navigate(new Page13(_currentUser));
         }
 
         private void UserButton_Click(object sender, RoutedEventArgs e)
@@ -213,8 +201,6 @@ namespace PBL3
         }
 
         private void MenuInfo_Click(object sender, RoutedEventArgs e) { }
-        private void MenuAdminUI_Click(object sender, RoutedEventArgs e) => NavigationService?.Navigate(new Page9());
-        private void MenuOfficerUI_Click(object sender, RoutedEventArgs e) { }
         private void MenuLogout_Click(object sender, RoutedEventArgs e) => NavigationService?.Navigate(new Page1());
         private void btnTraCuuNhanh_Click(object sender, RoutedEventArgs e) => NavigationService?.Navigate(new Page12(_currentUser));
         private void btnTraCuuLuat_Click(object sender, RoutedEventArgs e) => NavigationService?.Navigate(new Page13(_currentUser));
@@ -224,4 +210,3 @@ namespace PBL3
         private void btnLogOut_Click(object sender, RoutedEventArgs e) => NavigationService?.Navigate(new Page1());
     }
 }
-

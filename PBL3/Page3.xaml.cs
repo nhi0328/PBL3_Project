@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Windows;
@@ -41,13 +41,13 @@ namespace PBL3
                 // 2. Kiểm tra tính hợp lệ cơ bản
                 if (string.IsNullOrWhiteSpace(hoTen) || string.IsNullOrWhiteSpace(cccd))
                 {
-                    MessageBox.Show("Vui lòng điền đầy đủ Họ tên và CCCD!");
+                    new CustomMessageBox("Vui lòng điền đầy đủ Họ tên và CCCD!").ShowDialog();
                     return;
                 }
 
                 if (password != confirmPass)
                 {
-                    MessageBox.Show("Mật khẩu nhập lại không khớp!");
+                    new CustomMessageBox("Mật khẩu nhập lại không khớp!").ShowDialog();
                     return;
                 }
 
@@ -55,35 +55,36 @@ namespace PBL3
                 string gender = (RealComboBox.SelectedItem as ComboBoxItem)?.Content.ToString() ?? "Khác";
 
                 // 3. Kết nối Database
-                using TrafficDbContext db = new(); 
+                using TrafficSafetyDBContext db = new(); 
 
                 // 3.1. Kiểm tra trùng CCCD
-                if (db.Users.Any(u => u.Cccd == cccd))
+                if (db.Customers.Any(u => u.Cccd == cccd))
                 {
-                    MessageBox.Show("sẽ CCCD này đã được đăng ký!");
+                    new CustomMessageBox("sẽ CCCD này đã được đăng ký!").ShowDialog();
                     return; // Khi return ở đây, db sẽ tự động được giải phóng (Dispose)
                 }
 
                 // 3.2. Đăng ký mới (Đã dùng new() theo IDE0090)
-                Customer newUser = new(
-                    cccd: cccd,
-                    n: hoTen,
-                    p: "Chưa cập nhật",
-                    email: "user@traffic.gov.vn",
-                    dob: dob,
-                    gender: gender,
-                    pass: password
-                );
+                Customer newUser = new Customer
+                {
+                    Cccd = cccd,
+                    FullName = hoTen,
+                    Email = "user@traffic.gov.vn",
+                    Phone = "", // Để trống hoặc thêm UI nhập
+                    Dob = dob,
+                    Gender = gender,
+                    Password = password
+                };
 
-                db.Users.Add(newUser);
+                db.Customers.Add(newUser);
                 db.SaveChanges();
 
-                MessageBox.Show("Đăng ký thành công!", "Thông báo");
+                new CustomMessageBox("Đăng ký thành công!", "Thông báo").ShowDialog();
                 NavigationService.Navigate(new Page2());  
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Lỗi đăng ký: " + ex.Message);
+                new CustomMessageBox("Lỗi đăng ký: " + ex.Message).ShowDialog();
             }
         }
 

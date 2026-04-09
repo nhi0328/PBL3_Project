@@ -1,5 +1,6 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -11,43 +12,49 @@ using System.Windows.Media.Effects;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Microsoft.EntityFrameworkCore;
 using PBL3.Models;
 
 namespace PBL3
 {
+    public class ViolationDetailDisplay
+    {
+        public string MoTaLoi { get; set; } = string.Empty;
+        public string ThoiGian { get; set; } = string.Empty;
+    }
+
+    public class ViolationGroupDisplay
+    {
+        public int STT { get; set; }
+        public string BienSo { get; set; } = string.Empty;
+        public List<ViolationDetailDisplay> DanhSachLoi { get; set; } = new List<ViolationDetailDisplay>();
+        public string TrangThaiIcon { get; set; } = string.Empty;
+        public string TrangThaiText { get; set; } = string.Empty;
+        public string TrangThaiBg { get; set; } = string.Empty;
+        public string TrangThaiFg { get; set; } = string.Empty;
+        public int RecordId { get; set; }
+    }
+
     public partial class Page10 : Page
     {
         // Constructor mặc định
         public Page10()
         {
             InitializeComponent();
+            LoadCategories();
         }
 
-        public Page10(User user)
+        private void LoadCategories()
         {
-            InitializeComponent();
-        }
-
-        private void MenuInfo_Click(object sender, RoutedEventArgs e)
-        {
-            //NavigationService.Navigate(new Page());
-        }
-        private void MenuAdminUI_Click(object sender, RoutedEventArgs e)
-        {
-            NavigationService.Navigate(new Page9());
-        }
-        private void MenuOfficerUI_Click(object sender, RoutedEventArgs e)
-        {
-            //NavigationService.Navigate(new Page10());
-        }
-        private void MenuLogout_Click(object sender, RoutedEventArgs e)
-        {
-            NavigationService.Navigate(new Page1());
-        }
-
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-
+            using var db = new TrafficSafetyDBContext();
+            var categories = db.Categories
+                               .Where(c => c.CategoryName != "Đi bộ" && c.CategoryName != "Xe đạp")
+                               .ToList();
+            cboVehicleType.ItemsSource = categories;
+            if (categories.Any())
+            {
+                cboVehicleType.SelectedIndex = 0;
+            }
         }
 
         // Xử lý sự kiện nút Quay lại
@@ -59,9 +66,127 @@ namespace PBL3
         // Xử lý sự kiện nút Tìm kiếm
         private void BtnSearch_Click(object sender, RoutedEventArgs e)
         {
-            string keyword = txtIdentifier.Text;
-            MessageBox.Show($"Đang tìm kiếm luật với từ khóa: {keyword}");
-            // Viết logic tìm kiếm SQL ở đây...
+            PerformSearch();
+        }
+
+        private void PerformSearch()
+        {
+            if (txtIdentifier == null || dgViolations == null || txtErrorMessage == null || bdWarning == null || txtWarningMessage == null) return;
+
+            string keyword = txtIdentifier.Text.Trim();
+
+            if (string.IsNullOrEmpty(keyword))
+            {
+                txtErrorMessage.Visibility = Visibility.Collapsed;
+                bdWarning.Visibility = Visibility.Collapsed;
+                dgViolations.Visibility = Visibility.Collapsed;
+                return;
+            }
+
+            using var db = new TrafficSafetyDBContext();
+
+            var violations = db.ViolationRecords.Include(r => r.Law).Where(r => r.LicensePlate != null && r.LicensePlate.Contains(keyword)).ToList();
+
+            if (!violations.Any())
+            {
+                var vehicle = db.Vehicles.FirstOrDefault(v => v.LicensePlate.Contains(keyword));
+
+                if (vehicle != null)
+                {
+                    txtErrorMessage.Text = $"Biển số xe {vehicle.LicensePlate} hiện tại không có lỗi vi phạm nào.";
+                }
+                else
+                {
+                    txtErrorMessage.Text = $"Không tìm thấy dữ liệu phương tiện hoặc vi phạm nào cho từ khóa: '{keyword}'.";
+                }
+
+                txtErrorMessage.Visibility = Visibility.Visible;
+                bdWarning.Visibility = Visibility.Collapsed;
+                dgViolations.Visibility = Visibility.Collapsed;
+                return;
+            }
+
+            txtErrorMessage.Visibility = Visibility.Collapsed;
+
+            // Nhóm theo thời gian, ưu tiên nhóm có lỗi chưa xử lý (Status = 0) lên đầu
+            var grouped = violations.GroupBy(v => new { v.LicensePlate,v.ViolationDate, v.ViolationTime })
+                                    .OrderBy(g => g.All(v => v.Status != 0)) // Nhóm có ít nhất 1 lỗi Status == 0 sẽ lên đầu (vì All return False, False < True)
+                                    .ThenByDescending(g => g.Key.ViolationDate)
+                                    .ThenByDescending(g => g.Key.ViolationTime)
+                                    .ToList();
+
+            int stt = 1;
+            int totalUnprocessed = 0;
+            var listSource = new List<ViolationGroupDisplay>();
+
+            foreach (var group in grouped)
+            {
+                var first = group.First();
+                int groupUnprocessedCount = group.Count(v => v.Status == 0);
+                totalUnprocessed += groupUnprocessedCount;
+                
+                bool isProcessed = groupUnprocessedCount == 0;
+
+                var listLoi = new List<ViolationDetailDisplay>();
+                int loiCount = 1;
+                int totalInGroup = group.Count();
+
+                foreach (var v in group)
+                {
+                    string loiName = v.Law?.LawName ?? v.ViolationDescription ?? "Vi phạm giao thông";
+                    string prefix = totalInGroup > 1 ? $"{loiCount}. " : "";
+
+                    string timeStr = v.ViolationTime?.ToString(@"hh\:mm") ?? "";
+                    string dateStr = v.ViolationDate?.ToString("dd/MM/yyyy") ?? "";
+
+                    string extraTime = (loiCount == totalInGroup) ? $"{dateStr} - {timeStr}" : "";
+
+                    listLoi.Add(new ViolationDetailDisplay { MoTaLoi = prefix + loiName, ThoiGian = extraTime });
+                    loiCount++;
+                }
+
+                listSource.Add(new ViolationGroupDisplay
+                {
+                    STT = stt++,
+                    BienSo = first.LicensePlate,
+                    DanhSachLoi = listLoi,
+                    TrangThaiIcon = isProcessed ? "✔" : "⚠",
+                    TrangThaiText = isProcessed ? "Đã xử lý" : "Chưa xử lý",
+                    TrangThaiBg = isProcessed ? "#E8F5E9" : "#C62828",
+                    TrangThaiFg = isProcessed ? "#2E7D32" : "White",
+                    RecordId = first.ViolationRecordId
+                });
+            }
+
+            dgViolations.ItemsSource = listSource;
+            dgViolations.Visibility = Visibility.Visible;
+
+            if (totalUnprocessed > 0)
+            {
+                txtWarningMessage.Text = $"Hệ thống ghi nhận có {totalUnprocessed} lỗi vi phạm chưa được xử lý!";
+                bdWarning.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                bdWarning.Visibility = Visibility.Collapsed;
+            }
+        }
+
+        // Xử lý sự kiện nút Chi tiết
+        private void BtnDetail_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is Button btn && btn.DataContext is ViolationGroupDisplay data)
+            {
+                try
+                {
+                    // BẮT BUỘC PHẢI NHÉT `data.RecordId` VÀO TRONG NGOẶC NHƯ VẦY:
+                    NavigationService.Navigate(new Page17(data.RecordId));
+                }
+                catch (Exception ex)
+                {
+                    new CustomMessageBox("Lỗi khi chuyển trang: " + ex.Message, "Lỗi").ShowDialog();
+                }
+            }
         }
     }
 }

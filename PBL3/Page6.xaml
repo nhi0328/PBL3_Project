@@ -351,13 +351,6 @@
 
                 <Grid Grid.Row="0" Margin="0,20,0,15">
                     <TextBlock Text="QUẢN LÝ PHƯƠNG TIỆN" FontSize="40" FontFamily="Calibri" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                    <Button Content="+ Thêm phương tiện" FontFamily="Calibri" FontSize="20" HorizontalAlignment="Right" Background="#C62828" Foreground="White" Padding="5,2" Height="40" VerticalAlignment="Bottom" Margin="0,0,30,0" Width="210">
-                        <Button.Resources>
-                            <Style TargetType="Border">
-                                <Setter Property="CornerRadius" Value="10"/>
-                            </Style>
-                        </Button.Resources>
-                    </Button>
                 </Grid>
 
                 <Border Grid.Row="1" Background="White" CornerRadius="15" Padding="0" Margin="50,0,30,20">
@@ -365,180 +358,29 @@
                         <DropShadowEffect BlurRadius="40" Opacity="0.5" ShadowDepth="0" Direction="570"/>
                     </Border.Effect>
                     <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Margin="5,5,5,0">
-                        <UniformGrid Columns="3" Margin="5" VerticalAlignment="Top">
-                            <Border Style="{StaticResource VehicleCardStyle}">
-                                <StackPanel>
-                                    <TextBlock Text="30A-123.45" FontSize="25" FontFamily="Calibri" Height="30" Margin="0,0,0,0"/>
-                                    <TextBlock Text="Vinfast VF9" FontSize="15" FontFamily="Calibri"/>
-                                    <Image Source="/Assets/Images/vf9.png" Height="150" Margin="30,-30,0,0"/>
-                                    <StackPanel Orientation="Horizontal" Margin="0,0,0,5">
-                                        <TextBlock Text="⚠" Foreground="Red" Margin="10,-12,5,0" FontSize="18"/>
-                                        <TextBlock Text="Có 2 vi phạm" Foreground="Red" Margin="0,-10,0,0" FontSize="18" FontFamily="Calibri" VerticalAlignment="Bottom"/>
-                                    </StackPanel>
-                                    <Grid Margin="5,0,10,5">
-                                        <Button Content="Xem vi phạm" FontSize="20" FontFamily="Calibri" Background="#C62828" Foreground="White" HorizontalAlignment="Left" Width="185" Height="35" BorderThickness="0">
-                                            <Button.Resources>
-                                                <Style TargetType="Border">
-                                                    <Setter Property="CornerRadius" Value="8"/>
-                                                </Style>
-                                            </Button.Resources>
-                                        </Button>
-                                        <Button Content="Chi tiết" Background="Transparent" FontFamily="Calibri" FontSize="20" BorderBrush="Gray" BorderThickness="1" HorizontalAlignment="Right" Width="95" Height="35">
-                                            <Button.Resources>
-                                                <Style TargetType="Border">
-                                                    <Setter Property="CornerRadius" Value="8"/>
-                                                </Style>
-                                            </Button.Resources>
-                                        </Button>
-                                    </Grid>
-                                </StackPanel>
-                            </Border>
-
-                            <Border Style="{StaticResource VehicleCardStyle}">
-                                <StackPanel>
-                                    <TextBlock Text="59B1-678.90" FontSize="25" FontFamily="Calibri" Height="30" Margin="0,0,0,0"/>
-                                    <TextBlock Text="Honda SH" FontSize="15" FontFamily="Calibri"/>
-                                    <Image Source="/Assets/Images/sh.png" Height="150" Margin="30,-30,0,0"/>
-                                    <StackPanel Orientation="Horizontal" Margin="0,0,0,5">
-                                        <TextBlock Text="✔" Foreground="Green" Margin="10,-12,5,0" FontSize="18"/>
-                                        <TextBlock Text="Không có vi phạm" Foreground="Green" Margin="10,-10,5,0" FontSize="18" FontFamily="Calibri" VerticalAlignment="Bottom"/>
-                                    </StackPanel>
-                                    <Button Margin="5,0,10,5" Content="Chi tiết" Background="Transparent" FontFamily="Calibri" FontSize="20" BorderBrush="Gray" BorderThickness="1" HorizontalAlignment="Right" Width="95" Height="35">
-                                        <Button.Resources>
-                                            <Style TargetType="Border">
-                                                <Setter Property="CornerRadius" Value="8"/>
-                                            </Style>
-                                        </Button.Resources>
-                                    </Button>
-                                </StackPanel>
-                            </Border>
-
-                            <Border Style="{StaticResource VehicleCardStyle}">
-                                <StackPanel>
-                                    <TextBlock Text="75D1-298.90​" FontSize="15" FontFamily="Calibri" Height="18" Margin="0,0,0,0"/>
-                                    <TextBlock Text="Vinfast EVO" Foreground="Gray" FontSize="10" FontFamily="Calibri"/>
-                                    <Image Source="/Assets/Images/vfEVO.png" Height="70" Margin="30,-10,0,0"/>
-                                    <StackPanel Orientation="Horizontal" Margin="0,0,0,5">
-                                        <TextBlock Text="⚠" Foreground="Red" Margin="0,0,5,0" FontSize="10"/>
-                                        <TextBlock Text="Có 1 vi phạm" Foreground="Red" FontSize="10" FontFamily="Calibri" VerticalAlignment="Bottom"/>
-                                    </StackPanel>
-                                    <Grid>
-                                        <Button Content="Xem vi phạm" Background="#C62828" Foreground="White" HorizontalAlignment="Left" Width="100" BorderThickness="0">
-                                            <Button.Resources>
-                                                <Style TargetType="Border">
-                                                    <Setter Property="CornerRadius" Value="5"/>
-                                                </Style>
-                                            </Button.Resources>
-                                        </Button>
-                                        <Button Content="Chi tiết" Background="Transparent" BorderBrush="#DDD" BorderThickness="1" HorizontalAlignment="Right" Width="65">
-                                            <Button.Resources>
-                                                <Style TargetType="Border">
-                                                    <Setter Property="CornerRadius" Value="5"/>
-                                                </Style>
-                                            </Button.Resources>
-                                        </Button>
-                                    </Grid>
-                                </StackPanel>
-                            </Border>
-
-                            <Border Style="{StaticResource VehicleCardStyle}">
-                                <StackPanel>
-                                    <TextBlock Text="59B1-678.90" FontSize="15" FontFamily="Calibri" Height="18" Margin="0,0,0,0"/>
-                                    <TextBlock Text="Honda SH" Foreground="Gray" FontSize="10" FontFamily="Calibri"/>
-                                    <Image Source="/Assets/Images/sh.png" Height="70" Margin="30,-10,0,0"/>
-
-                                    <StackPanel Orientation="Horizontal" Margin="0,0,0,5">
-                                        <TextBlock Text="✔" Foreground="Green" Margin="0,0,5,0" FontSize="10"/>
-                                        <TextBlock Text="Không có vi phạm" Foreground="Green" FontSize="10" FontFamily="Calibri" VerticalAlignment="Bottom"/>
-                                    </StackPanel>
-
-                                    <Button Content="Chi tiết" Background="Transparent" BorderBrush="#DDD" BorderThickness="1" HorizontalAlignment="Right" Width="70">
-                                        <Button.Resources>
-                                            <Style TargetType="Border">
-                                                <Setter Property="CornerRadius" Value="5"/>
-                                            </Style>
-                                        </Button.Resources>
-                                    </Button>
-                                </StackPanel>
-                            </Border>
-
-                            <Border Style="{StaticResource VehicleCardStyle}">
-                                <StackPanel>
-                                    <TextBlock Text="59B1-678.90" FontSize="15" FontFamily="Calibri" Height="18" Margin="0,0,0,0"/>
-                                    <TextBlock Text="Honda SH" Foreground="Gray" FontSize="10" FontFamily="Calibri"/>
-                                    <Image Source="/Assets/Images/sh.png" Height="70" Margin="30,-10,0,0"/>
-
-                                    <StackPanel Orientation="Horizontal" Margin="0,0,0,5">
-                                        <TextBlock Text="✔" Foreground="Green" Margin="0,0,5,0" FontSize="10"/>
-                                        <TextBlock Text="Không có vi phạm" Foreground="Green" FontSize="10" FontFamily="Calibri" VerticalAlignment="Bottom"/>
-                                    </StackPanel>
-
-                                    <Button Content="Chi tiết" Background="Transparent" BorderBrush="#DDD" BorderThickness="1" HorizontalAlignment="Right" Width="70">
-                                        <Button.Resources>
-                                            <Style TargetType="Border">
-                                                <Setter Property="CornerRadius" Value="5"/>
-                                            </Style>
-                                        </Button.Resources>
-                                    </Button>
-                                </StackPanel>
-                            </Border>
-
-                            <Border Style="{StaticResource VehicleCardStyle}">
-                                <StackPanel>
-                                    <TextBlock Text="75D1-298.90​" FontSize="15" FontFamily="Calibri" Height="18" Margin="0,0,0,0"/>
-                                    <TextBlock Text="Vinfast EVO" Foreground="Gray" FontSize="10" FontFamily="Calibri"/>
-                                    <Image Source="/Assets/Images/vfEVO.png" Height="70" Margin="30,-10,0,0"/>
-                                    <StackPanel Orientation="Horizontal" Margin="0,0,0,5">
-                                        <TextBlock Text="⚠" Foreground="Red" Margin="0,0,5,0" FontSize="10"/>
-                                        <TextBlock Text="Có 1 vi phạm" Foreground="Red" FontSize="10" FontFamily="Calibri" VerticalAlignment="Bottom"/>
-                                    </StackPanel>
-                                    <Grid>
-                                        <Button Content="Xem vi phạm" Background="#C62828" Foreground="White" HorizontalAlignment="Left" Width="100" BorderThickness="0">
-                                            <Button.Resources>
-                                                <Style TargetType="Border">
-                                                    <Setter Property="CornerRadius" Value="5"/>
-                                                </Style>
-                                            </Button.Resources>
-                                        </Button>
-                                        <Button Content="Chi tiết" Background="Transparent" BorderBrush="#DDD" BorderThickness="1" HorizontalAlignment="Right" Width="65">
-                                            <Button.Resources>
-                                                <Style TargetType="Border">
-                                                    <Setter Property="CornerRadius" Value="5"/>
-                                                </Style>
-                                            </Button.Resources>
-                                        </Button>
-                                    </Grid>
-                                </StackPanel>
-                            </Border>
-
-                            <Border Style="{StaticResource VehicleCardStyle}">
-                                <StackPanel>
-                                    <TextBlock Text="75D1-298.90​" FontSize="15" FontFamily="Calibri" Height="18" Margin="0,0,0,0"/>
-                                    <TextBlock Text="Vinfast EVO" Foreground="Gray" FontSize="10" FontFamily="Calibri"/>
-                                    <Image Source="/Assets/Images/vfEVO.png" Height="70" Margin="30,-10,0,0"/>
-                                    <StackPanel Orientation="Horizontal" Margin="0,0,0,5">
-                                        <TextBlock Text="⚠" Foreground="Red" Margin="0,0,5,0" FontSize="10"/>
-                                        <TextBlock Text="Có 1 vi phạm" Foreground="Red" FontSize="10" FontFamily="Calibri" VerticalAlignment="Bottom"/>
-                                    </StackPanel>
-                                    <Grid>
-                                        <Button Content="Xem vi phạm" Background="#C62828" Foreground="White" HorizontalAlignment="Left" Width="100" BorderThickness="0">
-                                            <Button.Resources>
-                                                <Style TargetType="Border">
-                                                    <Setter Property="CornerRadius" Value="5"/>
-                                                </Style>
-                                            </Button.Resources>
-                                        </Button>
-                                        <Button Content="Chi tiết" Background="Transparent" BorderBrush="#DDD" BorderThickness="1" HorizontalAlignment="Right" Width="65">
-                                            <Button.Resources>
-                                                <Style TargetType="Border">
-                                                    <Setter Property="CornerRadius" Value="5"/>
-                                                </Style>
-                                            </Button.Resources>
-                                        </Button>
-                                    </Grid>
-                                </StackPanel>
-                            </Border>
-                        </UniformGrid>
+                        <ItemsControl x:Name="icVehicles">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <UniformGrid Columns="3" Margin="5" VerticalAlignment="Top"/>
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border Style="{StaticResource VehicleCardStyle}" MouseLeftButtonDown="VehicleCard_MouseLeftButtonDown" Background="White" Cursor="Hand">
+                                        <StackPanel>
+                                            <TextBlock Text="{Binding LicensePlate}" FontSize="25" FontFamily="Calibri" Height="30" Margin="0,0,0,0"/>
+                                            <TextBlock Text="{Binding DetailsText}" FontSize="15" FontFamily="Calibri" Height="18" Foreground="Gray"/>
+                                            <TextBlock Text="{Binding VehicleName}" FontSize="15" FontFamily="Calibri"/>
+                                            <Image Source="{Binding ImagePath}" Height="150" Margin="30,-30,0,0"/>
+                                            <StackPanel Orientation="Horizontal" Margin="0,0,0,5">
+                                                <TextBlock Text="{Binding IconText}" Foreground="{Binding StatusColor}" Margin="10,-12,5,0" FontSize="18"/>
+                                                <TextBlock Text="{Binding ViolationText}" Foreground="{Binding StatusColor}" Margin="0,-10,0,0" FontSize="18" FontFamily="Calibri" VerticalAlignment="Bottom"/>
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
                     </ScrollViewer>
                 </Border>
             </Grid>

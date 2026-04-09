@@ -1,4 +1,4 @@
-﻿using Microsoft.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using PBL3.Models;
@@ -22,8 +22,8 @@ namespace PBL3
 {
     public partial class Page20 : Page
     {
-        private LuatItem _currentLuat;
-        private User _currentUser;
+        private readonly LuatItem _currentLuat;
+        private readonly Officer _currentUser; // CHỈ NHẬN OFFICER
 
         // Constructor mặc định
         public Page20()
@@ -31,14 +31,15 @@ namespace PBL3
             InitializeComponent();
         }
 
-        public Page20(LuatItem luat, User user = null) : this()
+        // Constructor chính nhận dữ liệu Luật và Cán bộ
+        public Page20(LuatItem luat, Officer user = null) : this()
         {
             _currentLuat = luat;
             _currentUser = user;
 
             if (_currentUser != null)
             {
-                txtUserName.Text = _currentUser.FullName;
+                txtUserName.Text = $"Cán bộ: {_currentUser.OfficerId}";
             }
 
             LoadLuatDetails();
@@ -53,7 +54,6 @@ namespace PBL3
             txtNgayBanHanh.Text = _currentLuat.NgayBanHanh;
             txtNgayHieuLuc.Text = _currentLuat.NgayHieuLuc;
 
-            // Xử lý hiẨn th? m?c ph?t
             if (_currentLuat.HasPhatTienXeMay)
             {
                 spPhatXeMay.Visibility = Visibility.Visible;
@@ -86,16 +86,9 @@ namespace PBL3
         }
         private void MenuInfo_Click(object sender, RoutedEventArgs e)
         {
-            //NavigationService.Navigate(new Page());
+            NavigationService.Navigate(new Page24());
         }
-        private void MenuAdminUI_Click(object sender, RoutedEventArgs e)
-        {
-            NavigationService.Navigate(new Page9());
-        }
-        private void MenuOfficerUI_Click(object sender, RoutedEventArgs e)
-        {
-            //NavigationService.Navigate(new Page10());
-        }
+        
         private void MenuLogout_Click(object sender, RoutedEventArgs e)
         {
             NavigationService.Navigate(new Page1());
@@ -104,48 +97,14 @@ namespace PBL3
         {
             if (_currentUser == null) return;
 
-            // PHÂN QUYỀN HIỂN THỊ MENU
-
-            if (_currentUser is Customer)
-            {
-                // Công dân: Ẩn Các n�t chuyẨn giao diện v� thanh kẻ phụ
-
-
-
-            }
-            else if (_currentUser is Officer)
-            {
-                // Cán bộ: Được xem giao diện Khách hàng
-
-
-
-            }
-            else if (_currentUser is Admin)
-            {
-                // Quản trị viên: HiẨn Tất cả Các lựa chọn để ki?m tra
-
-
-
-            }
-
-            // Mở Menu
-            Button btn = sender as Button;
-            if (btn != null && btn.ContextMenu != null)
+            if (sender is Button btn && btn.ContextMenu != null)
             {
                 btn.ContextMenu.PlacementTarget = btn;
                 btn.ContextMenu.Placement = System.Windows.Controls.Primitives.PlacementMode.Bottom;
                 btn.ContextMenu.IsOpen = true;
             }
         }
-        public Page20(string tenNguoiDung) : this()
-        {
-            // Kiểm tra nếu có tên thì gán vào TextBlock
-            if (!string.IsNullOrEmpty(tenNguoiDung))
-            {
-                txtUserName.Text = tenNguoiDung;
-            }
-        }
-
+        
         private void btnBack_Click(object sender, RoutedEventArgs e)
         {
             if (NavigationService.CanGoBack)
@@ -176,43 +135,32 @@ namespace PBL3
             {
                 try
                 {
-                    string connectionString = @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=TrafficSafetyDB;Integrated Security=True";
-
-                    using (SqlConnection conn = new SqlConnection(connectionString))
+                    using (var db = new TrafficSafetyDBContext())
                     {
-                        conn.Open();
-                        string query = @"
-                            DELETE FROM TRAFFIC_LAW_DETAILS WHERE LAW_ID IN (SELECT LAW_ID FROM TRAFFIC_LAWS WHERE LAW_NAME = @TenLoi);
-                            DELETE FROM TRAFFIC_LAWS WHERE LAW_NAME = @TenLoi;";
-                        using (SqlCommand cmd = new SqlCommand(query, conn))
+                        // Tìm bộ luật theo LawId (Đảm bảo chính xác 100%)
+                        var lawToDelete = db.TrafficLaws.FirstOrDefault(l => l.LawId == _currentLuat.LawId);
+
+                        if (lawToDelete != null)
                         {
-                            cmd.Parameters.AddWithValue("@TenLoi", _currentLuat.TenLoi);
-                            int rowsAffected = cmd.ExecuteNonQuery();
+                            // Nhờ đã cấu hình Cascade Delete trong Database, 
+                            // khi xóa Luật thì các chi tiết (mức phạt Ô tô/Xe máy) trong bảng TRAFFIC_LAW_DETAILS cũng sẽ tự động bay màu theo!
+                            db.TrafficLaws.Remove(lawToDelete);
+                            db.SaveChanges();
 
-                            if (rowsAffected > 0)
-                            {
-                                MessageBox.Show("Đã xoá luật thành công.", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
+                            new CustomMessageBox("Đã xoá luật thành công.", "Thông báo").ShowDialog();
 
-                                // Quay lại trang trước sau khi Xoá
-                                if (NavigationService.CanGoBack)
-                                {
-                                    NavigationService.GoBack();
-                                }
-                                else
-                                {
-                                    NavigationService.Navigate(_currentUser != null ? new Page13(_currentUser) : new Page13());
-                                }
-                            }
-                            else
-                            {
-                                MessageBox.Show("Không tìm thấy luật Đã xoá.", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
-                            }
+                            // Trở về trang danh sách luật
+                            NavigationService.Navigate(new Page13(_currentUser));
+                        }
+                        else
+                        {
+                            new CustomMessageBox("Không tìm thấy luật trên hệ thống. Có thể nó đã bị xóa trước đó.", "Lỗi").ShowDialog();
                         }
                     }
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("Lỗi khi Xoá CSDL: " + ex.Message, "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                    new CustomMessageBox("Lỗi khi Xoá CSDL: " + ex.Message, "Lỗi").ShowDialog();
                 }
             }
         }

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Windows;
@@ -90,15 +90,14 @@ namespace PBL3
                 string identifier = txtIdentifier.Text.Trim();
                 string password = txtPassword.Password;
 
-                User loggedInUser = null;
+                object loggedInUser = null;
 
                 // 2. KIỂM TRA 4 TÀI KHOẢN ADMIN ĐẶC BIỆT
                 if (identifier.StartsWith("admin") && password == "admin")
                 {
                     if (identifier == "admin1" || identifier == "admin2" || identifier == "admin3" || identifier == "admin4")
                     {
-                        // ĐÃ FIX: Truyền đủ 3 tham sẽ (ID, Name, Password)
-                        loggedInUser = new Admin(identifier, "Quản trị viên " + identifier[5..], "admin");
+                        loggedInUser = new Admin(identifier, "Quản trị viên " + identifier[5..], "admin@traffic.gov.vn", "0123456789", "admin");
                     }
                 }
 
@@ -108,39 +107,41 @@ namespace PBL3
                 // 4. XỬ LÝ KẾT QUẢ
                 if (loggedInUser != null)
                 {
-                    // Gợi ý: Lưu vào App.Current để dùng ở các trang sau
-                    // ((App)Application.Current).CurrentUser = loggedInUser;
-
-                    if (loggedInUser is Admin)
+                    if (loggedInUser is Admin ad)
                     {
-                        MessageBox.Show($"Chào mừng Quản trị viên: {loggedInUser.FullName}");
+                        new CustomMessageBox($"Chào mừng Quản trị viên: {ad.FullName}").ShowDialog();
                         this.NavigationService.Navigate(new Page12());
                     }
-                    else if (loggedInUser is Officer)
+                    else if (loggedInUser is Officer off)
                     {
-                        MessageBox.Show($"Chào mừng Cán bộ: {loggedInUser.FullName}");
+                        new CustomMessageBox($"Chào mừng Cán bộ: {off.OfficerId}").ShowDialog();
                         this.NavigationService.Navigate(new Page12());
                     }
-                    else
+                    else if (loggedInUser is Customer cust)
                     {
-                        MessageBox.Show($"Chào mừng bạn: {loggedInUser.FullName}");
-                        this.NavigationService.Navigate(new Page4());
+                        new CustomMessageBox($"Chào mừng bạn: {cust.FullName}").ShowDialog();
+                        this.NavigationService.Navigate(new Page4(cust));
                     }
                 }
                 else
                 {
-                    MessageBox.Show("Tài khoản hoặc mật khẩu không chính xác!", "Lỗi đăng nhập");
+                    new CustomMessageBox("Tài khoản hoặc mật khẩu không chính xác!", "Lỗi đăng nhập").ShowDialog();
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Lỗi hệ thống: " + ex.Message);
+                new CustomMessageBox("Lỗi hệ thống: " + ex.Message).ShowDialog();
             }
         }
 
         private void BtnDangKy_Click(object sender, RoutedEventArgs e)
         {
             NavigationService.Navigate(new Page3());
+        }
+
+        private void BtnForgotPassword_Click(object sender, RoutedEventArgs e)
+        {
+            NavigationService.Navigate(new Page36());
         }
 
         private void BtnBack_Click(object sender, RoutedEventArgs e)

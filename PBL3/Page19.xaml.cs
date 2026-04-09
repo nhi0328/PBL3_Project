@@ -1,4 +1,4 @@
-﻿using PBL3.Models;
+using PBL3.Models;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -23,47 +23,31 @@ namespace PBL3
     /// </summary>
     public partial class Page19 : Page
     {
+        private readonly Officer _currentUser;
         private readonly int? _recordId;
 
+        // Constructor mặc định
         public Page19()
         {
             InitializeComponent();
         }
 
-        private User _currentUser;
-
-        public Page19(User user)
-        {
-            InitializeComponent();
-            _currentUser = user;
-
-            if (_currentUser != null)
-            {
-                txtUserName.Text = _currentUser.FullName;
-            }
-        }
-
-        public Page19(int recordId)
-        {
-            InitializeComponent();
-            _recordId = recordId;
-            LoadViolationDetail();
-        }
-
-        public Page19(User user, int recordId)
+        // 2. CONSTRUCTOR NHẬN CÁN BỘ & ID BIÊN BẢN (Dùng cái này là chính)
+        public Page19(Officer user, int recordId)
         {
             InitializeComponent();
             _currentUser = user;
             _recordId = recordId;
 
+            // Hiển thị tên cán bộ
             if (_currentUser != null)
             {
-                txtUserName.Text = _currentUser.FullName;
+                txtUserName.Text = $"Cán bộ: {_currentUser.OfficerId}";
             }
 
+            // Load thông tin biên bản
             LoadViolationDetail();
         }
-
         private void btnTraCuuNhanh_Click(object sender, RoutedEventArgs e)
         {
             NavigationService?.Navigate(new Page12());
@@ -106,16 +90,7 @@ namespace PBL3
 
         private void MenuInfo_Click(object sender, RoutedEventArgs e)
         {
-        }
-
-        private void MenuAdminUI_Click(object sender, RoutedEventArgs e)
-        {
-            NavigationService?.Navigate(new Page9());
-        }
-
-        private void MenuOfficerUI_Click(object sender, RoutedEventArgs e)
-        {
-            NavigationService?.Navigate(new Page10());
+            NavigationService?.Navigate(new Page24());
         }
 
         private void MenuLogout_Click(object sender, RoutedEventArgs e)
@@ -133,16 +108,18 @@ namespace PBL3
 
         private void LoadViolationDetail()
         {
-            if (_recordId is null)
-                return;
+            if (_recordId is null) return;
 
+            // Lấy thông tin từ Service (file ViolationLookupService.cs đã được chốt chuẩn)
             var detail = ViolationLookupService.GetViolationDetail(_recordId.Value);
+
             if (detail == null)
             {
-                MessageBox.Show("Không tìm thấy thông tin chi tiết vi phạm.");
+                new CustomMessageBox("Không tìm thấy thông tin chi tiết vi phạm này trên hệ thống.").ShowDialog();
                 return;
             }
 
+            // Gán dữ liệu lên các thành phần giao diện
             txtHeaderTitle.Text = detail.HeaderTitle;
             txtHeaderSubtitle.Text = detail.HeaderSubtitle;
             txtVehicleTypeValue.Text = detail.VehicleType;
@@ -153,18 +130,29 @@ namespace PBL3
             txtFineRangeValue.Text = detail.FineRange;
             txtPaymentLocationValue.Text = detail.PaymentLocation;
             txtStatusValue.Text = detail.StatusText;
-            txtStatusValue.Foreground = detail.IsProcessed ? Brushes.ForestGreen : Brushes.Firebrick;
-            txtEvidenceCaption.Text = detail.EvidenceCaption;
-            txtLastUpdatedValue.Text = detail.LastUpdated;
 
-            if (!string.IsNullOrWhiteSpace(detail.EvidenceImagePath))
+            // Đổi màu text Trạng thái
+            txtStatusValue.Foreground = detail.IsProcessed ? Brushes.ForestGreen : Brushes.Firebrick;
+
+            // Kiểm tra an toàn trước khi gán để tránh lỗi XAML chưa khởi tạo
+            if (txtEvidenceCaption != null) txtEvidenceCaption.Text = detail.EvidenceCaption;
+            if (txtLastUpdatedValue != null) txtLastUpdatedValue.Text = detail.LastUpdated;
+
+            // Xử lý hiển thị Hình ảnh bằng chứng
+            if (!string.IsNullOrWhiteSpace(detail.EvidenceImagePath) && imgEvidence != null)
             {
                 Uri? evidenceUri = BuildEvidenceUri(detail.EvidenceImagePath);
                 if (evidenceUri != null)
                 {
-                    imgEvidence.Source = new BitmapImage(evidenceUri);
-                    imgEvidence.Visibility = Visibility.Visible;
-                    txtEvidencePlaceholder.Visibility = Visibility.Collapsed;
+                    try
+                    {
+                        imgEvidence.Source = new BitmapImage(evidenceUri);
+                        imgEvidence.Visibility = Visibility.Visible;
+
+                        if (txtEvidencePlaceholder != null)
+                            txtEvidencePlaceholder.Visibility = Visibility.Collapsed;
+                    }
+                    catch { /* Im lặng bỏ qua nếu ảnh bị lỗi file */ }
                 }
             }
         }

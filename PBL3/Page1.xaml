@@ -78,7 +78,7 @@
             <Viewbox StretchDirection="DownOnly" Stretch="Uniform">
                 <UniformGrid Columns="2" HorizontalAlignment="Center" Width="1200" Margin="0,0,0,150">
 
-                    <Button Style="{StaticResource ModernButtonStyle}" x:Name="btnTraCuuNhanh">
+                    <Button Style="{StaticResource ModernButtonStyle}" x:Name="btnTraCuuNhanh" Click="btnTraCuuNhanh_Click">
                         <Grid Width="480">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="110"/>
@@ -93,7 +93,7 @@
                         </Grid>
                     </Button>
 
-                    <Button Style="{StaticResource ModernButtonStyle}">
+                    <Button Style="{StaticResource ModernButtonStyle}" x:Name="btnTraCuuLuat" Click="btnTraCuuLuat_Click">
                         <Grid Width="480">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="110"/>
@@ -123,7 +123,7 @@
                         </Grid>
                     </Button>
 
-                    <Button Style="{StaticResource ModernButtonStyle}">
+                    <Button Style="{StaticResource ModernButtonStyle}" x:Name="btnPhanAnh" Click="btnPhanAnh_Click">
                         <Grid Width="480">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="110"/>

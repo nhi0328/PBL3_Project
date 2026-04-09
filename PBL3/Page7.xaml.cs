@@ -1,4 +1,7 @@
-﻿using System;
+using PBL3.Models;
+using PBL3.ViewModels;
+using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Text;
 using System.Windows;
@@ -15,55 +18,149 @@ namespace PBL3
 {
     public partial class Page7 : Page
     {
-        // Constructor mặc định
-        public Page7()
-        {
-            InitializeComponent();
-        }
+        private readonly Customer _currentUser;
 
-        // Constructor nhận thông tin User
-        public Page7(string tenNguoiDung) : this()
+        public Page7() { InitializeComponent(); }
+
+        public Page7(Customer user) : this()
         {
-            // Kiểm tra nếu có tên thì gán vào TextBlock
-            if (!string.IsNullOrEmpty(tenNguoiDung))
+            _currentUser = user;
+            this.Loaded += Page7_Loaded;
+            if (_currentUser != null)
             {
-                txtUserName.Text = tenNguoiDung;
+                txtUserName.Text = _currentUser.FullName; // Bổ sung dòng này
             }
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void Page7_Loaded(object sender, RoutedEventArgs e)
         {
+            if (_currentUser != null)
+            {
+                this.DataContext = new CustomerViewModel(_currentUser);
 
+                using var db = new TrafficSafetyDBContext();
+                var licenses = db.DrivingLicenses.Where(l => l.Cccd == _currentUser.Cccd).ToList();
+
+                var vms = new List<LicenseViewModel>();
+                foreach (var l in licenses)
+                {
+                    bool active = l.Status == 1; // Adjust based on DB structure
+
+                    vms.Add(new LicenseViewModel
+                    {
+                        LicenseType = l.LicenseId ?? "Không rõ",
+                        StatusBackground = "#FCEB9C", // yellow color as per the screenshot
+                        StatusColor = active ? "Green" : "Red",
+                        StatusIcon = active ? "✔" : "⚠",
+                        StatusText = active ? "Đang hoạt động" : "Bị thu hồi",
+                        PointsText = $"Điểm còn lại của GPLX: {l.Points}",
+                        LastUpdateText = "Cập nhật lần cuối: " + DateTime.Now.ToString("HH:mm dd/MM/yyyy"), // Replace with actual trigger info if needed
+                        LicenseNumber = l.LicenseNumber,
+                        ExpiryDateText = l.ExpiryDate.HasValue ? l.ExpiryDate.Value.ToString("dd/MM/yyyy") : "Không thời hạn",
+                        IssueDateText = l.IssueDate.ToString("dd - MM - yyyy"),
+                        PlaceOfIssue = "Đà Nẵng" // If WARD_ID or similar exist in DrivingLicense can map it
+                    });
+                }
+
+                icLicenses.ItemsSource = vms;
+            }
+        }
+
+        private void btnLuuThongTin_Click(object sender, RoutedEventArgs e)
+        {
+            if (this.DataContext is CustomerViewModel vm && _currentUser != null)
+            {
+                try
+                {
+                    using var db = new TrafficSafetyDBContext();
+                    var customer = db.Customers.FirstOrDefault(c => c.Cccd == _currentUser.Cccd);
+
+                    if (customer != null)
+                    {
+                        customer.FullName = $"{vm.LastName} {vm.FirstName}".Trim();
+
+                        if (int.TryParse(vm.BirthYear, out int year) &&
+                            int.TryParse(vm.BirthMonth, out int month) &&
+                            int.TryParse(vm.BirthDay, out int day))
+                        {
+                            try
+                            {
+                                customer.Dob = new DateTime(year, month, day);
+                            }
+                            catch
+                            {
+                                new CustomMessageBox("Ngày sinh không hợp lệ.", "Lỗi").ShowDialog();
+                                return;
+                            }
+                        }
+
+                        if (vm.IsMale) customer.Gender = "Nam";
+                        else if (vm.IsFemale) customer.Gender = "Nữ";
+                        else customer.Gender = "Khác";
+
+                        customer.Phone = vm.PhoneNumber;
+                        customer.Email = vm.Email;
+
+                        // CCCD is typically a primary key and isn't updated here
+
+                        db.SaveChanges();
+
+                        // Update current user
+                        _currentUser.FullName = customer.FullName;
+                        _currentUser.Dob = customer.Dob;
+                        _currentUser.Gender = customer.Gender;
+                        _currentUser.Phone = customer.Phone;
+                        _currentUser.Email = customer.Email;
+
+                        txtUserName.Text = _currentUser.FullName;
+                        new CustomMessageBox("Cập nhật thông tin thành công!", "Thông báo").ShowDialog();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    new CustomMessageBox($"Có lỗi xảy ra: {ex.Message}", "Lỗi").ShowDialog();
+                }
+            }
+        }
+
+        private void btnLichSuTruDiem_Click(object sender, RoutedEventArgs e)
+        {
+            NavigationService.Navigate(new Page30(_currentUser));
+        }
+
+        private void btnBaoMat_Click(object sender, RoutedEventArgs e)
+        {
+            NavigationService.Navigate(new Page31(_currentUser));
         }
 
         //Chuyển qua trang Tra cứu nhanh
         private void btnTraCuuNhanh_Click(object sender, RoutedEventArgs e)
         {
-            NavigationService.Navigate(new Page4());
+            NavigationService.Navigate(new Page4(_currentUser as Customer));
         }
 
         // Chuyển trang Tra cứu luật
         private void btnTraCuuLuat_Click(object sender, RoutedEventArgs e)
         {
-            NavigationService.Navigate(new Page5());
+            NavigationService.Navigate(new Page5(_currentUser as Customer));
         }
 
         // Chuyển trang Quản lý phương tiện
         private void btnQLPT_Click(object sender, RoutedEventArgs e)
         {
-            NavigationService.Navigate(new Page6());
+            NavigationService.Navigate(new Page6(_currentUser as Customer));
         }
 
         //Chuyển trang Quản lý tài khoản
         private void btnTaiKhoan_Click(object sender, RoutedEventArgs e)
         {
-            NavigationService.Navigate(new Page7());
+            NavigationService.Navigate(new Page7(_currentUser as Customer));
         }
 
         // chuyển trang Phản ánh
         private void btnPhanAnh_Click(object sender, RoutedEventArgs e)
         {
-            NavigationService.Navigate(new Page8());
+            NavigationService.Navigate(new Page8(_currentUser as Customer));
         }
 
         // Đăng xuất

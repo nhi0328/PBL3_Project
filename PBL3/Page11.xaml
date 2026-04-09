@@ -30,16 +30,28 @@
 
             <Grid Grid.Row="1" Panel.ZIndex="1">
                 <Button Content="&lt; Quay lại" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="30" Background="Transparent" BorderThickness="0" FontSize="20" Cursor="Hand" Click="BtnBack_Click"/>
-                <StackPanel>
-                    <TextBlock Text="TRA CỨU LUẬT" FontSize="35" FontFamily="Calibri" Foreground="#333" HorizontalAlignment="Center" Padding="0,35,0,20"/>
 
-                    <Border Background="White" CornerRadius="20" Padding="0" Margin="250,0,250,10">
+                <Grid Margin="0,30,0,0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Grid.Row="0" Text="TRA CỨU LUẬT" FontSize="35" FontFamily="Calibri" Foreground="#333" HorizontalAlignment="Center" Padding="0,5,0,20"/>
+
+                    <Border Grid.Row="1" Background="White" CornerRadius="8" Padding="0" Margin="250,0,250,10">
                         <Border.Effect>
                             <DropShadowEffect BlurRadius="40" Opacity="0.3" ShadowDepth="0" Direction="570"/>
                         </Border.Effect>
 
-                        <StackPanel Margin="20">
-                            <Grid Height="50" Margin="0,20,0,0">
+                        <Grid Margin="20">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+
+                            <Grid Grid.Row="0" Height="50" Margin="0,0,0,20">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="*"/>
                                     <ColumnDefinition Width="150"/>
@@ -48,7 +60,7 @@
                                 <Border CornerRadius="8" BorderBrush="#CCC" BorderThickness="1" Background="#FAFAFA">
                                     <TextBox Grid.Column="1" VerticalContentAlignment="Center" FontSize="20"
                                         Background="Transparent" BorderThickness="0" Foreground="#333" 
-                                            x:Name="txtIdentifier">
+                                            x:Name="txtIdentifier" TextChanged="txtIdentifier_TextChanged">
                                         <TextBox.Resources>
                                             <Style TargetType="{x:Type TextBox}">
                                                 <Setter Property="Template">
@@ -56,7 +68,7 @@
                                                         <ControlTemplate TargetType="{x:Type TextBox}">
                                                             <Grid Margin="10">
                                                                 <ScrollViewer x:Name="PART_ContentHost"/>
-                                                                <TextBlock Text="Tìm kiếm luật" x:Name="UserPlaceholder" 
+                                                                <TextBlock Text="Tìm kiếm luật hoặc lỗi vi phạm giao thông..." x:Name="UserPlaceholder" 
                                                                     Foreground="Gray" VerticalAlignment="Center" 
                                                                     IsHitTestVisible="False"
                                                                     Visibility="Collapsed"/>
@@ -106,9 +118,134 @@
                                     </Button.Style>
                                 </Button>
                             </Grid>
-                        </StackPanel>
+                            <Border Grid.Row="1" Background="White" Padding="0" CornerRadius="10">
+                                <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                                    <ScrollViewer.Resources>
+                                        <Style TargetType="ScrollBar">
+                                            <Setter Property="Width" Value="8"/>
+                                            <Setter Property="Background" Value="Transparent"/>
+                                            <Setter Property="Template">
+                                                <Setter.Value>
+                                                    <ControlTemplate TargetType="ScrollBar">
+                                                        <Grid Background="Transparent">
+                                                            <Border x:Name="Bg" Background="Transparent"/>
+                                                            <Track x:Name="PART_Track" IsDirectionReversed="true" IsEnabled="{TemplateBinding IsMouseOver}">
+                                                                <Track.Thumb>
+                                                                    <Thumb>
+                                                                        <Thumb.Template>
+                                                                            <ControlTemplate TargetType="Thumb">
+                                                                                <Border CornerRadius="4" Background="#CCC" Margin="0,0,0,0"/>
+                                                                            </ControlTemplate>
+                                                                        </Thumb.Template>
+                                                                    </Thumb>
+                                                                </Track.Thumb>
+                                                            </Track>
+                                                        </Grid>
+                                                    </ControlTemplate>
+                                                </Setter.Value>
+                                            </Setter>
+                                        </Style>
+                                    </ScrollViewer.Resources>
+                                    <!-- ItemsControl for Laws -->
+                                    <ItemsControl x:Name="icLaws">
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <Border BorderBrush="#E0E0E0" BorderThickness="1" CornerRadius="8" Background="White" Margin="0,0,0,10">
+
+                                                    <Expander Background="White">
+                                                        <Expander.Style>
+                                                            <Style TargetType="Expander">
+                                                                <Setter Property="Template">
+                                                                    <Setter.Value>
+                                                                        <ControlTemplate TargetType="Expander">
+                                                                            <Border CornerRadius="8" Background="{TemplateBinding Background}">
+                                                                                <DockPanel>
+                                                                                    <ToggleButton x:Name="HeaderSite" DockPanel.Dock="Top" Cursor="Hand" IsChecked="{Binding IsExpanded, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}">
+                                                                                        <ToggleButton.Template>
+                                                                                            <ControlTemplate TargetType="ToggleButton">
+                                                                                                <Border x:Name="HeaderBorder" Background="Transparent" CornerRadius="8">
+                                                                                                    <Grid Margin="10,10,0,10">
+                                                                                                        <Grid.ColumnDefinitions>
+                                                                                                            <ColumnDefinition Width="Auto"/>
+                                                                                                            <ColumnDefinition Width="*"/>
+                                                                                                            <ColumnDefinition Width="Auto"/>
+                                                                                                        </Grid.ColumnDefinitions>
+
+                                                                                                        <Path Grid.Column="0" Data="M12 2L2 22H22L12 2ZM11 10H13V15H11V10ZM11 17H13V19H11V17Z" Fill="#C62828" Width="24" Height="24" Stretch="Uniform" Margin="0,0,10,0"/>
+                                                                                                        <ContentPresenter Grid.Column="1" ContentSource="Content" VerticalAlignment="Center" HorizontalAlignment="Left" />
+
+                                                                                                        <TextBlock x:Name="Arrow" Grid.Column="2" Text="v" FontFamily="Century Gothic" FontWeight="Bold" Foreground="#333" FontSize="18" Margin="0,0,15,0" VerticalAlignment="Center" RenderTransformOrigin="0.5,0.5">
+                                                                                                            <TextBlock.RenderTransform>
+                                                                                                                <RotateTransform Angle="0"/>
+                                                                                                            </TextBlock.RenderTransform>
+                                                                                                        </TextBlock>
+                                                                                                    </Grid>
+                                                                                                </Border>
+                                                                                                <ControlTemplate.Triggers>
+                                                                                                    <Trigger Property="IsMouseOver" Value="True">
+                                                                                                        <Setter TargetName="HeaderBorder" Property="Background" Value="#F0F0F0"/>
+                                                                                                    </Trigger>
+                                                                                                    <DataTrigger Binding="{Binding IsExpanded, RelativeSource={RelativeSource TemplatedParent}}" Value="True">
+                                                                                                        <Setter TargetName="Arrow" Property="RenderTransform">
+                                                                                                            <Setter.Value>
+                                                                                                                <RotateTransform Angle="180"/>
+                                                                                                            </Setter.Value>
+                                                                                                        </Setter>
+                                                                                                    </DataTrigger>
+                                                                                                </ControlTemplate.Triggers>
+                                                                                            </ControlTemplate>
+                                                                                        </ToggleButton.Template>
+                                                                                        <ToggleButton.Content>
+                                                                                            <TextBlock Text="{Binding Name}" FontSize="22" Foreground="#333" TextWrapping="Wrap" />
+                                                                                        </ToggleButton.Content>
+                                                                                    </ToggleButton>
+
+                                                                                    <ContentPresenter x:Name="ExpandSite" Visibility="Collapsed" Content="{TemplateBinding Content}" Margin="45,0,20,20"/>
+                                                                                </DockPanel>
+                                                                            </Border>
+                                                                            <ControlTemplate.Triggers>
+                                                                                <Trigger Property="IsExpanded" Value="True">
+                                                                                    <Setter TargetName="ExpandSite" Property="Visibility" Value="Visible"/>
+                                                                                </Trigger>
+                                                                            </ControlTemplate.Triggers>
+                                                                        </ControlTemplate>
+                                                                    </Setter.Value>
+                                                                </Setter>
+                                                            </Style>
+                                                        </Expander.Style>
+
+                                                        <StackPanel>
+                                                            <Path Data="M0,0 L1000,0" Stretch="Fill" Stroke="#E0E0E0" StrokeThickness="1" Height="1" Margin="-40,0,0,15"/>
+                                                            <ItemsControl ItemsSource="{Binding Details}">
+                                                                <ItemsControl.ItemTemplate>
+                                                                    <DataTemplate>
+                                                                        <StackPanel Orientation="Horizontal" Margin="0,5,0,5">
+                                                                            <Ellipse Width="6" Height="6" Fill="#C62828" Margin="0,8,10,0" VerticalAlignment="Top"/>
+                                                                            <TextBlock Text="{Binding}" FontSize="18" Foreground="#555" TextWrapping="Wrap" MaxWidth="800" TextAlignment="Left"/>
+                                                                        </StackPanel>
+                                                                    </DataTemplate>
+                                                                </ItemsControl.ItemTemplate>
+                                                            </ItemsControl>
+
+                                                            <Button Content="Xem chi tiết" HorizontalAlignment="Right" Background="White" Foreground="#C62828" BorderBrush="#E0E0E0" BorderThickness="1" Padding="10,5" Cursor="Hand" Margin="0,15,0,0" Tag="{Binding STT}" Click="BtnDetail_Click">
+                                                                <Button.Resources>
+                                                                    <Style TargetType="Border">
+                                                                        <Setter Property="CornerRadius" Value="4"/>
+                                                                    </Style>
+                                                                </Button.Resources>
+                                                            </Button>
+                                                        </StackPanel>
+
+                                                    </Expander>
+                                                </Border>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </ScrollViewer>
+                            </Border>
+                        </Grid>
                     </Border>
-                </StackPanel>
+                </Grid>
             </Grid>
         </Grid>
     </Grid>

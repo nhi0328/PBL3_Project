@@ -3,70 +3,58 @@
   "WorkspaceRootPath": "D:\\OneDrive - The University of Technology\\PBL3\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{168913BE-CFBF-22A3-7EB1-9531C1A25364}|PBL3\\PBL3.csproj|d:\\onedrive - the university of technology\\pbl3\\pbl3\\models\\trafficsafetydbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{168913BE-CFBF-22A3-7EB1-9531C1A25364}|PBL3\\PBL3.csproj|solutionrelative:pbl3\\models\\trafficsafetydbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{168913BE-CFBF-22A3-7EB1-9531C1A25364}|PBL3\\PBL3.csproj|d:\\onedrive - the university of technology\\pbl3\\pbl3\\notificationbellcontrol.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{168913BE-CFBF-22A3-7EB1-9531C1A25364}|PBL3\\PBL3.csproj|solutionrelative:pbl3\\notificationbellcontrol.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{168913BE-CFBF-22A3-7EB1-9531C1A25364}|PBL3\\PBL3.csproj|d:\\onedrive - the university of technology\\pbl3\\pbl3\\models\\authenticationservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{168913BE-CFBF-22A3-7EB1-9531C1A25364}|PBL3\\PBL3.csproj|solutionrelative:pbl3\\models\\authenticationservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{168913BE-CFBF-22A3-7EB1-9531C1A25364}|PBL3\\PBL3.csproj|d:\\onedrive - the university of technology\\pbl3\\pbl3\\page43.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{168913BE-CFBF-22A3-7EB1-9531C1A25364}|PBL3\\PBL3.csproj|solutionrelative:pbl3\\page43.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{168913BE-CFBF-22A3-7EB1-9531C1A25364}|PBL3\\PBL3.csproj|d:\\onedrive - the university of technology\\pbl3\\pbl3\\models\\trafficlaw.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{168913BE-CFBF-22A3-7EB1-9531C1A25364}|PBL3\\PBL3.csproj|solutionrelative:pbl3\\models\\trafficlaw.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{168913BE-CFBF-22A3-7EB1-9531C1A25364}|PBL3\\PBL3.csproj|d:\\onedrive - the university of technology\\pbl3\\pbl3\\models\\province.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{168913BE-CFBF-22A3-7EB1-9531C1A25364}|PBL3\\PBL3.csproj|solutionrelative:pbl3\\models\\province.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{168913BE-CFBF-22A3-7EB1-9531C1A25364}|PBL3\\PBL3.csproj|d:\\onedrive - the university of technology\\pbl3\\pbl3\\models\\trafficddcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{168913BE-CFBF-22A3-7EB1-9531C1A25364}|PBL3\\PBL3.csproj|solutionrelative:pbl3\\models\\trafficddcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{168913BE-CFBF-22A3-7EB1-9531C1A25364}|PBL3\\PBL3.csproj|d:\\onedrive - the university of technology\\pbl3\\pbl3\\page42.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{168913BE-CFBF-22A3-7EB1-9531C1A25364}|PBL3\\PBL3.csproj|solutionrelative:pbl3\\page42.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{168913BE-CFBF-22A3-7EB1-9531C1A25364}|PBL3\\PBL3.csproj|d:\\onedrive - the university of technology\\pbl3\\pbl3\\models\\violationtype.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{168913BE-CFBF-22A3-7EB1-9531C1A25364}|PBL3\\PBL3.csproj|solutionrelative:pbl3\\models\\violationtype.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{168913BE-CFBF-22A3-7EB1-9531C1A25364}|PBL3\\PBL3.csproj|d:\\onedrive - the university of technology\\pbl3\\pbl3\\page42.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{168913BE-CFBF-22A3-7EB1-9531C1A25364}|PBL3\\PBL3.csproj|solutionrelative:pbl3\\page42.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{168913BE-CFBF-22A3-7EB1-9531C1A25364}|PBL3\\PBL3.csproj|d:\\onedrive - the university of technology\\pbl3\\pbl3\\models\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{168913BE-CFBF-22A3-7EB1-9531C1A25364}|PBL3\\PBL3.csproj|solutionrelative:pbl3\\models\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{168913BE-CFBF-22A3-7EB1-9531C1A25364}|PBL3\\PBL3.csproj|d:\\onedrive - the university of technology\\pbl3\\pbl3\\page43.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{168913BE-CFBF-22A3-7EB1-9531C1A25364}|PBL3\\PBL3.csproj|solutionrelative:pbl3\\page43.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{168913BE-CFBF-22A3-7EB1-9531C1A25364}|PBL3\\PBL3.csproj|d:\\onedrive - the university of technology\\pbl3\\pbl3\\models\\officer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{168913BE-CFBF-22A3-7EB1-9531C1A25364}|PBL3\\PBL3.csproj|solutionrelative:pbl3\\models\\officer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{168913BE-CFBF-22A3-7EB1-9531C1A25364}|PBL3\\PBL3.csproj|d:\\onedrive - the university of technology\\pbl3\\pbl3\\page40.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{168913BE-CFBF-22A3-7EB1-9531C1A25364}|PBL3\\PBL3.csproj|solutionrelative:pbl3\\page40.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{168913BE-CFBF-22A3-7EB1-9531C1A25364}|PBL3\\PBL3.csproj|d:\\onedrive - the university of technology\\pbl3\\pbl3\\models\\vehicle.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{168913BE-CFBF-22A3-7EB1-9531C1A25364}|PBL3\\PBL3.csproj|solutionrelative:pbl3\\models\\vehicle.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{168913BE-CFBF-22A3-7EB1-9531C1A25364}|PBL3\\PBL3.csproj|d:\\onedrive - the university of technology\\pbl3\\pbl3\\page41.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{168913BE-CFBF-22A3-7EB1-9531C1A25364}|PBL3\\PBL3.csproj|solutionrelative:pbl3\\page41.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{168913BE-CFBF-22A3-7EB1-9531C1A25364}|PBL3\\PBL3.csproj|d:\\onedrive - the university of technology\\pbl3\\pbl3\\models\\customer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{168913BE-CFBF-22A3-7EB1-9531C1A25364}|PBL3\\PBL3.csproj|solutionrelative:pbl3\\models\\customer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{168913BE-CFBF-22A3-7EB1-9531C1A25364}|PBL3\\PBL3.csproj|d:\\onedrive - the university of technology\\pbl3\\pbl3\\page41.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{168913BE-CFBF-22A3-7EB1-9531C1A25364}|PBL3\\PBL3.csproj|solutionrelative:pbl3\\page41.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{168913BE-CFBF-22A3-7EB1-9531C1A25364}|PBL3\\PBL3.csproj|d:\\onedrive - the university of technology\\pbl3\\pbl3\\page2.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{168913BE-CFBF-22A3-7EB1-9531C1A25364}|PBL3\\PBL3.csproj|solutionrelative:pbl3\\page2.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{168913BE-CFBF-22A3-7EB1-9531C1A25364}|PBL3\\PBL3.csproj|d:\\onedrive - the university of technology\\pbl3\\pbl3\\page25.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{168913BE-CFBF-22A3-7EB1-9531C1A25364}|PBL3\\PBL3.csproj|solutionrelative:pbl3\\page25.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{168913BE-CFBF-22A3-7EB1-9531C1A25364}|PBL3\\PBL3.csproj|d:\\onedrive - the university of technology\\pbl3\\pbl3\\models\\admin.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{168913BE-CFBF-22A3-7EB1-9531C1A25364}|PBL3\\PBL3.csproj|solutionrelative:pbl3\\models\\admin.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{168913BE-CFBF-22A3-7EB1-9531C1A25364}|PBL3\\PBL3.csproj|d:\\onedrive - the university of technology\\pbl3\\pbl3\\models\\drivinglicense.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{168913BE-CFBF-22A3-7EB1-9531C1A25364}|PBL3\\PBL3.csproj|solutionrelative:pbl3\\models\\drivinglicense.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{168913BE-CFBF-22A3-7EB1-9531C1A25364}|PBL3\\PBL3.csproj|d:\\onedrive - the university of technology\\pbl3\\pbl3\\models\\complaint.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{168913BE-CFBF-22A3-7EB1-9531C1A25364}|PBL3\\PBL3.csproj|solutionrelative:pbl3\\models\\complaint.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{168913BE-CFBF-22A3-7EB1-9531C1A25364}|PBL3\\PBL3.csproj|d:\\onedrive - the university of technology\\pbl3\\pbl3\\models\\notification.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{168913BE-CFBF-22A3-7EB1-9531C1A25364}|PBL3\\PBL3.csproj|solutionrelative:pbl3\\models\\notification.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{168913BE-CFBF-22A3-7EB1-9531C1A25364}|PBL3\\PBL3.csproj|d:\\onedrive - the university of technology\\pbl3\\pbl3\\page39.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{168913BE-CFBF-22A3-7EB1-9531C1A25364}|PBL3\\PBL3.csproj|solutionrelative:pbl3\\page39.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
     {
-      "Orientation": 1,
+      "Orientation": 0,
       "VerticalTabListWidth": 256,
       "DocumentGroups": [
         {
-          "DockedHeight": 200,
-          "SelectedChildIndex": -1,
+          "DockedWidth": 930,
+          "SelectedChildIndex": 3,
           "Children": [
             {
               "$type": "Bookmark",
@@ -79,192 +67,170 @@
             {
               "$type": "Bookmark",
               "Name": "ST:0:0:{3ae79031-e1bc-11d0-8f78-00a0c9110057}"
-            }
-          ]
-        },
-        {
-          "DockedHeight": 198,
-          "SelectedChildIndex": 2,
-          "Children": [
-            {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{b1e99781-ab81-11d0-b683-00aa00a3ee26}"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "ViolationType.cs",
-              "DocumentMoniker": "D:\\OneDrive - The University of Technology\\PBL3\\PBL3\\Models\\ViolationType.cs",
-              "RelativeDocumentMoniker": "PBL3\\Models\\ViolationType.cs",
-              "ToolTip": "D:\\OneDrive - The University of Technology\\PBL3\\PBL3\\Models\\ViolationType.cs",
-              "RelativeToolTip": "PBL3\\Models\\ViolationType.cs",
-              "ViewState": "AgIAAA8AAAAAAAAAAAAgwBoAAAABAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-04T18:12:17.558Z"
             },
             {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "TrafficSafetyDBContext.cs",
-              "DocumentMoniker": "D:\\OneDrive - The University of Technology\\PBL3\\PBL3\\Models\\TrafficSafetyDBContext.cs",
-              "RelativeDocumentMoniker": "PBL3\\Models\\TrafficSafetyDBContext.cs",
-              "ToolTip": "D:\\OneDrive - The University of Technology\\PBL3\\PBL3\\Models\\TrafficSafetyDBContext.cs",
-              "RelativeToolTip": "PBL3\\Models\\TrafficSafetyDBContext.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAAmAAAAAAAAAA==",
+              "Title": "NotificationBellControl.xaml",
+              "DocumentMoniker": "D:\\OneDrive - The University of Technology\\PBL3\\PBL3\\NotificationBellControl.xaml",
+              "RelativeDocumentMoniker": "PBL3\\NotificationBellControl.xaml",
+              "ToolTip": "D:\\OneDrive - The University of Technology\\PBL3\\PBL3\\NotificationBellControl.xaml*",
+              "RelativeToolTip": "PBL3\\NotificationBellControl.xaml*",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2026-04-07T17:11:17.394Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Province.cs",
+              "DocumentMoniker": "D:\\OneDrive - The University of Technology\\PBL3\\PBL3\\Models\\Province.cs",
+              "RelativeDocumentMoniker": "PBL3\\Models\\Province.cs",
+              "ToolTip": "D:\\OneDrive - The University of Technology\\PBL3\\PBL3\\Models\\Province.cs",
+              "RelativeToolTip": "PBL3\\Models\\Province.cs",
+              "ViewState": "AgIAAAgAAAAAAAAAAAAvwAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-03T03:40:42.08Z",
+              "WhenOpened": "2026-04-07T16:33:47.498Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Page43.xaml.cs",
+              "DocumentMoniker": "D:\\OneDrive - The University of Technology\\PBL3\\PBL3\\Page43.xaml.cs",
+              "RelativeDocumentMoniker": "PBL3\\Page43.xaml.cs",
+              "ToolTip": "D:\\OneDrive - The University of Technology\\PBL3\\PBL3\\Page43.xaml.cs",
+              "RelativeToolTip": "PBL3\\Page43.xaml.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-07T16:06:29.459Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "Page42.xaml.cs",
+              "DocumentMoniker": "D:\\OneDrive - The University of Technology\\PBL3\\PBL3\\Page42.xaml.cs",
+              "RelativeDocumentMoniker": "PBL3\\Page42.xaml.cs",
+              "ToolTip": "D:\\OneDrive - The University of Technology\\PBL3\\PBL3\\Page42.xaml.cs",
+              "RelativeToolTip": "PBL3\\Page42.xaml.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-07T14:57:18.675Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 3,
-              "Title": "TrafficDdContext.cs",
-              "DocumentMoniker": "D:\\OneDrive - The University of Technology\\PBL3\\PBL3\\Models\\TrafficDdContext.cs",
-              "RelativeDocumentMoniker": "PBL3\\Models\\TrafficDdContext.cs",
-              "ToolTip": "D:\\OneDrive - The University of Technology\\PBL3\\PBL3\\Models\\TrafficDdContext.cs",
-              "RelativeToolTip": "PBL3\\Models\\TrafficDdContext.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-04T18:52:01.355Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "TrafficLaw.cs",
-              "DocumentMoniker": "D:\\OneDrive - The University of Technology\\PBL3\\PBL3\\Models\\TrafficLaw.cs",
-              "RelativeDocumentMoniker": "PBL3\\Models\\TrafficLaw.cs",
-              "ToolTip": "D:\\OneDrive - The University of Technology\\PBL3\\PBL3\\Models\\TrafficLaw.cs",
-              "RelativeToolTip": "PBL3\\Models\\TrafficLaw.cs",
-              "ViewState": "AgIAAA4AAAAAAAAAAADwvxUAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-04T16:45:53.228Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "User.cs",
-              "DocumentMoniker": "D:\\OneDrive - The University of Technology\\PBL3\\PBL3\\Models\\User.cs",
-              "RelativeDocumentMoniker": "PBL3\\Models\\User.cs",
-              "ToolTip": "D:\\OneDrive - The University of Technology\\PBL3\\PBL3\\Models\\User.cs",
-              "RelativeToolTip": "PBL3\\Models\\User.cs",
-              "ViewState": "AgIAABcAAAAAAAAAAADwvx8AAAAWAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-03T03:52:05.693Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "AuthenticationService.cs",
-              "DocumentMoniker": "D:\\OneDrive - The University of Technology\\PBL3\\PBL3\\Models\\AuthenticationService.cs",
-              "RelativeDocumentMoniker": "PBL3\\Models\\AuthenticationService.cs",
-              "ToolTip": "D:\\OneDrive - The University of Technology\\PBL3\\PBL3\\Models\\AuthenticationService.cs",
-              "RelativeToolTip": "PBL3\\Models\\AuthenticationService.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABAAAABGAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-03T03:21:22.425Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 6,
-              "Title": "Officer.cs",
-              "DocumentMoniker": "D:\\OneDrive - The University of Technology\\PBL3\\PBL3\\Models\\Officer.cs",
-              "RelativeDocumentMoniker": "PBL3\\Models\\Officer.cs",
-              "ToolTip": "D:\\OneDrive - The University of Technology\\PBL3\\PBL3\\Models\\Officer.cs",
-              "RelativeToolTip": "PBL3\\Models\\Officer.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-03T03:18:07.968Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 12,
-              "Title": "Complaint.cs",
-              "DocumentMoniker": "D:\\OneDrive - The University of Technology\\PBL3\\PBL3\\Models\\Complaint.cs",
-              "RelativeDocumentMoniker": "PBL3\\Models\\Complaint.cs",
-              "ToolTip": "D:\\OneDrive - The University of Technology\\PBL3\\PBL3\\Models\\Complaint.cs",
-              "RelativeToolTip": "PBL3\\Models\\Complaint.cs",
-              "ViewState": "AgIAABUAAAAAAAAAAAAhwCgAAAAhAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-03T03:09:52.115Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 11,
-              "Title": "DrivingLicense.cs",
-              "DocumentMoniker": "D:\\OneDrive - The University of Technology\\PBL3\\PBL3\\Models\\DrivingLicense.cs",
-              "RelativeDocumentMoniker": "PBL3\\Models\\DrivingLicense.cs",
-              "ToolTip": "D:\\OneDrive - The University of Technology\\PBL3\\PBL3\\Models\\DrivingLicense.cs",
-              "RelativeToolTip": "PBL3\\Models\\DrivingLicense.cs",
-              "ViewState": "AgIAACQAAAAAAAAAAAAEwDMAAAAFAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-03T03:09:01.73Z"
+              "Title": "Page42.xaml",
+              "DocumentMoniker": "D:\\OneDrive - The University of Technology\\PBL3\\PBL3\\Page42.xaml",
+              "RelativeDocumentMoniker": "PBL3\\Page42.xaml",
+              "ToolTip": "D:\\OneDrive - The University of Technology\\PBL3\\PBL3\\Page42.xaml",
+              "RelativeToolTip": "PBL3\\Page42.xaml",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2026-04-07T14:57:17.675Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 10,
-              "Title": "Admin.cs",
-              "DocumentMoniker": "D:\\OneDrive - The University of Technology\\PBL3\\PBL3\\Models\\Admin.cs",
-              "RelativeDocumentMoniker": "PBL3\\Models\\Admin.cs",
-              "ToolTip": "D:\\OneDrive - The University of Technology\\PBL3\\PBL3\\Models\\Admin.cs",
-              "RelativeToolTip": "PBL3\\Models\\Admin.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAABAAAAAAAAAA==",
+              "Title": "Page39.xaml.cs",
+              "DocumentMoniker": "D:\\OneDrive - The University of Technology\\PBL3\\PBL3\\Page39.xaml.cs",
+              "RelativeDocumentMoniker": "PBL3\\Page39.xaml.cs",
+              "ToolTip": "D:\\OneDrive - The University of Technology\\PBL3\\PBL3\\Page39.xaml.cs",
+              "RelativeToolTip": "PBL3\\Page39.xaml.cs",
+              "ViewState": "AgIAAEsAAAAAAAAAAIBJwAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-03T03:35:04.982Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 7,
-              "Title": "Vehicle.cs",
-              "DocumentMoniker": "D:\\OneDrive - The University of Technology\\PBL3\\PBL3\\Models\\Vehicle.cs",
-              "RelativeDocumentMoniker": "PBL3\\Models\\Vehicle.cs",
-              "ToolTip": "D:\\OneDrive - The University of Technology\\PBL3\\PBL3\\Models\\Vehicle.cs",
-              "RelativeToolTip": "PBL3\\Models\\Vehicle.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-03T04:15:25.135Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 13,
-              "Title": "Notification.cs",
-              "DocumentMoniker": "D:\\OneDrive - The University of Technology\\PBL3\\PBL3\\Models\\Notification.cs",
-              "RelativeDocumentMoniker": "PBL3\\Models\\Notification.cs",
-              "ToolTip": "D:\\OneDrive - The University of Technology\\PBL3\\PBL3\\Models\\Notification.cs",
-              "RelativeToolTip": "PBL3\\Models\\Notification.cs",
-              "ViewState": "AgIAABsAAAAAAAAAAAApwB8AAAAdAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-03T03:11:00.474Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 8,
-              "Title": "Customer.cs",
-              "DocumentMoniker": "D:\\OneDrive - The University of Technology\\PBL3\\PBL3\\Models\\Customer.cs",
-              "RelativeDocumentMoniker": "PBL3\\Models\\Customer.cs",
-              "ToolTip": "D:\\OneDrive - The University of Technology\\PBL3\\PBL3\\Models\\Customer.cs",
-              "RelativeToolTip": "PBL3\\Models\\Customer.cs",
-              "ViewState": "AgIAAAIAAAAAAAAAAAAwwA0AAAAfAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-03T04:00:16.274Z"
+              "WhenOpened": "2026-04-07T14:28:34.143Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 9,
-              "Title": "Page2.xaml.cs",
-              "DocumentMoniker": "D:\\OneDrive - The University of Technology\\PBL3\\PBL3\\Page2.xaml.cs",
-              "RelativeDocumentMoniker": "PBL3\\Page2.xaml.cs",
-              "ToolTip": "D:\\OneDrive - The University of Technology\\PBL3\\PBL3\\Page2.xaml.cs",
-              "RelativeToolTip": "PBL3\\Page2.xaml.cs",
-              "ViewState": "AgIAAE0AAAAAAAAAAAAswHYAAAAoAAAAAAAAAA==",
+              "Title": "Page25.xaml.cs",
+              "DocumentMoniker": "D:\\OneDrive - The University of Technology\\PBL3\\PBL3\\Page25.xaml.cs",
+              "RelativeDocumentMoniker": "PBL3\\Page25.xaml.cs",
+              "ToolTip": "D:\\OneDrive - The University of Technology\\PBL3\\PBL3\\Page25.xaml.cs",
+              "RelativeToolTip": "PBL3\\Page25.xaml.cs",
+              "ViewState": "AgIAAIUAAAAAAAAAAIBJwAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-03T03:41:22.215Z"
+              "WhenOpened": "2026-04-07T14:27:32.63Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "Page40.xaml.cs",
+              "DocumentMoniker": "D:\\OneDrive - The University of Technology\\PBL3\\PBL3\\Page40.xaml.cs",
+              "RelativeDocumentMoniker": "PBL3\\Page40.xaml.cs",
+              "ToolTip": "D:\\OneDrive - The University of Technology\\PBL3\\PBL3\\Page40.xaml.cs",
+              "RelativeToolTip": "PBL3\\Page40.xaml.cs",
+              "ViewState": "AgIAAJMAAAAAAAAAAAAowAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-07T14:27:20.428Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "Page43.xaml",
+              "DocumentMoniker": "D:\\OneDrive - The University of Technology\\PBL3\\PBL3\\Page43.xaml",
+              "RelativeDocumentMoniker": "PBL3\\Page43.xaml",
+              "ToolTip": "D:\\OneDrive - The University of Technology\\PBL3\\PBL3\\Page43.xaml",
+              "RelativeToolTip": "PBL3\\Page43.xaml",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2026-04-07T14:21:38.412Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "Page41.xaml.cs",
+              "DocumentMoniker": "D:\\OneDrive - The University of Technology\\PBL3\\PBL3\\Page41.xaml.cs",
+              "RelativeDocumentMoniker": "PBL3\\Page41.xaml.cs",
+              "ToolTip": "D:\\OneDrive - The University of Technology\\PBL3\\PBL3\\Page41.xaml.cs",
+              "RelativeToolTip": "PBL3\\Page41.xaml.cs",
+              "ViewState": "AgIAALgAAAAAAAAAAAD4vwAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-07T14:17:37.184Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "Page41.xaml",
+              "DocumentMoniker": "D:\\OneDrive - The University of Technology\\PBL3\\PBL3\\Page41.xaml",
+              "RelativeDocumentMoniker": "PBL3\\Page41.xaml",
+              "ToolTip": "D:\\OneDrive - The University of Technology\\PBL3\\PBL3\\Page41.xaml",
+              "RelativeToolTip": "PBL3\\Page41.xaml",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2026-04-07T08:08:09.705Z",
+              "EditorCaption": ""
             }
           ]
         },
         {
-          "DockedHeight": 50,
+          "DockedWidth": 740,
           "SelectedChildIndex": -1,
           "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{74946827-37a0-11d2-a273-00c04f8ef4ff}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{b1e99781-ab81-11d0-b683-00aa00a3ee26}"
+            }
+          ]
+        },
+        {
+          "DockedWidth": 204,
+          "SelectedChildIndex": -1,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:1:0:{d212f56b-c48a-434c-a121-1c5d80b59b9f}"
+            },
             {
               "$type": "Bookmark",
               "Name": "ST:0:0:{34e76e81-ee4a-11d0-ae2e-00a0c90fffc3}"

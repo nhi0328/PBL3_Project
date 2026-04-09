@@ -1,0 +1,195 @@
+﻿
+Line                                                                                                                                                           
+----                                                                                                                                                           
+        // C�c bi?n n�y s? gi�p giao di?n T? �?NG ?N d?ng ch? n?u lu?t �� kh�ng �p d?ng cho xe ��                                                              
+        public bool HasTruDiem => !string.IsNullOrEmpty(TruDiem) && !TruDiem.StartsWith("Tr? 0", StringComparison.OrdinalIgnoreCase) && !TruDiem.StartsWith(...
+        // Constructor m?c �?nh                                                                                                                                
+            // PH�N QUY?N HI?N TH? MENU                                                                                                                        
+                // C�ng d�n: ?n c�c n�t chuy?n giao di?n v� thanh k? ph?                                                                                       
+                // C�n b?: ��?c xem giao di?n Kh�ch h�ng                                                                                                       
+                // Qu?n tr? vi�n: Hi?n t?t c? c�c l?a ch?n �? ki?m tra                                                                                         
+            // M? Menu                                                                                                                                         
+            // Ki?m tra n?u c� t�n th? g�n v�o TextBlock                                                                                                       
+                MessageBox.Show("L?i k?t n?i CSDL: " + ex.Message);                                                                                            
+        //Chuy?n qua trang Tra c?u nhanh                                                                                                                       
+            NavigationService.Navigate(_currentUser != null ? new Page12(_currentUser) : new Page12());                                                        
+        // Chuy?n trang Tra c?u lu?t                                                                                                                           
+            NavigationService.Navigate(_currentUser != null ? new Page13(_currentUser) : new Page13());                                                        
+        // Chuy?n trang L?p bi�n b?n vi ph?m                                                                                                                   
+            NavigationService.Navigate(_currentUser != null ? new Page14(_currentUser) : new Page14());                                                        
+        //Chuy?n trang Qu?n l? t�i kho?n                                                                                                                       
+            NavigationService.Navigate(_currentUser != null ? new Page15(_currentUser) : new Page15());                                                        
+        // chuy?n trang Ph?n �nh                                                                                                                               
+            NavigationService.Navigate(_currentUser != null ? new Page16(_currentUser) : new Page16());                                                        
+        // ��ng xu?t                                                                                                                                           
+        // X? l? s? ki?n n�t T?m ki?m                                                                                                                          
+                    string combinedText = $"{(l.TenLoi != null ? RemoveDiacritics(l.TenLoi) : "")} " +                                                         
+                                          $"{(l.PhatTienOto != null ? RemoveDiacritics(l.PhatTienOto) : "")} " +                                               
+                                          $"{(l.PhatTienXeMay != null ? RemoveDiacritics(l.PhatTienXeMay) : "")} " +                                           
+                                          $"{(l.TruDiem != null ? RemoveDiacritics(l.TruDiem) : "")}";                                                         
+                    // Ki?m tra t?t c? c�c t? kh�a (kh�ng ph�n bi?t d?u/hoa th�?ng) c� m?t trong n?i dung lu?t                                                 
+        public string HangXe { get; set; } // C?t m?i                                                                                                          
+        public string HinhAnh { get; set; } // C?t m?i (ch?a path ?nh)                                                                                         
+        // Constructor nh?n th�ng tin User                                                                                                                     
+                        MessageBox.Show("L?i t?i d? li?u: " + ex.Message);                                                                                     
+                string filterValue = (cmbFilter?.SelectedItem as ComboBoxItem)?.Content?.ToString() ?? "T?t c?";                                               
+                // L?c theo t?m ki?m                                                                                                                           
+                // L?c tr?ng th�i                                                                                                                              
+                if (filterValue == "Ch�a x? l?")                                                                                                               
+                else if (filterValue == "�? x? l?")                                                                                                            
+                // S?p x?p                                                                                                                                     
+                else if (filterValue == "M?i nh?t")                                                                                                            
+                else // T?t c?, Ch�a x? l?, �? x? l? (M?c �?nh)                                                                                                
+                    // �u ti�n ch�a x? l? l�n tr�?c n?u ch?n "T?t c?"                                                                                          
+                    if (filterValue == "T?t c?")                                                                                                               
+                // ��nh l?i s? th? t? (STT)                                                                                                                    
+                NavigationService?.Navigate(_currentUser != null ? new Page22(_currentUser, recordId) : new Page22(recordId));                                 
+            NavigationService?.Navigate(_currentUser != null ? new Page23(_currentUser) : new Page23());                                                       
+            NavigationService?.Navigate(_currentUser != null ? new Page12(_currentUser) : new Page12());                                                       
+            NavigationService?.Navigate(_currentUser != null ? new Page13(_currentUser) : new Page13());                                                       
+        // Chuy?n trang LBBVP                                                                                                                                  
+            NavigationService?.Navigate(_currentUser != null ? new Page14(_currentUser) : new Page14());                                                       
+            NavigationService?.Navigate(_currentUser != null ? new Page15(_currentUser) : new Page15());                                                       
+            NavigationService?.Navigate(_currentUser != null ? new Page16(_currentUser) : new Page16());                                                       
+        // Bi?n l�u User �ang ��ng nh?p (N�n truy?n t? trang ��ng nh?p qua)                                                                                    
+                            NgaySinh = u.Dob.HasValue ? u.Dob.Value.ToString("dd/MM/yyyy") : "",                                                               
+                MessageBox.Show("L?i t?i d? li?u: " + ex.Message);                                                                                             
+                NavigationService?.Navigate(_currentUser != null ? new Page24(_currentUser, cccd) : new Page24(cccd));                                         
+        // Bi?n lưu User đang đăng nh?p (Nên truy?n t? trang Đăng nh?p qua)                                                                                    
+        // Constructor m?c đ?nh                                                                                                                                
+        // Constructor nh?n thông tin User                                                                                                                     
+            // Ki?m tra n?u có tên th? gán vào TextBlock                                                                                                       
+        private void LoadData(string searchText = "", string filter = "T?t c?")                                                                                
+                // L?c theo ngư?i dùng n?u là công dân                                                                                                         
+                if (filter == "Tai n?n")                                                                                                                       
+                    query = query.Where(c => c.Content.Contains("Tai n?n"));                                                                                   
+                else if (filter == "Vi ph?m")                                                                                                                  
+                    query = query.Where(c => c.Content.Contains("Vi ph?m") || c.Content.Contains("L?i"));                                                      
+                    LoaiPhanAnh = c.Content != null && c.Content.Contains("Tai n?n") ? "Tai n?n giao thông" :                                                  
+                                 (c.Content != null && (c.Content.Contains("vi ph?m") || c.Content.Contains("L?i")) ? "L?i vi ph?m giao thông" : "Bi?n báo/K...
+                    SubmittedDate = c.Ticket != null ? c.Ticket.ViolationTime : DateTime.Now,                                                                  
+                    Status = (c.Status == "0") ? "Chưa xử lý" : "Đã xử lý",                                                                                    
+                    StatusColor = (c.Status == "0") ? "#C62828" : "#2E7D32"                                                                                    
+                MessageBox.Show("L?i t?i d? li?u ph?n ánh: " + ex.Message);                                                                                    
+            if (txtSearch.Text == "T?m ki?m ph?n ánh...")                                                                                                      
+                txtSearch.Text = "T?m ki?m ph?n ánh...";                                                                                                       
+            string filter = (cbFilter.SelectedItem as ComboBoxItem)?.Content.ToString() ?? "T?t c?";                                                           
+                string filter = (cbFilter.SelectedItem as ComboBoxItem)?.Content.ToString() ?? "T?t c?";                                                       
+            // PHÂN QUY?N HI?N TH? MENU                                                                                                                        
+                // Công dân: ?n các nút chuy?n giao di?n và thanh k? ph?                                                                                       
+                // Cán b?: Đư?c xem giao di?n Khách hàng                                                                                                       
+                // Qu?n tr? viên: Hi?n t?t c? các l?a ch?n đ? ki?m tra                                                                                         
+        //Chuy?n trang Qu?n l? tài kho?n                                                                                                                       
+        // chuy?n trang Ph?n ánh                                                                                                                               
+        // Đăng xu?t                                                                                                                                           
+        private readonly int? _recordId;                                                                                                                       
+        // X? l? s? ki?n n�t Quay l?i                                                                                                                          
+                MessageBox.Show("Kh�ng t?m th?y th�ng tin chi ti?t vi ph?m.");                                                                                 
+            txtStatusValue.Foreground = detail.IsProcessed ? Brushes.ForestGreen : Brushes.Firebrick;                                                          
+                Uri? evidenceUri = BuildEvidenceUri(detail.EvidenceImagePath);                                                                                 
+        private static Uri? BuildEvidenceUri(string evidenceImagePath)                                                                                         
+            if (Uri.TryCreate(evidenceImagePath, UriKind.Absolute, out Uri? absoluteUri))                                                                      
+            return Uri.TryCreate(evidenceImagePath, UriKind.Relative, out Uri? relativeUri)                                                                    
+                ? relativeUri                                                                                                                                  
+            // X? l? hi?n th? m?c ph?t                                                                                                                         
+                txtPhatXeMay.Text = $"Ph?t ti?n t? {_currentLuat.PhatTienXeMay} �?i v?i ng�?i �i?u khi?n xe m� t� g?n m�y";                                    
+                txtPhatOto.Text = $"Ph?t ti?n t? {_currentLuat.PhatTienOto} �?i v?i ng�?i �i?u khi?n xe � t�";                                                 
+                NavigationService.Navigate(_currentUser != null ? new Page13(_currentUser) : new Page13());                                                    
+            MessageBoxResult result = MessageBox.Show($"B?n c� ch?c ch?n mu?n xo� lu?t '{_currentLuat.TenLoi}' kh�ng?", "X�c nh?n xo�", MessageBoxButton.Yes...
+                                MessageBox.Show("�? xo� lu?t th�nh c�ng.", "Th�ng b�o", MessageBoxButton.OK, MessageBoxImage.Information);                     
+                                // Quay l?i trang tr�?c sau khi xo�                                                                                            
+                                    NavigationService.Navigate(_currentUser != null ? new Page13(_currentUser) : new Page13());                                
+                                MessageBox.Show("Kh�ng t?m th?y lu?t �? xo�.", "L?i", MessageBoxButton.OK, MessageBoxImage.Error);                             
+                    MessageBox.Show("L?i khi xo� CSDL: " + ex.Message, "L?i", MessageBoxButton.OK, MessageBoxImage.Error);                                     
+                noidung += $"- Ph?t ti?n t? {txtMucPhatXeMay.Text} �?ng �?i v?i ng�?i �i?u khi?n xe m� t� g?n m�y\n";                                          
+                noidung += $"- Ph?t ti?n t? {txtMucPhatOto.Text} �?ng �?i v?i ng�?i �i?u khi?n xe � t�\n";                                                     
+                noidung += $"- Tr? {txtTruDiem.Text} �i?m b?ng l�i xe";                                                                                        
+                MessageBox.Show("Vui l?ng nh?p Ti�u �? lu?t.", "Th�ng b�o", MessageBoxButton.OK, MessageBoxImage.Warning);                                     
+                                // Xo� lu?t c? (chi ti?t theo t�n lu?t)                                                                                        
+                            // Th�m m?i xe m�y                                                                                                                 
+                            // Th�m m?i � t�                                                                                                                   
+                            MessageBox.Show("�? l�u th�ng tin lu?t th�nh c�ng!", "Th�ng b�o", MessageBoxButton.OK, MessageBoxImage.Information);               
+                            MessageBox.Show("L?i khi l�u v�o CSDL: " + ex.Message, "L?i", MessageBoxButton.OK, MessageBoxImage.Error);                         
+                MessageBox.Show("L?i k?t n?i CSDL: " + ex.Message, "L?i", MessageBoxButton.OK, MessageBoxImage.Error);                                         
+            string categoryId = vehicleType == "Xe m�y" ? "2" : "1";                                                                                           
+                string points = string.IsNullOrWhiteSpace(txtTruDiem.Text) ? "Tr? 0 �i?m" : $"Tr? {txtTruDiem.Text} �i?m";                                     
+                        MessageBox.Show("�? x�c nh?n x? l? th�nh c�ng!", "Th�ng b�o", MessageBoxButton.OK, MessageBoxImage.Information);                       
+                MessageBox.Show($"L?i khi c?p nh?t tr?ng th�i: {ex.Message}", "L?i", MessageBoxButton.OK, MessageBoxImage.Error);                              
+            NavigationService?.Navigate(_currentUser != null ? new Page23(_currentUser, _recordId.Value) : new Page23(_recordId.Value));                       
+        private string? _selectedEvidenceImagePath;                                                                                                            
+                MessageBox.Show("Vui l?ng nh?p �?y �? th�ng tin vi ph?m.");                                                                                    
+                MessageBox.Show("Vui l?ng ch?n �t nh?t m?t l?i vi ph?m.");                                                                                     
+                MessageBox.Show("Ng�y vi ph?m kh�ng h?p l?. Vui l?ng nh?p theo �?nh d?ng dd/MM/yyyy.");                                                        
+                MessageBox.Show("Gi? vi ph?m kh�ng h?p l?. Vui l?ng nh?p theo �?nh d?ng HH:mm.");                                                              
+                Vehicle? vehicle = db.Vehicles.FirstOrDefault(v => v.LicensePlate == licensePlate);                                                            
+                string ownerName = "Ch�a c?p nh?t";                                                                                                            
+                    TrafficLaw? law = FindTrafficLawForVehicleType(db, violation, vehicleType);                                                                
+                MessageBox.Show("�? l�u vi ph?m v�o c� s? d? li?u.");                                                                                          
+                NavigationService?.Navigate(_currentUser != null ? new Page14(_currentUser) : new Page14());                                                   
+                MessageBox.Show("Kh�ng th? l�u vi ph?m: " + ex.Message);                                                                                       
+        private void CmbViolationType_DropDownOpened(object? sender, EventArgs e)                                                                              
+                ? int.MaxValue                                                                                                                                 
+                ? 100 + bestDistance                                                                                                                           
+                    int cost = source[i - 1] == target[j - 1] ? 0 : 1;                                                                                         
+        private static TextBox? GetEditableComboBoxTextBox(ComboBox comboBox)                                                                                  
+            string? match = _availableTrafficLawViolations                                                                                                     
+        private void AddSelectedViolation(string? violation)                                                                                                   
+                Title = "Ch?n ?nh vi ph?m"                                                                                                                     
+                txtEvidenceFileName.Text = "+ T?i h?nh ?nh l�n";                                                                                               
+                txtEvidenceStatus.Text = "T?i �a 5 ?nh";                                                                                                       
+            txtEvidenceStatus.Text = "Nh?n �? ch?n l?i ?nh";                                                                                                   
+            Uri? previewUri = BuildEvidencePreviewUri(_selectedEvidenceImagePath);                                                                             
+        private static Uri? BuildEvidencePreviewUri(string evidenceImagePath)                                                                                  
+                "Xe t?i" => "� t�",                                                                                                                            
+                "Xe t?i" => new List<string> { "Xe t?i", "� t�" },                                                                                             
+        private static TrafficLaw? FindTrafficLawForVehicleType(TrafficSafetyDBContext db, string violation, string vehicleType)                               
+            TrafficLaw? law = db.Set<TrafficLaw>()                                                                                                             
+            SetComboBoxSelection(cmbVehicleType, detail.VehicleType == "� t�" ? "Xe � t�" : detail.VehicleType);                                               
+            txtLicensePlate.Text = detail.HeaderTitle.Replace("Ph��ng ti?n ", string.Empty);                                                                   
+                                    cccd = reader.IsDBNull(0) ? "" : reader.GetString(0);                                                                      
+                                    name = reader.IsDBNull(1) ? "" : reader.GetString(1);                                                                      
+                                    dob = reader.IsDBNull(2) ? "" : reader.GetDateTime(2).ToString("dd/MM/yyyy");                                              
+                                    gender = reader.IsDBNull(3) ? "" : reader.GetString(3);                                                                    
+                                    phone = reader.IsDBNull(4) ? "" : reader.GetString(4);                                                                     
+                                    email = reader.IsDBNull(5) ? "" : reader.GetString(5);                                                                     
+                                    imagePath = reader.IsDBNull(6) ? "" : reader.GetString(6);                                                                 
+                MessageBox.Show("L?i t?i chi ti?t t�i kho?n: " + ex.Message);                                                                                  
+                MessageBox.Show("Vui l?ng nh?p m?t kh?u m?i.");                                                                                                
+                MessageBox.Show("C?p nh?t m?t kh?u th�nh c�ng!");                                                                                              
+                MessageBox.Show("L?i c?p nh?t m?t kh?u: " + ex.Message);                                                                                       
+            NavigationService.Navigate(_currentUser != null ? new Page25(_currentUser, _targetCccd) : new Page25(_targetCccd));                                
+                NavigationService.Navigate(_currentUser != null ? new Page15(_currentUser) : new Page15());                                                    
+        public string IssuePlace { get; set; } = "�� N?ng";                                                                                                    
+                if (string.IsNullOrWhiteSpace(Status)) return "B? thu h?i";                                                                                    
+                if (s.Contains("�ang ho?t �?ng") || s.Contains("ho?t �?ng") || s == "active") return "�ang ho?t �?ng";                                         
+                if (s.Contains("h?t h?n") || s == "expired") return "H?t h?n";                                                                                 
+                return "B? thu h?i";                                                                                                                           
+                if (text == "�ang ho?t �?ng") return new SolidColorBrush(Color.FromRgb(46, 125, 50));                                                          
+                if (text == "H?t h?n") return new SolidColorBrush(Color.FromRgb(255, 152, 0));                                                                 
+                if (text == "�ang ho?t �?ng")                                                                                                                  
+                if (text == "H?t h?n")                                                                                                                         
+                                        LicenseClass = reader.IsDBNull(0) ? "" : reader.GetString(0),                                                          
+                                        LicenseNo = reader.IsDBNull(1) ? "" : reader.GetString(1),                                                             
+                                        Points = reader.IsDBNull(2) ? 0 : reader.GetInt32(2),                                                                  
+                                        Status = reader.IsDBNull(5) ? "" : reader.GetString(5)                                                                 
+                                        item.ExpiryDateStr = "Kh�ng th?i h?n";                                                                                 
+                MessageBox.Show("L?i t?i chi ti?t GPLX: " + ex.Message);                                                                                       
+            MessageBox.Show("Ch?c n�ng th�m GPLX �ang ��?c c?p nh?t.");                                                                                        
+                var result = MessageBox.Show($"B?n c� ch?c ch?n mu?n xo� GPLX s? {licenseNo}?", "X�c nh?n", MessageBoxButton.YesNo, MessageBoxImage.Warning);  
+                        MessageBox.Show("L?i khi xo� GPLX: " + ex.Message);                                                                                    
+                NavigationService.Navigate(_currentUser != null ? new Page24(_currentUser, _targetCccd) : new Page24(_targetCccd));                            
+                    txtLoaiPhanAnh.Text = complaint.Title != null && complaint.Title.Contains("Tai nạn") ? "Tai nạn giao thông" :                              
+                                         (complaint.Title != null && (complaint.Title.Contains("vi phạm") || complaint.Title.Contains("Lỗi")) ? "Vi phạm gia...
+                            txtImageName.Text = "Không th? t?i ?nh";                                                                                           
+                        txtImageName.Text = "Không có h?nh ?nh";                                                                                               
+                            txtPhanHoi.Text = "Thông qua h?nh ?nh ngư?i dân cung c?p, cơ quan ch?c năng đ? l?p biên b?n x? ph?t phương ti?n trên v?i l?i tươ...
+                            txtPhanHoi.Text = "N?i dung ph?n h?i";                                                                                             
+                MessageBox.Show("L?i t?i chi ti?t: " + ex.Message);                                                                                            
+            if (!txtPhanHoi.IsReadOnly && txtPhanHoi.Text == "N?i dung ph?n h?i")                                                                              
+                txtPhanHoi.Text = "N?i dung ph?n h?i";                                                                                                         
+                    complaint.Status = "Đ? x? l?";                                                                                                             
+                    string responseText = txtPhanHoi.Text == "N?i dung ph?n h?i" ? "" : txtPhanHoi.Text;                                                       
+                    MessageBox.Show("Đ? xác nh?n x? l? thành công!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);                           
+                MessageBox.Show("L?i khi x? l?: " + ex.Message);                                                                                               
+
+

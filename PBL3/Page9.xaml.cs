@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Windows;
@@ -17,38 +17,30 @@ namespace PBL3
 {
     public partial class Page9 : Page
     {
+        private readonly Customer _currentUser;
+
         // Constructor mặc định
         public Page9()
         {
             InitializeComponent();
         }
 
-        // Biến lưu User đang đăng nhập (Nên truyền từ trang Đăng nhập qua)
-        private User _currentUser;
-
-        public Page9(User user)
+        // 2. Constructor nhận thông tin Customer từ trang khác truyền tới
+        public Page9(Customer user) : this()
         {
-            InitializeComponent();
             _currentUser = user;
 
-            if (_currentUser != null)
+            // Hiển thị tên người dùng góc trên bên phải
+            if (_currentUser != null && txtUserName != null)
             {
                 txtUserName.Text = _currentUser.FullName;
             }
         }
-
         private void MenuInfo_Click(object sender, RoutedEventArgs e)
         {
-            //NavigationService.Navigate(new Page());
+            NavigationService.Navigate(new Page7(_currentUser));
         }
-        private void MenuAdminUI_Click(object sender, RoutedEventArgs e)
-        {
-            NavigationService.Navigate(new Page9());
-        }
-        private void MenuOfficerUI_Click(object sender, RoutedEventArgs e)
-        {
-            //NavigationService.Navigate(new Page10());
-        }
+       
         private void MenuLogout_Click(object sender, RoutedEventArgs e)
         {
             NavigationService.Navigate(new Page1());
@@ -56,35 +48,7 @@ namespace PBL3
 
         private void UserButton_Click(object sender, RoutedEventArgs e)
         {
-            if (_currentUser == null) return;
-
-            // PHÂN QUYỀN HIỂN THỊ MENU
-
-            if (_currentUser is Customer)
-            {
-                // Công dân: Ẩn các nút chuyển giao diện và thanh kẻ phụ
-                miAdminUI.Visibility = Visibility.Collapsed;
-                miOfficerUI.Visibility = Visibility.Collapsed;
-                sep1.Visibility = Visibility.Collapsed;
-            }
-            else if (_currentUser is Officer)
-            {
-                // Cán bộ: Được xem giao diện Khách hàng
-                miAdminUI.Visibility = Visibility.Visible;
-                miOfficerUI.Visibility = Visibility.Collapsed;
-                sep1.Visibility = Visibility.Visible;
-            }
-            else if (_currentUser is Admin)
-            {
-                // Quản trị viên: Hiện tất cả các lựa chọn để kiểm tra
-                miAdminUI.Visibility = Visibility.Visible;
-                miOfficerUI.Visibility = Visibility.Visible;
-                sep1.Visibility = Visibility.Visible;
-            }
-
-            // Mở Menu
-            Button btn = sender as Button;
-            if (btn != null && btn.ContextMenu != null)
+            if (sender is Button btn && btn.ContextMenu != null)
             {
                 btn.ContextMenu.PlacementTarget = btn;
                 btn.ContextMenu.Placement = System.Windows.Controls.Primitives.PlacementMode.Bottom;
@@ -92,20 +56,6 @@ namespace PBL3
             }
         }
 
-        // Constructor nhận thông tin User
-        public Page9(string tenNguoiDung) : this()
-        {
-            // Kiểm tra nếu có tên thì gán vào TextBlock
-            if (!string.IsNullOrEmpty(tenNguoiDung))
-            {
-                txtUserName.Text = tenNguoiDung;
-            }
-        }
-
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
 
         //Chuyển qua trang Tra cứu nhanh
         private void btnTraCuuNhanh_Click(object sender, RoutedEventArgs e)
@@ -147,7 +97,7 @@ namespace PBL3
         private void btnSearch_Click(object sender, RoutedEventArgs e)
         {
             string keyword = txtIdentifier.Text;
-            MessageBox.Show($"Đang tìm kiếm luật với từ khóa: {keyword}");
+            new CustomMessageBox($"Đang tìm kiếm luật với từ khóa: {keyword}").ShowDialog();
             // Viết logic tìm kiếm SQL ở đây...
         }
     }

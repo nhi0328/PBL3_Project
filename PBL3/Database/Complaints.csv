@@ -1,0 +1,101 @@
+ComplaintId,CCCD,Title,ContentDetail,Status,SubmittedDate,ReportedLicensePlate,OfficerBadgeNumber
+1,68901234567,"Vượt đèn đỏ","Xe Toyota Innova vượt đèn đỏ tại ngã tư Hàng Xanh.","Đã xử lý",05/01/2026,96C-681.02,CA1245
+2,28901234567,"Sử dụng điện thoại","Tài xế Mazda CX-8 nhắn tin khi đang lái xe.","Đã xử lý",05/01/2026,56C-281.02,CA7364
+3,56789012345,"Nồng độ cồn","Xe Ford Everest có dấu hiệu say xỉn tại phố Xã Đàn.","Đã xử lý",06/01/2026,84C-369.80,CA1234
+4,92345678901,"Sai làn đường","VinFast VF 5 chạy vào làn xe máy trên cầu Rồng.","Chưa xử lý",07/01/2026,97C-792.13,-
+5,12345678901,"Vượt đèn đỏ (XM)","Xe máy Wave Alpha vượt đèn đỏ vòng xoay Quách Thị Trang.","Đã xử lý",07/01/2026,43D-999.99,CA8124
+6,52345678901,"Không mũ bảo hiểm","Người đi xe Future 125 không đội mũ bảo hiểm.","Chưa xử lý",08/01/2026,86C-581.02,-
+7,72345678901,"Dùng tai nghe","Tài xế Air Blade đeo tai nghe khi lái xe trên cầu Nhật Tân.","Đã xử lý",08/01/2026,94C-469.80,CA6641
+8,32345678901,"Lạng lách","Xe Sirius lạng lách đánh võng trên đường Lê Lợi.","Đã xử lý",09/01/2026,43D-669.80,CA9891
+9,9012345678,"Xe không biển số","VinFast Klara S không biển số tại Hồ Gươm.","Đã xử lý",10/01/2026,48C-303.24,CA1111
+10,49012345678,"Mở cửa xe nguy hiểm","Xe Mazda mở cửa không quan sát trên đường Đồng Khởi.","Đã xử lý",10/01/2026,71C-836.57,CA2312
+11,12345678911,"Ngược chiều","Honda Vision đi ngược chiều đường Nguyễn Văn Linh.","Đã xử lý",11/01/2026,51D-936.57,CA1245
+12,12345678912,"Đỗ xe cấm","Toyota Vios đỗ xe nơi có biển cấm tại Hải Phòng.","Chưa xử lý",12/01/2026,59C-736.57,-
+13,12345678913,"Pô độ ồn","Exciter 150 nẹt pô gây ồn ào tại Cần Thơ.","Đã xử lý",12/01/2026,61D-536.57,CA7364
+14,12345678914,"Che biển số","Winner X dùng khẩu trang che biển số trên QL1A.","Đã xử lý",13/01/2026,63D-436.57,CA1234
+15,12345678915,"Bốc đầu","Suzuki Raider bốc đầu xe tại Bình Dương.","Đã xử lý",14/01/2026,65D-236.57,CA8124
+16,12345678916,"Dàn hàng ngang","3 xe máy Grande đi dàn hàng ngang trên đường Hùng Vương.","Chưa xử lý",15/01/2026,67D-136.57,-
+17,12345678917,"Cồn xe máy","Honda SH lạng lách nghi do uống rượu tại Vũng Tàu.","Đã xử lý",15/01/2026,71D-036.57,CA6641
+18,12345678918,"Pha trong đô thị","Vespa Sprint bật đèn pha gây chói mắt người đối diện.","Đã xử lý",16/01/2026,73D-836.57,CA9891
+19,12345678919,"Hàng cồng kềnh","Honda Lead chở hàng quá khổ tại Chợ Đồng Xuân.","Chưa xử lý",17/01/2026,75D-636.57,-
+20,12345678920,"Thiếu đèn","Xe Janus không bật đèn chiếu sáng sau 19h tại Nha Trang.","Đã xử lý",18/01/2026,77D-436.57,CA1111
+21,12345678921,"Rơi vãi hàng","Ford Ranger để vật liệu rơi xuống cầu Phú Mỹ.","Đã xử lý",19/01/2026,79C-236.57,CA2312
+22,12345678922,"Làn ETC","Hyundai SantaFe không đủ tiền vẫn vào làn ETC.","Đã xử lý",20/01/2026,81C-036.57,CA1245
+23,12345678923,"Kéo đẩy xe","Xe máy Sirius Fi đang đẩy một xe máy khác trên đường.","Chưa xử lý",21/01/2026,83D-836.57,-
+24,12345678924,"Cản xe ưu tiên","Honda CR-V không nhường đường cho xe cứu hỏa.","Đã xử lý",22/01/2026,85C-636.57,CA7364
+25,12345678925,"Đổi màu sơn","Xe Liberty thay đổi màu sơn từ trắng sang tím trái phép.","Đã xử lý",23/01/2026,87D-436.57,CA1234
+26,12345678926,"Thiếu xi-nhan","Kia Morning chuyển làn đột ngột không báo trước tại Phạm Hùng.","Chưa xử lý",24/01/2026,89C-236.57,-
+27,12345678927,"Lùi cao tốc","Toyota Camry lùi xe trên cao tốc Hà Nội - Hải Phòng.","Đã xử lý",25/01/2026,91C-036.57,CA8124
+28,12345678928,"Chân chống","Xe SYM Shark quên gạt chân chống gây nguy hiểm.","Đã xử lý",26/01/2026,93D-836.57,CA6641
+29,12345678929,"Đỗ xe khuất","Mitsubishi Xpander đỗ xe ngay khúc cua đèo Bảo Lộc.","Chưa xử lý",27/01/2026,95C-636.57,-
+30,12345678930,"Đi ngược chiều","VinFast Lux A đi ngược chiều phố Khuất Duy Tiến.","Đã xử lý",28/01/2026,97C-436.57,CA9891
+31,12345678931,"Ngược chiều XM","Honda Blade đi ngược chiều tại đường Nguyễn Trãi.","Đã xử lý",29/01/2026,99D-236.57,CA1111
+32,12345678932,"Lên vỉa hè","Honda Scoopy chạy trên vỉa hè đường Xuân Thủy.","Đã xử lý",30/01/2026,01D-111.11,CA2312
+33,12345678933,"Quá tốc độ","Hyundai Accent chạy quá tốc độ (vượt 25km/h).","Đã xử lý",31/01/2026,02C-222.22,CA1245
+34,12345678934,"Thiếu dây an toàn","Lái xe Kia K3 không thắt dây an toàn khi lưu thông.","Chưa xử lý",01/02/2026,03C-333.33,-
+35,12345678935,"Chở quá người","Vespa Primavera chở 3 người lớn tại Hội An.","Đã xử lý",02/02/2026,04D-444.44,CA7364
+36,12345678936,"Tốc độ cực cao","Ford Territory chạy vượt 40km/h trên cao tốc.","Đã xử lý",03/02/2026,05C-555.55,CA1234
+37,12345678937,"Dùng chân lái","Thanh niên dùng chân lái xe NVX tại cầu vượt Ngã Tư Sở.","Đã xử lý",04/02/2026,06D-666.66,CA8124
+38,12345678938,"Vượt nơi cấm","Honda City vượt xe khác tại đoạn đường vạch liền đèo Cả.","Đã xử lý",05/02/2026,07C-777.77,CA6641
+39,12345678939,"Buông cả hai tay","Tài xế xe Vario buông cả hai tay để chụp ảnh khi lái xe.","Chưa xử lý",06/02/2026,08D-888.88,-
+40,12345678940,"Vào đường cấm","Mazda 3 đi vào phố đi bộ Hàng Bài giờ cấm.","Đã xử lý",07/02/2026,09C-999.99,CA9891
+41,12345678941,"Lái xe một tay","Thanh niên lái Satria bằng 1 tay, tay kia cầm điện thoại quay clip.","Đã xử lý",08/02/2026,11D-123.45,CA1111
+42,12345678942,"Cồn cực nặng","Fortuner có nồng độ cồn vượt 0.4mg/l tại đường Láng.","Đã xử lý",09/02/2026,12C-678.90,CA2312
+43,12345678943,"Hàng quá cao","Xe máy Jupiter chở tủ lạnh cao hơn 2m tại cầu Linh Xuân.","Chưa xử lý",10/02/2026,14D-543.21,-
+44,12345678944,"Thiếu ETC","VinFast VF 8 chưa dán thẻ ETC vẫn cố tình vào làn ưu tiên.","Đã xử lý",11/02/2026,15C-987.65,CA1245
+45,12345678945,"Kẹp ba","Xe máy Wave RSX chở 3 người lớn không đội mũ bảo hiểm.","Đã xử lý",12/02/2026,16D-135.79,CA7364
+46,12345678946,"Còi hơi","Xe Tucson lắp còi hơi và bấm liên tục trong phố Huế.","Đã xử lý",13/02/2026,17C-246.80,CA1234
+47,12345678947,"Quệt chân chống","Xe Luvias bôi mỡ dưới chân chống để quệt lửa xuống đường.","Đã xử lý",14/02/2026,18D-112.23,CA8124
+48,12345678948,"Không nhường vượt","Xe Seltos cố tình tăng tốc cản trở xe sau xin vượt hợp lệ.","Chưa xử lý",15/02/2026,19C-334.45,-
+49,12345678949,"Độ xe","Xe MSX 125 thay đổi kết cấu khung, đèn xe trái quy định.","Đã xử lý",16/02/2026,21D-556.67,CA6641
+50,12345678950,"Vào làn BRT","Toyota Corolla Altis chạy lấn hoàn toàn làn BRT Lê Văn Lương.","Đã xử lý",17/02/2026,22C-778.89,CA9891
+51,12345678951,"Vượt đèn đỏ","Xe máy Wave Alpha vượt đèn đỏ tại ngã tư Phú Nhuận.","Đã xử lý",18/02/2026,23D-990.01,CA1111
+52,12345678952,"Điện thoại","VinFast VF 9 vừa lái xe vừa xem phim qua máy tính bảng.","Đã xử lý",19/02/2026,25C-112.23,CA2312
+53,12345678953,"Thiếu mũ BH","Người đi Air Blade không đội mũ bảo hiểm tại Pleiku.","Chưa xử lý",20/02/2026,27D-334.45,-
+54,12345678954,"Vượt đèn đỏ","Mazda CX-5 vượt đèn đỏ tại ngã sáu Cộng Hòa.","Đã xử lý",21/02/2026,29C-556.67,CA1245
+55,12345678955,"Đánh võng","Exciter 155 đánh võng gây nguy hiểm trên đường Bạch Đằng.","Đã xử lý",22/02/2026,31D-778.89,CA7364
+56,12345678956,"Cồn mức 1","Camry có nồng độ cồn nhẹ tại phố Lý Thường Kiệt.","Đã xử lý",23/02/2026,33C-990.01,CA1234
+57,12345678957,"Lên vỉa hè","Xe Lead chạy trên vỉa hè đường Tôn Đức Thắng.","Chưa xử lý",24/02/2026,35D-112.23,-
+58,12345678958,"Sai làn","Ford Everest đi vào làn xe buýt tại cầu Chương Dương.","Đã xử lý",25/02/2026,37C-334.45,CA8124
+59,12345678959,"Dùng tai nghe","Vespa Sprint sử dụng tai nghe chống ồn khi điều khiển xe.","Đã xử lý",26/02/2026,39D-556.67,CA6641
+60,12345678960,"Quay đầu cấm","Honda City quay đầu xe tại nơi có biển cấm quay đầu.","Đã xử lý",27/02/2026,41C-778.89,CA9891
+61,12345678961,"Che biển","Winner X dùng bùn đất bôi bẩn để che biển số.","Đã xử lý",28/02/2026,43D-990.01,CA1111
+62,12345678962,"Thiếu dây an toàn","Người ngồi cạnh lái xe VF 6 không thắt dây an toàn.","Chưa xử lý",01/03/2026,45C-112.23,-
+63,12345678963,"Thiếu xi-nhan","Xe máy Sirius Fi rẽ đột ngột không bật xi-nhan tại ngã sáu BMT.","Đã xử lý",02/03/2026,47D-334.45,CA2312
+64,12345678964,"Sai làn ô tô","Hyundai Tucson đi vào làn ngược chiều để vượt xe khác.","Đã xử lý",03/03/2026,49C-556.67,CA1245
+65,12345678965,"Quên đèn","Xe máy Janus không bật đèn chiếu sáng sau 19h tại Rạch Giá.","Đã xử lý",04/03/2026,51D-778.89,CA7364
+66,12345678966,"Ngược chiều","Kia K5 đi ngược chiều phố Kim Mã vào giờ cao điểm.","Đã xử lý",05/03/2026,53C-990.01,CA1234
+67,12345678967,"Kẹp bốn","Honda Vision chở 4 người (2 người lớn, 2 trẻ em) tại Nguyễn Huệ.","Chưa xử lý",06/03/2026,55D-112.23,-
+68,12345678968,"Đỗ sai","Toyota Innova đỗ xe chắn lối vào ngõ tại phố Lý Đạo Thành.","Đã xử lý",07/03/2026,96C-681.02,CA8124
+69,12345678969,"Ngược chiều XM","Wave Alpha đi ngược chiều tại đường Cách Mạng Tháng 8.","Đã xử lý",08/03/2026,43D-999.99,CA6641
+70,12345678970,"Tốc độ bàn thờ","Ford Everest chạy 135km/h trên cao tốc Dầu Giây.","Đã xử lý",09/03/2026,84C-369.80,CA9891
+71,12345678971,"Ma túy","Tài xế Suzuki Raider dương tính với ma túy tại Thủ Đức.","Đã xử lý",10/03/2026,65D-236.57,CA1111
+72,12345678972,"Chống đối cồn","Xe SH không dừng xe theo hiệu lệnh kiểm tra cồn.","Đã xử lý",11/03/2026,71D-036.57,CA2312
+73,12345678973,"Chống đối cồn","Fortuner cố tình lái xe bỏ chạy khi bị yêu cầu thổi nồng độ cồn.","Đã xử lý",12/03/2026,12C-678.90,CA1245
+74,12345678974,"Lùi cao tốc","Hyundai Accent lùi xe trên cao tốc Nội Bài - Lào Cai.","Chưa xử lý",13/03/2026,02C-222.22,-
+75,12345678975,"Tai nạn bỏ chạy","Corolla Altis gây va chạm tại ngã tư Bảy Hiền rồi bỏ chạy.","Đã xử lý",14/03/2026,22C-778.89,CA7364
+76,12345678976,"Hàng cồng kềnh","Future 125 chở 2 bao tải lớn lấn sang làn bên cạnh tại Long Xuyên.","Đã xử lý",15/03/2026,86C-581.02,CA1234
+77,12345678977,"Bốc đầu","Exciter 150 bốc đầu xe khi đang vào sân bay Tân Sơn Nhất.","Đã xử lý",16/03/2026,61D-536.57,CA8124
+78,12345678978,"Vào cao tốc","Xe điện Klara S chạy lên đường vành đai 3 trên cao.","Chưa xử lý",17/03/2026,48C-303.24,-
+79,12345678979,"Cản xe cứu thương","Xe Territory không nhường đường cho xe cấp cứu đang hú còi.","Đã xử lý",18/03/2026,05C-555.55,CA6641
+80,12345678980,"Quệt chân chống","Xe Jupiter cố ý tạo tia lửa bằng chân chống trên cầu Sài Gòn.","Đã xử lý",19/03/2026,14D-543.21,CA9891
+81,12345678981,"Hàng ngang","Nhóm xe Wave RSX đi hàng 4 gây tắc nghẽn giao thông Thanh Hóa.","Đã xử lý",20/03/2026,16D-135.79,CA1111
+82,12345678982,"Còi hơi","Hyundai SantaFe lắp thêm còi hơi âm lượng lớn tại Trần Hưng Đạo.","Chưa xử lý",21/03/2026,81C-036.57,-
+83,12345678983,"Phố cấm","Honda CR-V đi vào phố Hàng Đào ngày cuối tuần đang cấm xe.","Đã xử lý",22/03/2026,85C-636.57,CA2312
+84,12345678984,"Pha đô thị","Hyundai Tucson dùng đèn pha cực mạnh trên đường Xô Viết Nghệ Tĩnh.","Đã xử lý",23/03/2026,17C-246.80,CA1245
+85,12345678985,"Mở cửa ẩu","Xe Kia K3 mở cửa đột ngột khiến người đi xe máy ngã tại đường Hải Thượng Lãn Ông.","Đã xử lý",24/03/2026,03C-333.33,CA7364
+86,12345678986,"Độ xe","Sirius Fi thay mâm lốp, phuộc xe không đúng tiêu chuẩn đăng ký.","Chưa xử lý",25/03/2026,83D-836.57,-
+87,12345678987,"Ồn ào","Xe MSX 125 lắp pô độ nẹt pô inh ỏi trên cầu Trần Thị Lý.","Đã xử lý",26/03/2026,21D-556.67,CA1234
+88,12345678988,"Rơi vãi cát","Ford Ranger chở cát không bọc bạt làm rơi vãi xuống đường Bắc Ninh.","Đã xử lý",27/03/2026,79C-236.57,CA8124
+89,12345678989,"Rẽ ẩu","Honda Lead rẽ trái từ đường nhánh ra không nhường đường xe đi thẳng.","Đã xử lý",28/03/2026,75D-636.57,CA6641
+90,12345678990,"Làn BRT","VinFast VF 5 chạy vào làn BRT tại đoạn đường Ba La.","Chưa xử lý",29/03/2026,97C-792.13,-
+91,12345678991,"Hàng cồng kềnh","Xe Primavera chở cây cảnh quá cao vướng vào dây điện cầu An Sương.","Đã xử lý",30/03/2026,04D-444.44,CA9891
+92,12345678992,"Không nhường vượt","Honda City cố tình chèn ép không cho xe sau vượt tại Quảng Bình.","Đã xử lý",31/03/2026,07C-777.77,CA1111
+93,12345678993,"ETC lỗi","Mazda CX-8 liên tục vào làn ETC khi tài khoản không đủ tiền.","Đã xử lý",01/04/2026,56C-281.02,CA2312
+94,12345678994,"Chở ba","Yamaha Grande chở 3 người lớn không đội mũ bảo hiểm.","Chưa xử lý",02/04/2026,67D-136.57,-
+95,12345678995,"Dùng chân lái","Tài xế Exciter 155 gác chân lên tay lái khi đang lưu thông.","Đã xử lý",03/04/2026,31D-778.89,CA1245
+96,12345678996,"Thiếu ETC","Kia K5 chưa dán thẻ ETC nhưng đi vào làn thu phí tự động.","Đã xử lý",04/04/2026,53C-990.01,CA7364
+97,12345678997,"Quay đầu cấm","Mazda 3 quay đầu xe tại nơi có biển cấm rẽ trái/quay đầu.","Đã xử lý",05/04/2026,09C-999.99,CA1234
+98,12345678998,"Lái một tay","Tài xế Air Blade vừa lái xe bằng 1 tay vừa livestream trên cầu Vĩnh Tuy.","Chưa xử lý",06/04/2026,94C-469.80,-
+99,12345678999,"Chân chống","Winner X để chân chống quẹt lửa xuống mặt đường nhựa Kon Tum.","Đã xử lý",07/04/2026,43D-990.01,CA8124
+100,12345678910,"Không nhường xuyến","Honda Scoopy không nhường đường cho xe bên trái tại vòng xoay Cây Gõ.","Đã xử lý",08/04/2026,01D-111.11,CA6641

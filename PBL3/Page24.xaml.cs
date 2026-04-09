@@ -1,32 +1,29 @@
-﻿using Microsoft.Data.SqlClient;
 using PBL3.Models;
 using System;
+using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
 
 namespace PBL3
 {
     public partial class Page24 : Page
     {
-        private User _currentUser;
-        private string _targetCccd;
-        private string connectionString = @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=TrafficSafetyDB;Integrated Security=True";
+        // CHỈ NHẬN OFFICER VÀ MÃ CCCD CỦA CÔNG DÂN CẦN XEM
+        private readonly Officer _currentUser;
+        private readonly string _targetCccd;
 
+        // Constructor mặc định
         public Page24()
         {
             InitializeComponent();
         }
 
-        public Page24(string cccd)
-        {
-            InitializeComponent();
-            _targetCccd = cccd;
-            this.Loaded += Page24_Loaded;
-        }
-
-        public Page24(User user, string cccd)
+        // Constructor chính
+        public Page24(Officer user, string cccd)
         {
             InitializeComponent();
             _currentUser = user;
@@ -34,86 +31,78 @@ namespace PBL3
 
             if (_currentUser != null)
             {
-                txtUserName.Text = _currentUser.FullName;
+                txtUserName.Text = $"Cán bộ: {_currentUser.OfficerId}";
             }
             this.Loaded += Page24_Loaded;
         }
 
+        // Dành cho test
+        public Page24(string cccd)
+        {
+            InitializeComponent();
+            _targetCccd = cccd;
+            this.Loaded += Page24_Loaded;
+        }
+
+        // --- SỰ KIỆN KHI TRANG LOAD ---
         private async void Page24_Loaded(object sender, RoutedEventArgs e)
         {
             if (System.ComponentModel.DesignerProperties.GetIsInDesignMode(this)) return;
             await LoadDataAsync();
         }
 
+        // --- TẢI DỮ LIỆU CÔNG DÂN BẰNG ENTITY FRAMEWORK ---
         private async Task LoadDataAsync()
         {
             if (string.IsNullOrEmpty(_targetCccd)) return;
 
             try
             {
-                string cccd = "";
-                string name = "";
-                string dob = "";
-                string gender = "";
-                string phone = "";
-                string email = "";
-                string imagePath = "";
+                // Dùng Entity Framework để lấy dữ liệu cực nhanh và an toàn
+                using var db = new TrafficSafetyDBContext();
+                var customer = await Task.Run(() => db.Customers.FirstOrDefault(c => c.Cccd == _targetCccd));
 
-                await Task.Run(() =>
+                if (customer == null)
                 {
-                    using (SqlConnection conn = new SqlConnection(connectionString))
-                    {
-                        conn.Open();
-                        string query = @"SELECT CCCD, FULL_NAME, DOB, GENDER, PHONE, EMAIL, AVATAR FROM CUSTOMERS WHERE CCCD = @Cccd";
+                    new CustomMessageBox("Không tìm thấy dữ liệu của công dân này trên hệ thống.", "Lỗi").ShowDialog();
+                    return;
+                }
 
-                        using (SqlCommand cmd = new SqlCommand(query, conn))
-                        {
-                            cmd.Parameters.AddWithValue("@Cccd", _targetCccd);
-                            using (SqlDataReader reader = cmd.ExecuteReader())
-                            {
-                                if (reader.Read())
-                                {
-                                    cccd = reader.IsDBNull(0) ? "" : reader.GetString(0);
-                                    name = reader.IsDBNull(1) ? "" : reader.GetString(1);
-                                    dob = reader.IsDBNull(2) ? "" : reader.GetDateTime(2).ToString("dd/MM/yyyy");
-                                    gender = reader.IsDBNull(3) ? "" : reader.GetString(3);
-                                    phone = reader.IsDBNull(4) ? "" : reader.GetString(4);
-                                    email = reader.IsDBNull(5) ? "" : reader.GetString(5);
-                                    imagePath = reader.IsDBNull(6) ? "" : reader.GetString(6);
-                                }
-                            }
-                        }
-                    }
-                });
+                // Đổ dữ liệu lên UI
+                tbCccd.Text = customer.Cccd;
+                tbHoTen.Text = customer.FullName ?? "Chưa cập nhật";
+                tbNgaySinh.Text = customer.Dob?.ToString("dd/MM/yyyy") ?? "Chưa cập nhật";
+                tbGioiTinh.Text = customer.Gender ?? "Chưa cập nhật";
+                tbPhone.Text = customer.Phone ?? "Chưa cập nhật";
+                tbEmail.Text = customer.Email ?? "Chưa cập nhật";
 
-                tbCccd.Text = cccd;
-                tbHoTen.Text = name;
-                tbNgaySinh.Text = dob;
-                tbGioiTinh.Text = gender;
-                tbPhone.Text = phone;
-                tbEmail.Text = email;
-
-                if (!string.IsNullOrEmpty(imagePath))
+                // Load Avatar an toàn
+                if (!string.IsNullOrWhiteSpace(customer.Avatar))
                 {
                     try
                     {
-                        imgAvatar.Source = new BitmapImage(new Uri(imagePath, UriKind.RelativeOrAbsolute));
+                        var uri = new Uri(customer.Avatar, UriKind.RelativeOrAbsolute);
+                        // Nếu là đường dẫn tương đối, ghép với thư mục chạy phần mềm
+                        if (!uri.IsAbsoluteUri)
+                        {
+                            string fullPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, customer.Avatar.TrimStart('/', '\\'));
+                            if (File.Exists(fullPath)) uri = new Uri(fullPath, UriKind.Absolute);
+                        }
+                        imgAvatar.Source = new BitmapImage(uri);
                     }
-                    catch { }
+                    catch { /* Im lặng bỏ qua nếu ảnh lỗi */ }
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Lỗi t?i chi ti?t tài khoản: " + ex.Message);
+                new CustomMessageBox("Lỗi tải chi tiết tài khoản: " + ex.Message, "Lỗi").ShowDialog();
             }
         }
 
+        // --- XỬ LÝ ĐẶT LẠI MẬT KHẨU CHO CÔNG DÂN ---
         private void pbNewPassword_PasswordChanged(object sender, RoutedEventArgs e)
         {
-            if (string.IsNullOrEmpty(pbNewPassword.Password))
-                tbPasswordPlaceholder.Visibility = Visibility.Visible;
-            else
-                tbPasswordPlaceholder.Visibility = Visibility.Collapsed;
+            tbPasswordPlaceholder.Visibility = string.IsNullOrEmpty(pbNewPassword.Password) ? Visibility.Visible : Visibility.Collapsed;
         }
 
         private async void btnLuuMatKhau_Click(object sender, RoutedEventArgs e)
@@ -121,84 +110,53 @@ namespace PBL3
             string newPassword = pbNewPassword.Password;
             if (string.IsNullOrEmpty(newPassword))
             {
-                MessageBox.Show("Vui lòng nhập mật khẩu mới.");
+                new CustomMessageBox("Vui lòng nhập mật khẩu mới.", "Nhắc nhở").ShowDialog();
                 return;
             }
 
             try
             {
-                await Task.Run(() =>
+                using var db = new TrafficSafetyDBContext();
+                var customer = db.Customers.FirstOrDefault(c => c.Cccd == _targetCccd);
+
+                if (customer != null)
                 {
-                    using (SqlConnection conn = new SqlConnection(connectionString))
-                    {
-                        conn.Open();
-                        string query = "UPDATE CUSTOMERS SET PASSWORD = @Pass WHERE CCCD = @Cccd";
-                        using (SqlCommand cmd = new SqlCommand(query, conn))
-                        {
-                            cmd.Parameters.AddWithValue("@Pass", newPassword);
-                            cmd.Parameters.AddWithValue("@Cccd", _targetCccd);
-                            cmd.ExecuteNonQuery();
-                        }
-                    }
-                });
-                
-                MessageBox.Show("cập nhật m?t kh?u thành công!");
-                pbNewPassword.Password = "";
+                    // LƯU Ý: Nếu model Customer của Nhi không dùng chữ "Password" mà dùng "MatKhau", 
+                    // thì Nhi đổi chữ Password ở dòng dưới này thành MatKhau nhé!
+                    customer.Password = newPassword;
+
+                    await db.SaveChangesAsync(); // Cập nhật bằng EF siêu gọn
+
+                    new CustomMessageBox("Cập nhật mật khẩu thành công!", "Thông báo").ShowDialog();
+                    pbNewPassword.Password = "";
+                }
+                else
+                {
+                    new CustomMessageBox("Không tìm thấy tài khoản để cập nhật.", "Lỗi").ShowDialog();
+                }
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Lỗi cập nhật mật khẩu: " + ex.Message);
+                new CustomMessageBox("Lỗi cập nhật mật khẩu: " + ex.Message, "Lỗi").ShowDialog();
             }
         }
 
+        // --- CÁC NÚT ĐIỀU HƯỚNG ---
         private void btnChiTietGplx_Click(object sender, RoutedEventArgs e)
         {
-            NavigationService.Navigate(_currentUser != null ? new Page25(_currentUser, _targetCccd) : new Page25(_targetCccd));
+            NavigationService.Navigate(new Page25(_currentUser, _targetCccd));
         }
 
         private void btnBack_Click(object sender, RoutedEventArgs e)
         {
-            if (NavigationService.CanGoBack)
-            {
-                NavigationService.GoBack();
-            }
-            else
-            {
-                NavigationService.Navigate(_currentUser != null ? new Page15(_currentUser) : new Page15());
-            }
+            if (NavigationService.CanGoBack) NavigationService.GoBack();
+            else NavigationService.Navigate(new Page15(_currentUser));
         }
 
         private void UserButton_Click(object sender, RoutedEventArgs e)
         {
-            if (_currentUser == null) return;
-
-            Button btn = sender as Button;
-            if (btn != null && btn.ContextMenu != null)
+            if (sender is Button btn && btn.ContextMenu != null)
             {
-                // Access menu items through the ContextMenu.Items collection
-
-
-
-
-                if (_currentUser is Customer)
-                {
-
-
-
-                }
-                else if (_currentUser is Officer)
-                {
-
-
-
-                }
-                else if (_currentUser is Admin)
-                {
-
-
-
-                }
-
                 btn.ContextMenu.PlacementTarget = btn;
                 btn.ContextMenu.Placement = System.Windows.Controls.Primitives.PlacementMode.Bottom;
                 btn.ContextMenu.IsOpen = true;
@@ -206,48 +164,14 @@ namespace PBL3
         }
 
         private void MenuInfo_Click(object sender, RoutedEventArgs e) { }
-        
-        private void MenuAdminUI_Click(object sender, RoutedEventArgs e)
-        {
-            NavigationService.Navigate(new Page9());
-        }
-        
-        private void MenuOfficerUI_Click(object sender, RoutedEventArgs e) { }
-        
-        private void MenuLogout_Click(object sender, RoutedEventArgs e)
-        {
-            NavigationService.Navigate(new Page1());
-        }
+        private void MenuLogout_Click(object sender, RoutedEventArgs e) => NavigationService.Navigate(new Page1());
 
-        private void btnTraCuuNhanh_Click(object sender, RoutedEventArgs e)
-        {
-            NavigationService.Navigate(_currentUser != null ? new Page12(_currentUser) : new Page12());
-        }
-
-        private void btnTraCuuLuat_Click(object sender, RoutedEventArgs e)
-        {
-            NavigationService.Navigate(_currentUser != null ? new Page13(_currentUser) : new Page13());
-        }
-
-        private void btnLBBVP_Click(object sender, RoutedEventArgs e)
-        {
-            NavigationService.Navigate(_currentUser != null ? new Page14(_currentUser) : new Page14());
-        }
-
-        private void btnTaiKhoan_Click(object sender, RoutedEventArgs e)
-        {
-            NavigationService.Navigate(_currentUser != null ? new Page15(_currentUser) : new Page15());
-        }
-
-        private void btnPhanAnh_Click(object sender, RoutedEventArgs e)
-        {
-            NavigationService.Navigate(_currentUser != null ? new Page16(_currentUser) : new Page16());
-        }
-
-        private void btnLogOut_Click(object sender, RoutedEventArgs e)
-        {
-            NavigationService.Navigate(new Page1());
-        }
+        // --- SIDEBAR MENU ---
+        private void btnTraCuuNhanh_Click(object sender, RoutedEventArgs e) => NavigationService.Navigate(new Page12(_currentUser));
+        private void btnTraCuuLuat_Click(object sender, RoutedEventArgs e) => NavigationService.Navigate(new Page13(_currentUser));
+        private void btnLBBVP_Click(object sender, RoutedEventArgs e) => NavigationService.Navigate(new Page14(_currentUser));
+        private void btnTaiKhoan_Click(object sender, RoutedEventArgs e) => NavigationService.Navigate(new Page15(_currentUser));
+        private void btnPhanAnh_Click(object sender, RoutedEventArgs e) => NavigationService.Navigate(new Page16(_currentUser));
+        private void btnLogOut_Click(object sender, RoutedEventArgs e) => NavigationService.Navigate(new Page1());
     }
 }
-

@@ -1,5 +1,6 @@
-﻿using PBL3.Models;
+using PBL3.Models;
 using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,42 +14,23 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using IOPath = System.IO.Path;
 
 namespace PBL3
 {
-    /// <summary>
-    /// Interaction logic for Page22.xaml
-    /// </summary>
     public partial class Page22 : Page
     {
+        private readonly Officer _currentUser;
         private readonly int? _recordId;
 
+        // Constructor mặc định
         public Page22()
         {
             InitializeComponent();
         }
 
-        private User _currentUser;
-
-        public Page22(User user)
-        {
-            InitializeComponent();
-            _currentUser = user;
-
-            if (_currentUser != null)
-            {
-                txtUserName.Text = _currentUser.FullName;
-            }
-        }
-
-        public Page22(int recordId)
-        {
-            InitializeComponent();
-            _recordId = recordId;
-            LoadViolationDetail();
-        }
-
-        public Page22(User user, int recordId)
+        // 2. CONSTRUCTOR CHÍNH
+        public Page22(Officer user, int recordId)
         {
             InitializeComponent();
             _currentUser = user;
@@ -56,12 +38,11 @@ namespace PBL3
 
             if (_currentUser != null)
             {
-                txtUserName.Text = _currentUser.FullName;
+                txtUserName.Text = $"Cán bộ: {_currentUser.OfficerId}";
             }
 
             LoadViolationDetail();
         }
-
         private void btnTraCuuNhanh_Click(object sender, RoutedEventArgs e)
         {
             NavigationService?.Navigate(_currentUser != null ? new Page12(_currentUser) : new Page12());
@@ -109,16 +90,7 @@ namespace PBL3
 
         private void MenuInfo_Click(object sender, RoutedEventArgs e)
         {
-        }
-
-        private void MenuAdminUI_Click(object sender, RoutedEventArgs e)
-        {
-            NavigationService?.Navigate(new Page9());
-        }
-
-        private void MenuOfficerUI_Click(object sender, RoutedEventArgs e)
-        {
-            NavigationService?.Navigate(new Page10());
+            NavigationService?.Navigate(new Page24());
         }
 
         private void MenuLogout_Click(object sender, RoutedEventArgs e)
@@ -136,16 +108,16 @@ namespace PBL3
 
         private void LoadViolationDetail()
         {
-            if (_recordId is null)
-                return;
+            if (_recordId is null) return;
 
             var detail = ViolationLookupService.GetViolationDetail(_recordId.Value);
             if (detail == null)
             {
-                MessageBox.Show("Không tìm thấy thông tin chi tiết vi phạm.");
+                new CustomMessageBox("Không tìm thấy thông tin chi tiết vi phạm.").ShowDialog();
                 return;
             }
 
+            // Gán dữ liệu lên giao diện
             txtHeaderTitle.Text = detail.HeaderTitle;
             txtHeaderSubtitle.Text = detail.HeaderSubtitle;
             txtVehicleTypeValue.Text = detail.VehicleType;
@@ -154,58 +126,80 @@ namespace PBL3
             txtViolationLocationValue.Text = detail.ViolationLocation;
             txtViolationDescriptionValue.Text = detail.ViolationDescription;
             txtFineRangeValue.Text = detail.FineRange;
-            txtPointsDeductedValue.Text = detail.PointsDeducted;
+            if (txtPointsDeductedValue != null) txtPointsDeductedValue.Text = detail.PointsDeducted;
             txtPaymentLocationValue.Text = detail.PaymentLocation;
             txtStatusValue.Text = detail.StatusText;
-            txtStatusValue.Foreground = detail.IsProcessed ? Brushes.ForestGreen : Brushes.Firebrick;
-            txtEvidenceCaption.Text = detail.EvidenceCaption;
 
+            // Đổi màu Trạng thái
+            txtStatusValue.Foreground = detail.IsProcessed ? Brushes.ForestGreen : Brushes.Firebrick;
+            if (txtEvidenceCaption != null) txtEvidenceCaption.Text = detail.EvidenceCaption;
+
+            // Ẩn hiện các nút chức năng tùy theo trạng thái (Đã xử lý thì không cho sửa nữa)
             if (detail.IsProcessed)
             {
-                btnConfirm.Visibility = Visibility.Collapsed;
-                btnEdit.Visibility = Visibility.Collapsed;
+                if (btnConfirm != null) btnConfirm.Visibility = Visibility.Collapsed;
+                if (btnEdit != null) btnEdit.Visibility = Visibility.Collapsed;
             }
             else
             {
-                btnConfirm.Visibility = Visibility.Visible;
-                btnEdit.Visibility = Visibility.Visible;
+                if (btnConfirm != null) btnConfirm.Visibility = Visibility.Visible;
+                if (btnEdit != null) btnEdit.Visibility = Visibility.Visible;
             }
 
-            if (!string.IsNullOrWhiteSpace(detail.EvidenceImagePath))
+            // Load ảnh bằng chứng cực kỳ an toàn
+            if (!string.IsNullOrWhiteSpace(detail.EvidenceImagePath) && imgEvidence != null)
             {
-                imgEvidence.Source = new BitmapImage(new Uri(detail.EvidenceImagePath, UriKind.Relative));
-                imgEvidence.Visibility = Visibility.Visible;
-                txtEvidencePlaceholder.Visibility = Visibility.Collapsed;
+                Uri? evidenceUri = BuildEvidenceUri(detail.EvidenceImagePath);
+                if (evidenceUri != null)
+                {
+                    try
+                    {
+                        imgEvidence.Source = new BitmapImage(evidenceUri);
+                        imgEvidence.Visibility = Visibility.Visible;
+
+                        if (txtEvidencePlaceholder != null)
+                            txtEvidencePlaceholder.Visibility = Visibility.Collapsed;
+                    }
+                    catch { /* Im lặng bỏ qua nếu ảnh bị lỗi */ }
+                }
             }
         }
 
+        private static Uri? BuildEvidenceUri(string evidenceImagePath)
+        {
+            if (Uri.TryCreate(evidenceImagePath, UriKind.Absolute, out Uri? absoluteUri)) return absoluteUri;
+
+            string fullPath = IOPath.Combine(AppDomain.CurrentDomain.BaseDirectory, evidenceImagePath.TrimStart('/', '\\').Replace('/', IOPath.DirectorySeparatorChar));
+            if (File.Exists(fullPath)) return new Uri(fullPath, UriKind.Absolute);
+
+            return Uri.TryCreate(evidenceImagePath, UriKind.Relative, out Uri? relativeUri) ? relativeUri : null;
+        }
         private void btnConfirm_Click(object sender, RoutedEventArgs e)
         {
-            if (_recordId is null)
-                return;
+            if (_recordId is null) return;
+
+            var result = MessageBox.Show("Xác nhận đánh dấu biên bản này là ĐÃ XỬ LÝ?", "Xác nhận", MessageBoxButton.YesNo, MessageBoxImage.Question);
+            if (result == MessageBoxResult.No) return;
 
             try
             {
                 using (var db = new TrafficSafetyDBContext())
                 {
-                    var record = db.ViolationRecords.FirstOrDefault(r => r.Stt == _recordId.Value);
+                    var record = db.ViolationRecords.FirstOrDefault(r => r.ViolationRecordId == _recordId.Value);
                     if (record != null)
                     {
-                        record.Status = 1; // Mark as processed
+                        record.Status = 1; // 1 = Đã xử lý
                         db.SaveChanges();
-                        MessageBox.Show("�? Xác nhận Xử lý thành công!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
+                        new CustomMessageBox("Đã xác nhận xử lý thành công!", "Thông báo").ShowDialog();
 
-                        // Navigate back or reload the view
-                        if (NavigationService?.CanGoBack == true)
-                        {
-                            NavigationService.GoBack();
-                        }
+                        // Tải lại giao diện ngay lập tức để làm biến mất 2 nút Sửa và Xác nhận
+                        LoadViolationDetail();
                     }
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Lỗi khi cập nhật trạng thái: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                new CustomMessageBox($"Lỗi khi cập nhật trạng thái: {ex.Message}", "Lỗi").ShowDialog();
             }
         }
 

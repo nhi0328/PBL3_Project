@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Windows;
@@ -17,71 +17,36 @@ namespace PBL3
 {
     public partial class Page4 : Page
     {
-        // Constructor mặc định
         public Page4()
         {
             InitializeComponent();
         }
 
-        // Biến lưu User đang đăng nhập (Nên truyền từ trang Đăng nhập qua)
-        private readonly User _currentUser;
+        private readonly object _currentUser;
 
-        public Page4(User user)
+        public Page4(Customer user)
         {
             InitializeComponent();
             _currentUser = user;
 
             if (_currentUser != null)
             {
-                txtUserName.Text = _currentUser.FullName;
+                txtUserName.Text = (_currentUser as Customer)?.FullName;
+                myBell.LoadData(_currentUser as Customer);
             }
-        }
-
-        private void MenuInfo_Click(object sender, RoutedEventArgs e) 
-        {
-            //NavigationService.Navigate(new Page());
-        }
-        private void MenuAdminUI_Click(object sender, RoutedEventArgs e) 
-        {
-            NavigationService.Navigate(new Page9());
-        }
-        private void MenuOfficerUI_Click(object sender, RoutedEventArgs e) 
-        {
-            //NavigationService.Navigate(new Page10());
         }
         private void MenuLogout_Click(object sender, RoutedEventArgs e) 
         {
             NavigationService.Navigate(new Page1());
         }
 
+        private void MenuInfo_Click(object sender, RoutedEventArgs e)
+        {
+            NavigationService.Navigate(new Page6()); // Trang thông tin cá nhân
+        }
+
         private void UserButton_Click(object sender, RoutedEventArgs e)
         {
-            if (_currentUser == null) return;
-
-            // PHÂN QUYỀN HIỂN THỊ MENU
-
-            if (_currentUser is Customer)
-            {
-                // Công dân: Ẩn các nút chuyển giao diện và thanh kẻ phụ
-                miAdminUI.Visibility = Visibility.Collapsed;
-                miOfficerUI.Visibility = Visibility.Collapsed;
-                sep1.Visibility = Visibility.Collapsed;
-            }
-            else if (_currentUser is Officer)
-            {
-                // Cán bộ: Được xem giao diện Khách hàng
-                miAdminUI.Visibility = Visibility.Visible;
-                miOfficerUI.Visibility = Visibility.Collapsed;
-                sep1.Visibility = Visibility.Visible;
-            }
-            else if (_currentUser is Admin)
-            {
-                // Quản trị viên: Hiện tất cả các lựa chọn để kiểm tra
-                miAdminUI.Visibility = Visibility.Visible;
-                miOfficerUI.Visibility = Visibility.Visible;
-                sep1.Visibility = Visibility.Visible;
-            }
-
             // Mở Menu
             if (sender is Button btn && btn.ContextMenu != null) {            
                 btn.ContextMenu.PlacementTarget = btn;
@@ -100,39 +65,34 @@ namespace PBL3
             }
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
-
         //Chuyển qua trang Tra cứu nhanh
         private void BtnTraCuuNhanh_Click(object sender, RoutedEventArgs e)
         {
-            NavigationService.Navigate(new Page4());
+            NavigationService.Navigate(new Page4(_currentUser as Customer));
         }
 
         // Chuyển trang Tra cứu luật
         private void BtnTraCuuLuat_Click(object sender, RoutedEventArgs e)
         {
-            NavigationService.Navigate(new Page5());
+            NavigationService.Navigate(new Page5(_currentUser as Customer));
         }
 
         // Chuyển trang Quản lý phương tiện
         private void BtnQLPT_Click(object sender, RoutedEventArgs e)
         {
-            NavigationService.Navigate(new Page6());
+            NavigationService.Navigate(new Page6(_currentUser as Customer));
         }
 
         //Chuyển trang Quản lý tài khoản
         private void BtnTaiKhoan_Click(object sender, RoutedEventArgs e)
         {
-            NavigationService.Navigate(new Page7());
+            NavigationService.Navigate(new Page7(_currentUser as Customer));
         }
 
         // chuyển trang Phản ánh
         private void BtnPhanAnh_Click(object sender, RoutedEventArgs e)
         {
-            NavigationService.Navigate(new Page8());
+            NavigationService.Navigate(new Page8(_currentUser as Customer));
         }
 
         // Đăng xuất
@@ -145,7 +105,7 @@ namespace PBL3
         private void BtnSearch_Click(object sender, RoutedEventArgs e)
         {
             string keyword = txtIdentifier.Text;
-            MessageBox.Show($"Đang tìm kiếm luật với từ khóa: {keyword}");
+            new CustomMessageBox($"Đang tìm kiếm luật với từ khóa: {keyword}").ShowDialog();
             // Viết logic tìm kiếm SQL ở đây...
         }
     }

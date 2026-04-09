@@ -1,4 +1,4 @@
-﻿using Microsoft.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 using PBL3.Models;
 using System;
 using System.Collections.Generic;
@@ -20,16 +20,15 @@ namespace PBL3
     public class AccountViewModel
     {
         public int Stt { get; set; }
-        public string Cccd { get; set; }
-        public string HoTen { get; set; }
-        public string NgaySinh { get; set; }
-        public string GioiTinh { get; set; }
+        public string Cccd { get; set; } = string.Empty;
+        public string HoTen { get; set; } = string.Empty;
+        public string NgaySinh { get; set; } = string.Empty;
+        public string GioiTinh { get; set; } = string.Empty;
     }
 
     public partial class Page15 : Page
     {
-        // Biến lưu User đang đăng nhập (Nên truyền từ trang đăng nhập qua)
-        private User _currentUser;
+        private readonly Officer _currentUser;
         private List<AccountViewModel> _allAccounts = new List<AccountViewModel>();
 
         // Constructor mặc định
@@ -39,25 +38,14 @@ namespace PBL3
             this.Loaded += Page15_Loaded;
         }
 
-        public Page15(User user)
+        // Constructor nhận thông tin Cán bộ
+        public Page15(Officer user) : this()
         {
-            InitializeComponent();
             _currentUser = user;
 
             if (_currentUser != null)
             {
-                txtUserName.Text = _currentUser.FullName;
-            }
-            this.Loaded += Page15_Loaded;
-        }
-
-        // Constructor nhận thông tin User
-        public Page15(string tenNguoiDung) : this()
-        {
-            // Kiểm tra nếu có tên thì gán vào TextBlock
-            if (!string.IsNullOrEmpty(tenNguoiDung))
-            {
-                txtUserName.Text = tenNguoiDung;
+                txtUserName.Text = $"Cán bộ: {_currentUser.OfficerId}";
             }
         }
 
@@ -76,17 +64,17 @@ namespace PBL3
                 await Task.Run(() =>
                 {
                     using TrafficSafetyDBContext db = new TrafficSafetyDBContext();
-                    
-                    var users = db.Users.ToList();
 
-                    foreach (var u in users)
+                    var customers = db.Customers.ToList();
+
+                    foreach (var c in customers)
                     {
                         accounts.Add(new AccountViewModel
                         {
-                            Cccd = u.Cccd ?? "",
-                            HoTen = u.FullName ?? "",
-                            NgaySinh = u.Dob.HasValue ? u.Dob.Value.ToString("dd/MM/yyyy") : "",
-                            GioiTinh = u.Gender ?? ""
+                            Cccd = c.Cccd ?? "",
+                            HoTen = c.FullName ?? "",
+                            NgaySinh = c.Dob.HasValue ? c.Dob.Value.ToString("dd/MM/yyyy") : "Chưa cập nhật",
+                            GioiTinh = c.Gender ?? "Không rõ"
                         });
                     }
                 });
@@ -96,7 +84,7 @@ namespace PBL3
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Lỗi tải dữ liệu: " + ex.Message);
+                new CustomMessageBox("Lỗi tải dữ liệu: " + ex.Message).ShowDialog();
             }
         }
 
@@ -146,14 +134,6 @@ namespace PBL3
         {
             //NavigationService.Navigate(new Page());
         }
-        private void MenuAdminUI_Click(object sender, RoutedEventArgs e)
-        {
-            NavigationService.Navigate(new Page9());
-        }
-        private void MenuOfficerUI_Click(object sender, RoutedEventArgs e)
-        {
-            //NavigationService.Navigate(new Page10());
-        }
         private void MenuLogout_Click(object sender, RoutedEventArgs e)
         {
             NavigationService.Navigate(new Page1());
@@ -163,43 +143,12 @@ namespace PBL3
         {
             if (_currentUser == null) return;
 
-            // PHÂN QUYỀN HIỂN THỊ MENU
-
-            if (_currentUser is Customer)
-            {
-                // Công dân: Ẩn Các n�t chuyẨn giao diện v� thanh kẻ phụ
-
-
-
-            }
-            else if (_currentUser is Officer)
-            {
-                // Cán bộ: Được xem giao diện Khách hàng
-
-
-
-            }
-            else if (_currentUser is Admin)
-            {
-                // Quản trị viên: HiẨn Tất cả Các lựa chọn để ki?m tra
-
-
-
-            }
-
-            // Mở Menu
-            Button btn = sender as Button;
-            if (btn != null && btn.ContextMenu != null)
+            if (sender is Button btn && btn.ContextMenu != null)
             {
                 btn.ContextMenu.PlacementTarget = btn;
                 btn.ContextMenu.Placement = System.Windows.Controls.Primitives.PlacementMode.Bottom;
                 btn.ContextMenu.IsOpen = true;
             }
-        }
-
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-
         }
 
         //Chuyển qua trang Tra cứu nhanh

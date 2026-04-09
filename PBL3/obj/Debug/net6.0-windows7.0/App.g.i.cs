@@ -44,7 +44,7 @@ namespace PBL3 {
         /// InitializeComponent
         /// </summary>
         [System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [System.CodeDom.Compiler.GeneratedCodeAttribute("PresentationBuildTasks", "10.0.3.0")]
+        [System.CodeDom.Compiler.GeneratedCodeAttribute("PresentationBuildTasks", "10.0.5.0")]
         public void InitializeComponent() {
             
             #line 4 "..\..\..\App.xaml"
@@ -59,7 +59,7 @@ namespace PBL3 {
         /// </summary>
         [System.STAThreadAttribute()]
         [System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [System.CodeDom.Compiler.GeneratedCodeAttribute("PresentationBuildTasks", "10.0.3.0")]
+        [System.CodeDom.Compiler.GeneratedCodeAttribute("PresentationBuildTasks", "10.0.5.0")]
         public static void Main() {
             PBL3.App app = new PBL3.App();
             app.InitializeComponent();

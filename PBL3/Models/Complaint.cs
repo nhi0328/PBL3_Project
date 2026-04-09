@@ -1,56 +1,92 @@
-using System.Collections.Generic;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace PBL3.Models; 
+namespace PBL3.Models;
 
-[Table("COMPLAINTS")] 
+[Table("COMPLAINTS")]
 public class Complaint
 {
     [Key]
-    [Column("COMPLAINT_ID")] 
-    public string ComplaintId { get; set; } = string.Empty;
+    [Column("COMPLAINT_ID")]
+    public int ComplaintId { get; set; }
 
-    [Column("TICKET_ID")]
-    public string TicketId { get; set; } = string.Empty;
+    [Required]
+    [Column("SENDER_CITIZEN_ID")] // Đổi từ CCCD sang đúng tên cột mới
+    public string SenderCitizenId { get; set; } = string.Empty;
 
-    [Column("CCCD")]
-    public string CCCD { get; set; } = string.Empty;
+    [Column("TITLE")]
+    public string Title { get; set; } = string.Empty;
 
     [Column("CONTENT")]
     public string Content { get; set; } = string.Empty;
 
+    [Column("WARD_ID")]
+    public int? WardId { get; set; }
+
+    [Column("ADDRESS")]
+    public string? Address { get; set; }
+
     [Column("STATUS")]
-    public string Status { get; set; } = string.Empty;
+    public int Status { get; set; } = 0; // 0: Đang xử lý, 1: Đã xử lý
+    [NotMapped]
+    public string StatusText
+    {
+        get { return Status == 1 ? "Đã xử lý" : "Chưa xử lý"; }
+    }
 
-    // Navigation properties - Các mối quan hệ liên kết
-    [ForeignKey("TicketId")]
-    public virtual Ticket Ticket { get; set; } // Đổi từ Violation sang Ticket
+    [Column("SUBMIT_DATE")]
+    public DateTime SubmitDate { get; set; } = DateTime.Now;
 
-    [ForeignKey("CCCD")]
-    public virtual User User { get; set; }
+    [Column("LICENSE_PLATE")]
+    public string? LicensePlate { get; set; }
 
-    // Lưu ý: Đã xóa List<ComplaintHistory> vì bảng này không có trong SQL mới
+    [Column("HANDLING_OFFICER_ID")] // Mã cán bộ tiếp nhận/xử lý
+    public string? HandlingOfficerId { get; set; }
+
+    [Column("CATEGORY_ID")] 
+    public int? CategoryId { get; set; }
+
+    [Column("IMAGE_PATH")]
+    public string? ImagePath { get; set; }
+
+    [Column("OFFICER_RESPONSE")]
+    public string? OfficerResponse { get; set; }
+
+    // --- CÁC MỐI QUAN HỆ LIÊN KẾT (FOREIGN KEYS) ---
+    [ForeignKey("SenderCitizenId")]
+    public virtual Customer? Sender { get; set; }
+
+    [ForeignKey("HandlingOfficerId")]
+    public virtual Officer? HandlingOfficer { get; set; }
+
+    [ForeignKey("WardId")]
+    public virtual Ward? Ward { get; set; }
+
+    [ForeignKey("LicensePlate")]
+    public virtual Vehicle? Vehicle { get; set; }
+
+    [ForeignKey("CategoryId")]
+    public virtual Category? Category { get; set; }
 
     public Complaint() { }
 
-    public Complaint(string id, Ticket ticket, User user, string content)
+    public Complaint(int id, string senderId, string title, string content, string? licensePlate = null)
     {
         this.ComplaintId = id;
-        this.Ticket = ticket;
-        this.TicketId = ticket.TicketId;
-        this.User = user;
-        this.CCCD = user.Cccd;
+        this.SenderCitizenId = senderId;
+        this.Title = title;
         this.Content = content;
-        this.Status = "ĐANG XỬ LÝ";
+        this.LicensePlate = licensePlate;
 
-        // Tự động thêm vào danh sách khiếu nại của biên bản đó
-        ticket.Complaints ??= new List<Complaint>();
-        ticket.Complaints.Add(this);
+        this.Status = 0; // Mặc định là 0 (Đang xử lý)
+        this.SubmitDate = DateTime.Now; // Tự động lấy ngày giờ hiện tại
+        this.OfficerResponse = string.Empty;
     }
 
     public string Display()
     {
-        return $"{ComplaintId} | {Status} | {Content}";
+        string statusText = (Status == 1) ? "Đã xử lý" : "Đang xử lý";
+        return $"{ComplaintId} | {Title} | {statusText} | Ngày: {SubmitDate:dd/MM/yyyy}";
     }
 }

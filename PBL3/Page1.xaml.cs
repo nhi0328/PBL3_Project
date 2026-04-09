@@ -1,4 +1,4 @@
-﻿using System.Text;
+using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -25,10 +25,23 @@ namespace PBL3
             NavigationService.Navigate(new Page2());
         }
 
-        private void BtnTraCuuNhanh_Click(object sender, RoutedEventArgs e)
+        private void btnTraCuuNhanh_Click(object sender, RoutedEventArgs e)
         {
             // Lệnh chuyển sang Page10
             NavigationService.Navigate(new Page10());
+        }
+
+        private void btnTraCuuLuat_Click(object sender, RoutedEventArgs e)
+        {
+            // Lệnh chuyển sang Page11
+            NavigationService.Navigate(new Page11());
+        }
+
+        private void btnPhanAnh_Click(object sender, RoutedEventArgs e)
+        {
+            new CustomMessageBox("Bạn cần đăng nhập để phản ánh vi phạm!").ShowDialog();
+            // Lệnh chuyển sang Page2
+            NavigationService.Navigate(new Page2());
         }
     }
 }

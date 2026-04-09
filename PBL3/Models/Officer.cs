@@ -1,27 +1,45 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PBL3.Models;
 
 [Table("OFFICERS")]
-public partial class Officer : User
+public class Officer
 {
-    // Không dùng override Cccd ở đây nữa để tránh lỗi LINQ
 
-    [NotMapped] // Nhãn này bảo EF: "Đừng tìm cột BadgeNumber trong SQL, tôi chỉ dùng trong code thôi"
-    public string BadgeNumber
+    [Key]
+    [Column("OFFICER_ID")]
+    public string OfficerId { get; set; } = string.Empty;
+
+    [Required]
+    [Column("CCCD")]
+    public string Cccd { get; set; } = string.Empty;
+
+    [Required]
+    [Column("PASSWORD")]
+    public string Password { get; set; } = string.Empty;
+
+    [ForeignKey("Cccd")]
+    public virtual Customer? CustomerInfo { get; set; }
+
+    public Officer() { }
+
+    public Officer(string officerId, string cccd, string password)
     {
-        get => Cccd;
-        set => Cccd = value;
+        OfficerId = officerId;
+        Cccd = cccd;
+        Password = password;
     }
 
-    public Officer() : base() { }
-
-    public Officer(string badge, string name, string pass)
-        : base(badge, name, "", "", DateTime.Now, "", pass)
+    public string GetRole()
     {
-        this.Cccd = badge;
+        return "OFFICER";
     }
 
-    public override string GetRole() => "OFFICER";
-    public override string Display() => $"[Cán bộ] {FullName} - SH: {Cccd}";
+    public string Display()
+    {
+        string name = CustomerInfo != null ? CustomerInfo.FullName : "Chưa tải tên";
+        return $"[Cán bộ] {name} - SH: {OfficerId}";
+    }
 }

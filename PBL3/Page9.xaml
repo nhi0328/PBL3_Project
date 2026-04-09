@@ -333,24 +333,6 @@
 
                                     <Separator x:Name="sep1"/>
 
-                                    <MenuItem x:Name="miAdminUI" Header="Giao diện cho Quản trị viên" Style="{StaticResource RedMenuItemStyle}" Click="MenuAdminUI_Click">
-                                        <MenuItem.Icon>
-                                            <Viewbox Width="18" Height="18">
-                                                <Path Fill="{Binding Foreground, RelativeSource={RelativeSource AncestorType=MenuItem}}" Data="M12,5.5A3.5,3.5 0 0,1 15.5,9A3.5,3.5 0 0,1 12,12.5A3.5,3.5 0 0,1 8.5,9A3.5,3.5 0 0,1 12,5.5M5,8C5.56,8 6,8.44 6,9V15H7V22H5V15H4V9C4,8.44 4.44,8 5,8M20,11C20.56,11 21,11.44 21,12V18H22V22H20V18H19V12C19,11.44 19.44,11 20,11M12,14C14.21,14 16,15.79 16,18V22H8V18C8,15.79 9.79,14 12,14Z"/>
-                                            </Viewbox>
-                                        </MenuItem.Icon>
-                                    </MenuItem>
-
-                                    <MenuItem x:Name="miOfficerUI" Header="Giao diện cho Cán bộ" Style="{StaticResource RedMenuItemStyle}" Click="MenuOfficerUI_Click">
-                                        <MenuItem.Icon>
-                                            <Viewbox Width="18" Height="18">
-                                                <Path Fill="{Binding Foreground, RelativeSource={RelativeSource AncestorType=MenuItem}}" Data="M12,1L3,5V11C3,16.55 6.84,21.74 12,23C17.16,21.74 21,16.55 21,11V5L12,1M12,7A3,3 0 0,1 15,10A3,3 0 0,1 12,13A3,3 0 0,1 9,10A3,3 0 0,1 12,7M12,14C14.21,14 16,15.79 16,18V20H8V18C8,15.79 9.79,14 12,14Z"/>
-                                            </Viewbox>
-                                        </MenuItem.Icon>
-                                    </MenuItem>
-
-                                    <Separator x:Name="sep2"/>
-
                                     <MenuItem Header="Đăng xuất" Style="{StaticResource RedMenuItemStyle}" Click="MenuLogout_Click">
                                         <MenuItem.Icon>
                                             <Viewbox Width="18" Height="18">

@@ -1,0 +1,5 @@
+D:\OneDrive - The University of Technology\PBL3\TestEF\obj\Debug\net10.0\TestEF.GeneratedMSBuildEditorConfig.editorconfig
+D:\OneDrive - The University of Technology\PBL3\TestEF\obj\Debug\net10.0\TestEF.AssemblyInfoInputs.cache
+D:\OneDrive - The University of Technology\PBL3\TestEF\obj\Debug\net10.0\TestEF.AssemblyInfo.cs
+D:\OneDrive - The University of Technology\PBL3\TestEF\obj\Debug\net10.0\TestEF.csproj.CoreCompileInputs.cache
+D:\OneDrive - The University of Technology\PBL3\TestEF\obj\Debug\net10.0\TestEF.sourcelink.json

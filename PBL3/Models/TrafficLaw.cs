@@ -11,25 +11,20 @@ public class TrafficLaw
     [Column("LAW_ID")]
     public int LawId { get; set; }
 
-    [Column("VIOLATION_DESCRIPTION")]
-    public string ViolationDescription { get; set; } = string.Empty;
+    [Required]
+    [Column("LAW_NAME")]
+    public string LawName { get; set; } = string.Empty;
 
-    [Column("FINE_RANGE")]
-    public string FineRange { get; set; } = string.Empty;
+    // 1 Điều luật có thể có nhiều Chi tiết mức phạt (cho nhiều loại xe khác nhau)
+    public virtual ICollection<TrafficLawDetail> Details { get; set; }
 
-    [Column("LAW_REFERENCE")]
-    public string LawReference { get; set; } = string.Empty;
+    // 1 Điều luật có thể xuất hiện trong nhiều Hồ sơ vi phạm
+    public virtual ICollection<ViolationRecord> ViolationRecords { get; set; }
 
-    [Column("VEHICLE_TYPE")]
-    public string VehicleType { get; set; } = string.Empty; // "Xe máy" hoặc "Ô tô"
-
-    public TrafficLaw() { }
-
-    public TrafficLaw(string desc, string fine, string refe, string type)
+    public TrafficLaw()
     {
-        this.ViolationDescription = desc;
-        this.FineRange = fine;
-        this.LawReference = refe;
-        this.VehicleType = type;
+        // Khởi tạo list trống
+        Details = new HashSet<TrafficLawDetail>();
+        ViolationRecords = new HashSet<ViolationRecord>();
     }
 }
