@@ -29,16 +29,47 @@ namespace PBL3
 
         public Page6() { InitializeComponent(); }
 
-        public Page6(Customer user) : this()
+        public Page6(Customer user)
         {
+            InitializeComponent();
             _currentUser = user;
+
             if (_currentUser != null)
             {
-                txtUserName.Text = _currentUser.FullName; // Bổ sung dòng này
+                txtUserName.Text = (_currentUser as Customer)?.FullName;
+                myBell.LoadData(_currentUser as Customer);
             }
-            this.Loaded += Page6_Loaded;
+        }
+        private void MenuLogout_Click(object sender, RoutedEventArgs e)
+        {
+            NavigationService.Navigate(new Page1());
         }
 
+        private void MenuInfo_Click(object sender, RoutedEventArgs e)
+        {
+            NavigationService.Navigate(new Page6()); // Trang thông tin cá nhân
+        }
+
+        private void UserButton_Click(object sender, RoutedEventArgs e)
+        {
+            // Mở Menu
+            if (sender is Button btn && btn.ContextMenu != null)
+            {
+                btn.ContextMenu.PlacementTarget = btn;
+                btn.ContextMenu.Placement = System.Windows.Controls.Primitives.PlacementMode.Bottom;
+                btn.ContextMenu.IsOpen = true;
+            }
+        }
+
+        // Constructor nhận thông tin User
+        public Page6(string tenNguoiDung) : this()
+        {
+            // Kiểm tra nếu có tên thì gán vào TextBlock
+            if (!string.IsNullOrEmpty(tenNguoiDung))
+            {
+                txtUserName.Text = tenNguoiDung;
+            }
+        }
         private void Page6_Loaded(object sender, RoutedEventArgs e)
         {
             if (_currentUser != null)
@@ -140,12 +171,6 @@ namespace PBL3
         private void btnPhanAnh_Click(object sender, RoutedEventArgs e)
         {
             NavigationService.Navigate(new Page8(_currentUser as Customer));
-        }
-
-        // Đăng xuất
-        private void btnLogOut_Click(object sender, RoutedEventArgs e)
-        {
-            NavigationService.Navigate(new Page1());
         }
     }
 }

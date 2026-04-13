@@ -26,10 +26,12 @@ namespace PBL3
         // Thay bằng thông tin của Nhi
         private const string SenderEmail = "hethongcsgt@gmail.com";
         private const string SenderAppPassword = "vflrfsiyjdaqjeng";
+        private readonly string _cccd;
 
-        public Page37()
+        public Page37(string cccd)
         {
             InitializeComponent();
+            _cccd = cccd;
             this.Loaded += Page37_Loaded;
         }
 
@@ -136,7 +138,7 @@ namespace PBL3
             if (userEnteredOTP == _generatedOTP)
             {
                 new CustomMessageBox("Xác nhận OTP thành công! Chuyển phần thiết lập lại MK.", "Thành công").ShowDialog();
-                NavigationService.Navigate(new Page38()); // Chuyển trang đặt lại MK
+                NavigationService.Navigate(new Page38(_cccd)); // Chuyển trang đặt lại MK
             }
             else
             {

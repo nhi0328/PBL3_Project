@@ -23,14 +23,46 @@ namespace PBL3
 
         public Page8() { InitializeComponent(); }
 
-        public Page8(Customer user) : this()
+        public Page8(Customer user)
         {
+            InitializeComponent();
             _currentUser = user;
+
             if (_currentUser != null)
             {
-                txtUserName.Text = _currentUser.FullName; // Bổ sung dòng này
+                txtUserName.Text = (_currentUser as Customer)?.FullName;
+                myBell.LoadData(_currentUser as Customer);
             }
-            this.Loaded += Page8_Loaded;
+        }
+        private void MenuLogout_Click(object sender, RoutedEventArgs e)
+        {
+            NavigationService.Navigate(new Page1());
+        }
+
+        private void MenuInfo_Click(object sender, RoutedEventArgs e)
+        {
+            NavigationService.Navigate(new Page6()); // Trang thông tin cá nhân
+        }
+
+        private void UserButton_Click(object sender, RoutedEventArgs e)
+        {
+            // Mở Menu
+            if (sender is Button btn && btn.ContextMenu != null)
+            {
+                btn.ContextMenu.PlacementTarget = btn;
+                btn.ContextMenu.Placement = System.Windows.Controls.Primitives.PlacementMode.Bottom;
+                btn.ContextMenu.IsOpen = true;
+            }
+        }
+
+        // Constructor nhận thông tin User
+        public Page8(string tenNguoiDung) : this()
+        {
+            // Kiểm tra nếu có tên thì gán vào TextBlock
+            if (!string.IsNullOrEmpty(tenNguoiDung))
+            {
+                txtUserName.Text = tenNguoiDung;
+            }
         }
 
         private void Page8_Loaded(object sender, RoutedEventArgs e)

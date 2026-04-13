@@ -35,6 +35,8 @@ namespace PBL3
             if (_currentUser != null)
             {
                 txtUserName.Text = $"Quản trị viên"; // Hoặc _currentUser.HoTen nếu có
+
+                myBell.LoadData(_currentUser as Admin);
             }
         }
 
@@ -214,27 +216,27 @@ namespace PBL3
 
         private void btnTraCuuLuat_Click(object sender, RoutedEventArgs e)
         {
-            //NavigationService.Navigate(new Page45(_currentUser));
+            NavigationService.Navigate(new Page45(_currentUser));
         }
 
         private void btnTaiKhoan_Click(object sender, RoutedEventArgs e)
         {
-            //NavigationService.Navigate(new Page46(_currentUser));
+            NavigationService.Navigate(new Page46(_currentUser));
         }
 
         private void btnPhanAnh_Click(object sender, RoutedEventArgs e)
         {
-            //NavigationService.Navigate(new Page47(_currentUser));
+            NavigationService.Navigate(new Page47(_currentUser));
         }
 
         private void btnLichSu_Click(object sender, RoutedEventArgs e)
         {
-            new CustomMessageBox("Chức năng Lịch sử đang phát triển.", "Thông báo").ShowDialog();
+            NavigationService.Navigate(new Page48(_currentUser));
         }
 
         private void btnThongKe_Click(object sender, RoutedEventArgs e)
         {
-            new CustomMessageBox("Chức năng Thống kê đang phát triển.", "Thông báo").ShowDialog();
+            NavigationService.Navigate(new Page49(_currentUser));
         }
     }
 }

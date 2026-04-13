@@ -33,6 +33,38 @@ namespace PBL3
         private const string SenderAppPassword = "vflrfsiyjdaqjeng";
 
         public Page32() { InitializeComponent(); }
+
+        private void MenuLogout_Click(object sender, RoutedEventArgs e)
+        {
+            NavigationService.Navigate(new Page1());
+        }
+
+        private void MenuInfo_Click(object sender, RoutedEventArgs e)
+        {
+            NavigationService.Navigate(new Page6()); // Trang thông tin cá nhân
+        }
+
+        private void UserButton_Click(object sender, RoutedEventArgs e)
+        {
+            // Mở Menu
+            if (sender is Button btn && btn.ContextMenu != null)
+            {
+                btn.ContextMenu.PlacementTarget = btn;
+                btn.ContextMenu.Placement = System.Windows.Controls.Primitives.PlacementMode.Bottom;
+                btn.ContextMenu.IsOpen = true;
+            }
+        }
+
+        // Constructor nhận thông tin User
+        public Page32(string tenNguoiDung) : this()
+        {
+            // Kiểm tra nếu có tên thì gán vào TextBlock
+            if (!string.IsNullOrEmpty(tenNguoiDung))
+            {
+                txtUserName.Text = tenNguoiDung;
+            }
+        }
+
         public Page32(Customer user) : this()
         {
             _currentUser = user;
@@ -40,6 +72,8 @@ namespace PBL3
             if (_currentUser != null)
             {
                 txtUserName.Text = _currentUser.FullName;
+
+                myBell.LoadData(_currentUser as Customer);
             }
         }
 

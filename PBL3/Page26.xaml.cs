@@ -198,7 +198,6 @@ namespace PBL3
         private void btnLBBVP_Click(object sender, RoutedEventArgs e) => NavigationService.Navigate(new Page14(_currentUser));
         private void btnTaiKhoan_Click(object sender, RoutedEventArgs e) => NavigationService.Navigate(new Page15(_currentUser));
         private void btnPhanAnh_Click(object sender, RoutedEventArgs e) => NavigationService.Navigate(new Page16(_currentUser));
-        private void btnLogOut_Click(object sender, RoutedEventArgs e) => NavigationService.Navigate(new Page1());
         private void Button_Click(object sender, RoutedEventArgs e) { }
     }
 }

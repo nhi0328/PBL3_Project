@@ -1,4 +1,4 @@
-ï»¿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Windows;
@@ -24,6 +24,14 @@ namespace PBL3
             InitializeComponent();
         }
 
+        private readonly string _cccd;
+
+        public Page38(string cccd)
+        {
+            _cccd = cccd;
+            InitializeComponent();
+        }
+
         private void BtnBack_Click(object sender, RoutedEventArgs e)
         {
             if (NavigationService.CanGoBack) NavigationService.GoBack();
@@ -32,8 +40,75 @@ namespace PBL3
 
         private void BtnSavePassword_Click(object sender, RoutedEventArgs e)
         {
-            // Add password update logic here later
-            NavigationService.Navigate(new Page1());
+            // 1. L?y m?t kh?u t? ô nh?p (b?t k? ðang ?n hay hi?n)
+            string newPassword = txtNewPassword.Visibility == Visibility.Visible
+                ? txtNewPassword.Password
+                : txtVisiblePassword.Text;
+
+            string confirmPassword = txtConfirmPassword.Visibility == Visibility.Visible
+                ? txtConfirmPassword.Password
+                : txtVisibleConfirmPassword.Text;
+
+            // 2. Ki?m tra tính h?p l? cõ b?n
+            if (string.IsNullOrWhiteSpace(newPassword))
+            {
+                MessageBox.Show("Vui l?ng nh?p m?t kh?u m?i.", "Thông báo");
+                return;
+            }
+
+            if (newPassword != confirmPassword)
+            {
+                MessageBox.Show("M?t kh?u xác nh?n không kh?p. Vui l?ng nh?p l?i.", "L?i");
+                return;
+            }
+
+            // 3. Ti?n hành c?p nh?t DB và ghi Log
+            try
+            {
+                using TrafficSafetyDBContext db = new TrafficSafetyDBContext();
+
+                // T?m Customer d?a vào _cccd ð? ðý?c truy?n vào
+                var customer = db.Customers.FirstOrDefault(c => c.Cccd == _cccd);
+
+                if (customer == null)
+                {
+                    MessageBox.Show("Không t?m th?y thông tin tài kho?n ð? ð?i m?t kh?u.", "L?i");
+                    return;
+                }
+
+                // C?p nh?t m?t kh?u m?i (N?u có hàm bãm m?t kh?u MD5/Bcrypt th? nh? bãm ch? này)
+                customer.Password = newPassword;
+                db.SaveChanges(); // Lýu m?t kh?u m?i
+
+                // ==========================================
+                // ?? ÐO?N CODE GHI NH?T K? (LOG)
+                // ==========================================
+                // Chuy?n CCCD sang s? ð? lýu vào TargetValue
+                int targetIdValue = 0;
+                int.TryParse(customer.Cccd, out targetIdValue);
+
+                var newLog = new SystemLog
+                {
+                    Role = 3,                       // 3: Customer
+                    Id = customer.Cccd,             // ID c?a ngý?i th?c hi?n
+                    Action = 2,                     // 2: C?p nh?t
+                    TargetPrefix = "C",             // C: Customer
+                    TargetValue = targetIdValue.ToString(),
+                    Time = DateTime.Now
+                };
+                db.SystemLogs.Add(newLog);
+                db.SaveChanges(); // Lýu log
+                // ==========================================
+
+                MessageBox.Show("Ð?i m?t kh?u thành công! Vui l?ng ðãng nh?p l?i.", "Thành công");
+
+                // Chuy?n v? trang ðãng nh?p
+                NavigationService.Navigate(new Page1());
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Ð? x?y ra l?i trong quá tr?nh ð?i m?t kh?u: " + ex.Message, "L?i");
+            }
         }
 
         private void BtnToggleEye_Click(object sender, RoutedEventArgs e)

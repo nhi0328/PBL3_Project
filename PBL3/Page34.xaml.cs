@@ -30,6 +30,8 @@ namespace PBL3
             if (_currentUser != null)
             {
                 txtUserName.Text = _currentUser.FullName;
+
+                myBell.LoadData(_currentUser as Customer);
             }
             this.Loaded += Page34_Loaded;
         }
@@ -133,10 +135,26 @@ namespace PBL3
             NavigationService.Navigate(new Page8(_currentUser as Customer));
         }
 
-        // Đăng xuất
-        private void btnLogOut_Click(object sender, RoutedEventArgs e)
+
+        private void MenuLogout_Click(object sender, RoutedEventArgs e)
         {
             NavigationService.Navigate(new Page1());
+        }
+
+        private void MenuInfo_Click(object sender, RoutedEventArgs e)
+        {
+            NavigationService.Navigate(new Page6()); // Trang thông tin cá nhân
+        }
+
+        private void UserButton_Click(object sender, RoutedEventArgs e)
+        {
+            // Mở Menu
+            if (sender is Button btn && btn.ContextMenu != null)
+            {
+                btn.ContextMenu.PlacementTarget = btn;
+                btn.ContextMenu.Placement = System.Windows.Controls.Primitives.PlacementMode.Bottom;
+                btn.ContextMenu.IsOpen = true;
+            }
         }
     }
 }

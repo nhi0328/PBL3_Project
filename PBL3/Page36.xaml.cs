@@ -41,7 +41,7 @@ namespace PBL3
 
                 if (customer != null)
                 {
-                    NavigationService.Navigate(new Page37());
+                    NavigationService.Navigate(new Page37(customer.Cccd));
                 }
                 else
                 {

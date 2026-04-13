@@ -36,6 +36,8 @@ namespace PBL3
             if (_currentUser != null)
             {
                 txtUserName.Text = $"Cán bộ: {_currentUser.OfficerId}";
+
+                myBell.LoadData(_currentUser as Officer);
             }
             LoadData();
         }

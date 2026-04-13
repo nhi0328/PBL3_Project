@@ -76,8 +76,6 @@
                     <RowDefinition Height="110"/>
                     <RowDefinition Height="80"/>
                     <RowDefinition Height="80"/>
-                    <RowDefinition Height="150"/>
-                    <RowDefinition Height="70"/>
                 </Grid.RowDefinitions>
                 <Button Click="BtnTraCuuNhanh_Click" Background="White" Grid.Row="0" BorderThickness="0" VerticalAlignment="Top" Height="80">
                     <StackPanel Orientation="Horizontal" Width="350">
@@ -236,35 +234,6 @@
                         </Style>
                     </Button.Style>
                 </Button>
-                <Button Click="BtnLogOut_Click" Background="#C62828" Grid.Row="6" BorderThickness="0" VerticalAlignment="Bottom" Margin="0,0,0,0">
-                    <StackPanel Orientation="Horizontal" Width="400">
-                        <TextBlock Text="Đăng xuất" Foreground="White" VerticalAlignment="Center" Margin="100,0,0,0" FontSize="30" FontFamily="Calibri"/>
-                        <Viewbox Width="35" Height="30" Margin="10,0,0,0">
-                            <Path Fill="White" Data="M16,17V14H9V10H16V7L21,12L16,17M14,2A2,2 0 0,1 16,4V9H14V4H5V20H14V15H16V20A2,2 0 0,1 14,22H5A2,2 0 0,1 3,20V4A2,2 0 0,1 5,2H14Z" />
-                        </Viewbox>
-                    </StackPanel>
-                    <Button.Style>
-                        <Style TargetType="Button">
-                            <Setter Property="Template">
-                                <Setter.Value>
-                                    <ControlTemplate TargetType="Button">
-                                        <Border x:Name="border" Background="{TemplateBinding Background}" >
-                                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                        </Border>
-                                        <ControlTemplate.Triggers>
-                                            <Trigger Property="IsMouseOver" Value="True">
-                                                <Setter TargetName="border" Property="Background" Value="#cc7274"/>
-                                            </Trigger>
-                                            <Trigger Property="IsPressed" Value="True">
-                                                <Setter TargetName="border" Property="Background" Value="#dea2a3"/>
-                                            </Trigger>
-                                        </ControlTemplate.Triggers>
-                                    </ControlTemplate>
-                                </Setter.Value>
-                            </Setter>
-                        </Style>
-                    </Button.Style>
-                </Button>
             </Grid>
         </Border>
 
@@ -364,7 +333,7 @@
                                 <Border CornerRadius="8" BorderBrush="#CCC" BorderThickness="1" Background="#FAFAFA">
                                     <TextBox Grid.Column="1" VerticalContentAlignment="Center" FontSize="20"
                                         Background="Transparent" BorderThickness="0" Foreground="#333" 
-                                            x:Name="txtIdentifier">
+                                            x:Name="txtIdentifier" KeyDown="txtIdentifier_KeyDown">
                                         <TextBox.Resources>
                                             <Style TargetType="{x:Type TextBox}">
                                                 <Setter Property="Template">
@@ -423,7 +392,9 @@
                                 </Button>
                             </Grid>
 
-                            <DataGrid Margin="0,30,0,0" Height="250" AutoGenerateColumns="False" CanUserAddRows="False" 
+                            <TextBlock x:Name="txtErrorMessage" Foreground="Red" FontSize="16" Margin="0,10,0,0" Visibility="Collapsed" HorizontalAlignment="Center"/>
+
+                            <DataGrid x:Name="dgViolations" Margin="0,30,0,0" Height="250" AutoGenerateColumns="False" CanUserAddRows="False" 
                               HeadersVisibility="Column" Background="White" RowHeaderWidth="0" BorderBrush="#EEE" BorderThickness="1">
                                 <DataGrid.ColumnHeaderStyle>
                                     <Style TargetType="DataGridColumnHeader">

@@ -52,7 +52,11 @@ namespace PBL3
         {
             _currentUser = user;
             if (_currentUser != null)
+            {
                 txtUserName.Text = $"Cán bộ: {_currentUser.OfficerId}";
+
+                myBell.LoadData(_currentUser as Officer);
+            }
         }
 
         // Constructor khi Chỉnh sửa Biên bản
@@ -75,7 +79,6 @@ namespace PBL3
         private void btnNLVP_Click(object sender, RoutedEventArgs e) => NavigationService?.Navigate(new Page14(_currentUser));
         private void btnTaiKhoan_Click(object sender, RoutedEventArgs e) => NavigationService?.Navigate(new Page15(_currentUser));
         private void btnPhanAnh_Click(object sender, RoutedEventArgs e) => NavigationService?.Navigate(new Page16(_currentUser));
-        private void btnLogOut_Click(object sender, RoutedEventArgs e) => NavigationService?.Navigate(new Page1());
         private void BtnBack_Click(object sender, RoutedEventArgs e)
         {
             if (NavigationService?.CanGoBack == true) NavigationService.GoBack();
@@ -740,6 +743,18 @@ namespace PBL3
                         record.DemeritPoints = points;
                     }
 
+                    db.SaveChanges();
+
+                    var newLog = new SystemLog
+                    {
+                        Role = 2,                              // 2: Cán bộ (Officer)
+                        Id = _currentUser.OfficerId,
+                        Action = _recordId.HasValue ? 2 : 1,
+                        TargetPrefix = "B",
+                        TargetValue = record.ViolationRecordId.ToString(),
+                        Time = DateTime.Now
+                    };
+                    db.SystemLogs.Add(newLog);
                     db.SaveChanges();
 
                     new CustomMessageBox("Đã lưu biên bản vi phạm vào hệ thống thành công!", "Thành công").ShowDialog();

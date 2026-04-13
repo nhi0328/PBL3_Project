@@ -1,0 +1,232 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Text;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Documents;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Effects;
+using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
+using System.Windows.Shapes;
+using Microsoft.EntityFrameworkCore;
+using PBL3.Models;
+
+namespace PBL3
+{
+    public partial class Page51 : Page
+    {
+        private readonly Admin _currentUser;
+        private readonly LuatItem _currentLuat;
+
+        // Constructor mặc định
+        public Page51()
+        {
+            InitializeComponent();
+            this.Loaded += Page51_Loaded;
+        }
+
+        // Constructor chính
+        public Page51(LuatItem luat, Admin user) : this()
+        {
+            _currentLuat = luat;
+            _currentUser = user;
+            if (_currentUser != null)
+            {
+                txtUserName.Text = $"Quản trị viên"; // Hoặc _currentUser.HoTen nếu có
+
+                myBell.LoadData(_currentUser as Admin);
+            }
+        }
+
+        private void Page51_Loaded(object sender, RoutedEventArgs e)
+        {
+            if (System.ComponentModel.DesignerProperties.GetIsInDesignMode(this)) return;
+            LoadData();
+        }
+
+        private void LoadData()
+        {
+            if (_currentLuat == null) return;
+
+            txtTenLoi.Text = _currentLuat.TenLoi;
+            txtNghiDinh.Text = _currentLuat.CanCu;
+            txtNgayBanHanh.Text = _currentLuat.NgayBanHanh;
+            txtNgayHieuLuc.Text = _currentLuat.NgayHieuLuc;
+
+            if (_currentLuat.HasPhatTienXeMay)
+            {
+                spPhatXeMay.Visibility = Visibility.Visible;
+                txtPhatXeMay.Text = $"Phạt tiền từ {_currentLuat.PhatTienXeMay} đối với người điều khiển xe mô tô, xe máy";
+            }
+            else
+            {
+                spPhatXeMay.Visibility = Visibility.Collapsed;
+            }
+
+            if (_currentLuat.HasPhatTienOto)
+            {
+                spPhatOto.Visibility = Visibility.Visible;
+                txtPhatOto.Text = $"Phạt tiền từ {_currentLuat.PhatTienOto} đối với người điều khiển xe Ô tô";
+            }
+            else
+            {
+                spPhatOto.Visibility = Visibility.Collapsed;
+            }
+
+            if (_currentLuat.HasTruDiem)
+            {
+                spTruDiem.Visibility = Visibility.Visible;
+                txtTruDiem.Text = _currentLuat.TruDiem;
+            }
+            else
+            {
+                spTruDiem.Visibility = Visibility.Collapsed;
+            }
+        }
+
+        // --- CÁC HÀM TÌM KIẾM & LỌC ---
+        private void btnSearch_Click(object sender, RoutedEventArgs e) { }
+        private void txtIdentifier_TextChanged(object sender, TextChangedEventArgs e) { }
+
+        private string RemoveDiacritics(string text)
+        {
+            if (string.IsNullOrWhiteSpace(text)) return text;
+            var normalizedString = text.Normalize(System.Text.NormalizationForm.FormD);
+            var stringBuilder = new StringBuilder();
+
+            foreach (var c in normalizedString)
+            {
+                var unicodeCategory = System.Globalization.CharUnicodeInfo.GetUnicodeCategory(c);
+                if (unicodeCategory != System.Globalization.UnicodeCategory.NonSpacingMark)
+                {
+                    stringBuilder.Append(c);
+                }
+            }
+            return stringBuilder.ToString().Normalize(System.Text.NormalizationForm.FormC).Replace('đ', 'd').Replace('Đ', 'D').ToLower();
+        }
+
+        private void FilterLaws()
+        {
+        }
+
+        private void UserButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is Button btn && btn.ContextMenu != null)
+            {
+                btn.ContextMenu.PlacementTarget = btn;
+                btn.ContextMenu.Placement = System.Windows.Controls.Primitives.PlacementMode.Bottom;
+                btn.ContextMenu.IsOpen = true;
+            }
+        }
+
+        private void MenuInfo_Click(object sender, RoutedEventArgs e) { }
+
+        private void MenuLogout_Click(object sender, RoutedEventArgs e)
+        {
+            NavigationService.Navigate(new Page1());
+        }
+
+        private void btnTraCuuNhanh_Click(object sender, RoutedEventArgs e)
+        {
+            NavigationService.Navigate(new Page44(_currentUser));
+        }
+
+        private void btnTraCuuLuat_Click(object sender, RoutedEventArgs e)
+        {
+            NavigationService.Navigate(new Page45(_currentUser));
+        }
+
+        private void btnTaiKhoan_Click(object sender, RoutedEventArgs e)
+        {
+            NavigationService.Navigate(new Page46(_currentUser));
+        }
+
+        private void btnPhanAnh_Click(object sender, RoutedEventArgs e)
+        {
+            NavigationService.Navigate(new Page47(_currentUser));
+        }
+
+        private void btnLichSu_Click(object sender, RoutedEventArgs e)
+        {
+            NavigationService.Navigate(new Page48(_currentUser));
+        }
+
+        private void btnThongKe_Click(object sender, RoutedEventArgs e)
+        {
+            NavigationService.Navigate(new Page49(_currentUser));
+        }
+        private void btnBack_Click(object sender, RoutedEventArgs e)
+        {
+            if (NavigationService.CanGoBack)
+            {
+                NavigationService.GoBack();
+            }
+            else
+            {
+                NavigationService.Navigate(new Page45(_currentUser));
+            }
+        }
+
+        private void btnChinhSua_Click(object sender, RoutedEventArgs e)
+        {
+            if (_currentLuat != null)
+            {
+                var l = new LuatItem 
+                {
+                    LawId = _currentLuat.LawId,
+                    TenLoi = _currentLuat.TenLoi,
+                    PhatTienOto = _currentLuat.PhatTienOto,
+                    PhatTienXeMay = _currentLuat.PhatTienXeMay,
+                    TruDiem = _currentLuat.TruDiem,
+                    CanCu = _currentLuat.CanCu,
+                    NgayBanHanh = _currentLuat.NgayBanHanh,
+                    NgayHieuLuc = _currentLuat.NgayHieuLuc
+                };
+                //NavigationService.Navigate(new Page52(l, _currentUser));
+            }
+        }
+
+        private void btnXoaLuat_Click(object sender, RoutedEventArgs e)
+        {
+            if (_currentLuat == null) return;
+
+            MessageBoxResult result = MessageBox.Show($"Bạn có chắc chắn muốn xoá luật '{_currentLuat.TenLoi}' không?", "Xác nhận Xoá", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+
+            if (result == MessageBoxResult.Yes)
+            {
+                try
+                {
+                    using (var db = new TrafficSafetyDBContext())
+                    {
+                        var lawToDelete = db.TrafficLaws.FirstOrDefault(l => l.LawId == _currentLuat.LawId);
+
+                        if (lawToDelete != null)
+                        {
+                            db.TrafficLaws.Remove(lawToDelete);
+                            db.SaveChanges();
+
+                            new CustomMessageBox("Đã xoá luật thành công.", "Thông báo").ShowDialog();
+
+                            NavigationService.Navigate(new Page45(_currentUser));
+                        }
+                        else
+                        {
+                            new CustomMessageBox("Không tìm thấy luật trên hệ thống. Có thể nó đã bị xóa trước đó.", "Lỗi").ShowDialog();
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    new CustomMessageBox("Lỗi khi Xoá CSDL: " + ex.Message, "Lỗi").ShowDialog();
+                }
+            }
+        }
+    }
+}
+
+

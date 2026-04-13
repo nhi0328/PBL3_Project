@@ -1,12 +1,12 @@
 ﻿using System;
-using PBL3.Models; // Namespace chứa các bảng SQL của Nhi
 using System.Linq;
+using PBL3.Models;
 
 namespace PBL3.Utils
 {
     public static class TrackingHelper
     {
-        // 1. DỊCH MÃ HÀNH ĐỘNG (1, 2, 3, 4)
+        // 1. Dịch mã hành động (giữ nguyên logic cũ)
         public static string GetActionName(int actionCode)
         {
             switch (actionCode)
@@ -15,86 +15,90 @@ namespace PBL3.Utils
                 case 2: return "Cập nhật";
                 case 3: return "Xóa";
                 case 4: return "Xác nhận xử lý";
-                default: return "Không xác định";
+                default: return "Hành động lạ";
             }
         }
 
-        // 2. TÁCH CHỮ CÁI ĐỂ NHẬN DIỆN BẢNG VÀ DỊCH TÊN ĐỐI TƯỢNG
-        public static string GetTargetDisplayName(string targetId)
+        // 2. Dịch thông tin đối tượng (Dùng tham số string vì TargetValue đã là chữ)
+        public static string GetDetailedTargetInfo(string prefix, string value, TrafficSafetyDBContext db)
         {
-            if (string.IsNullOrEmpty(targetId)) return "Lỗi dữ liệu";
+            if (string.IsNullOrEmpty(prefix) || string.IsNullOrEmpty(value)) return "Không có dữ liệu";
 
-            char prefix = targetId[0]; // Lấy chữ cái đầu tiên (P, B, L, C, G)
-
-            switch (prefix)
+            switch (prefix.ToUpper())
             {
-                case 'P': return $"Phản ánh ({targetId})";
-                case 'B': return $"Biên bản phạt ({targetId})";
-                case 'L': return $"Điều luật ({targetId})";
-                case 'C': return $"Người dân ({targetId})";
-                case 'G': return $"Bằng lái ({targetId})";
-                default: return $"Đối tượng khác ({targetId})";
-            }
-        }
-
-        public static string GetDetailedTargetInfo(string targetId, TrafficSafetyDBContext db)
-        {
-            // Chặn lỗi nếu targetId rỗng hoặc bị thiếu số
-            if (string.IsNullOrEmpty(targetId) || targetId.Length < 2) return "Lỗi dữ liệu";
-
-            char prefix = targetId[0]; // Lấy chữ cái đầu (P, B, L, C, G)
-
-            // CẮT BỎ CHỮ CÁI ĐẦU, chỉ lấy phần đuôi. Ví dụ: "L123" -> "123", "C079" -> "079"
-            string realIdString = targetId.Substring(1);
-
-            switch (prefix)
-            {
-                case 'L':
-                    // 💡 Bảng Luật (LawId là INT): Cần ép kiểu từ String sang Int
-                    if (int.TryParse(realIdString, out int lawIdInt))
+                // ===== CÁC ĐỐI TƯỢNG CÓ ID LÀ SỐ (Cần ép kiểu về INT) =====
+                case "L":
+                    if (int.TryParse(value, out int lawId))
                     {
-                        var luat = db.TrafficLaws.FirstOrDefault(x => x.LawId == lawIdInt);
-                        return luat != null ? $"Luật: {luat.LawName}" : "Luật (Đã xóa)";
+                        var luat = db.TrafficLaws.FirstOrDefault(x => x.LawId == lawId);
+                        return luat != null ? $"Luật: {luat.LawName}" : $"Mã luật {lawId} (Đã xóa)";
                     }
-                    return "Mã luật bị lỗi định dạng";
+                    return "Lỗi mã luật";
 
-                case 'C':
-                    // 💡 Bảng Khách hàng (Cccd là STRING): So sánh chuỗi trực tiếp, KHÔNG cần ép sang Int
-                    var khach = db.Customers.FirstOrDefault(x => x.Cccd == realIdString);
-                    return khach != null ? $"Người dân: {khach.FullName}" : "Người dân (Đã xóa)";
-
-                case 'B':
-                    // 💡 Bảng Biên bản: Giả sử ViolationRecordId là kiểu INT 
-                    // (Nếu của Nhi là STRING thì xóa int.TryParse đi, làm y như case 'C' nha)
-                    if (int.TryParse(realIdString, out int bbIdInt))
+                case "P":
+                    if (int.TryParse(value, out int complaintId))
                     {
-                        var bb = db.ViolationRecords.FirstOrDefault(x => x.ViolationRecordId == bbIdInt);
+                        var pa = db.Complaints.FirstOrDefault(x => x.ComplaintId == complaintId);
+                        return pa != null ? $"Phản ánh: {pa.Title}" : $"Phản ánh #{complaintId} (Đã xóa)";
+                    }
+                    return "Lỗi mã phản ánh";
+
+                case "B":
+                    if (int.TryParse(value, out int recordId))
+                    {
+                        var bb = db.ViolationRecords.FirstOrDefault(x => x.ViolationRecordId == recordId);
                         if (bb != null)
                         {
-                            // Lấy LawId của biên bản chui sang bảng Luật để tìm Tên
-                            var luatCuaBB = db.TrafficLaws.FirstOrDefault(l => l.LawId == bb.LawId);
-                            string tenLuat = luatCuaBB != null ? luatCuaBB.LawName : "Lỗi không xác định";
-                            return $"Biên bản lỗi: {tenLuat}";
+                            var tenLuat = db.TrafficLaws.Where(l => l.LawId == bb.LawId).Select(l => l.LawName).FirstOrDefault();
+                            return $"Biên bản lỗi: {tenLuat ?? "Không rõ"}";
                         }
+                        return $"Biên bản #{recordId} (Đã xóa)";
                     }
-                    return "Biên bản (Đã xóa)";
+                    return "Lỗi mã biên bản";
 
-                case 'P':
-                    // 💡 Bảng Phản ánh: Giả sử ComplaintId là INT
-                    if (int.TryParse(realIdString, out int paIdInt))
+                // ===== CÁC ĐỐI TƯỢNG CÓ ID LÀ CHUỖI (Dùng thẳng luôn) =====
+                case "C":
+                    var khach = db.Customers.FirstOrDefault(x => x.Cccd == value);
+                    return khach != null ? $"Dân: {khach.FullName}" : $"Người dân {value} (Đã xóa)";
+
+                case "G":
+                    var bang = db.DrivingLicenses.FirstOrDefault(x => x.LicenseNumber == value);
+                    return bang != null ? $"GPLX: {bang.LicenseNumber}" : $"GPLX {value} (Đã xóa)";
+
+                case "O":
+                    var officer = db.Officers.FirstOrDefault(x => x.OfficerId == value);
+                    return officer != null ? $"Cán bộ: {officer.OfficerId}" : $"Cán bộ {value} (Đã xóa)";
+
+                case "V":
+                    // 1. Tìm chiếc xe dựa vào Biển số
+                    var vehicle = db.Vehicles.FirstOrDefault(x => x.LicensePlate == value);
+
+                    if (vehicle != null)
                     {
-                        var pa = db.Complaints.FirstOrDefault(x => x.ComplaintId == paIdInt);
-                        return pa != null ? $"Phản ánh: {pa.Title}" : "Phản ánh (Đã xóa)";
-                    }
-                    return "Mã phản ánh bị lỗi định dạng";
+                        // 2. Tìm tên Loại xe từ bảng VehicleTypes dựa vào VehicleTypeId
+                        var loaiXe = db.VehicleTypes.FirstOrDefault(t => t.VehicleTypeId == vehicle.VehicleTypeId);
 
-                case 'G':
-                    // 💡 Bảng Bằng lái: LicenseNumber thường là STRING (để giữ số 0 ở đầu)
-                    var bang = db.DrivingLicenses.FirstOrDefault(x => x.LicenseNumber == realIdString);
-                    return bang != null ? $"Bằng lái xe: {bang.LicenseNumber}" : "Bằng lái xe (Đã xóa)";
+                        string tenLoai = loaiXe != null ? loaiXe.VehicleTypeName : "Không rõ loại xe";
+
+                        return $"Phương tiện: {vehicle.LicensePlate} ({tenLoai})";
+                    }
+
+                    return $"Phương tiện {value} (Đã xóa)";
 
                 default:
-                    return GetTargetDisplayName(targetId);
+                    return $"Đối tượng {prefix}{value}";
+            }
+        }
+
+        // Dịch mã Role sang chữ
+        public static string GetRoleName(int roleCode)
+        {
+            switch (roleCode)
+            {
+                case 1: return "Quản trị viên"; // Admin
+                case 2: return "Cán bộ";        // Officer
+                case 3: return "Người dân";     // Customer
+                default: return "Không xác định";
             }
         }
     }

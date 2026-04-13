@@ -11,10 +11,21 @@ using System.Windows.Media.Effects;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Linq;
+using Microsoft.EntityFrameworkCore;
 using PBL3.Models;
 
 namespace PBL3
 {
+    public class ViolationQuickDisplay
+    {
+        public int STT { get; set; }
+        public string Loi { get; set; }
+        public string ThoiGian { get; set; }
+        public string DiaDiem { get; set; }
+        public string TrangThai { get; set; }
+    }
+
     public partial class Page4 : Page
     {
         public Page4()
@@ -95,18 +106,73 @@ namespace PBL3
             NavigationService.Navigate(new Page8(_currentUser as Customer));
         }
 
-        // Đăng xuất
-        private void BtnLogOut_Click(object sender, RoutedEventArgs e)
-        {
-            NavigationService.Navigate(new Page1());
-        }
-
         // Xử lý sự kiện nút Tìm kiếm
         private void BtnSearch_Click(object sender, RoutedEventArgs e)
         {
-            string keyword = txtIdentifier.Text;
-            new CustomMessageBox($"Đang tìm kiếm luật với từ khóa: {keyword}").ShowDialog();
-            // Viết logic tìm kiếm SQL ở đây...
+            PerformSearch();
+        }
+
+        private void txtIdentifier_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                PerformSearch();
+            }
+        }
+
+        private void PerformSearch()
+        {
+            if (txtIdentifier == null || dgViolations == null || txtErrorMessage == null) return;
+
+            string keyword = txtIdentifier.Text.Trim();
+
+            if (string.IsNullOrEmpty(keyword))
+            {
+                txtErrorMessage.Visibility = Visibility.Collapsed;
+                dgViolations.Visibility = Visibility.Collapsed;
+                return;
+            }
+
+            using var db = new TrafficSafetyDBContext();
+
+            var violations = db.ViolationRecords
+                               .Where(r => r.LicensePlate != null && r.LicensePlate.Contains(keyword))
+                               .OrderByDescending(r => r.ViolationDate)
+                               .ThenByDescending(r => r.ViolationTime)
+                               .ToList();
+
+            if (!violations.Any())
+            {
+                var vehicle = db.Vehicles.FirstOrDefault(v => v.LicensePlate.Contains(keyword));
+
+                if (vehicle != null)
+                {
+                    txtErrorMessage.Text = $"Biển số xe {vehicle.LicensePlate} hiện tại không có lỗi vi phạm nào.";
+                }
+                else
+                {
+                    txtErrorMessage.Text = $"Không tìm thấy dữ liệu phương tiện hoặc vi phạm nào cho từ khóa: '{keyword}'.";
+                }
+
+                txtErrorMessage.Visibility = Visibility.Visible;
+                dgViolations.Visibility = Visibility.Collapsed;
+                return;
+            }
+
+            txtErrorMessage.Visibility = Visibility.Collapsed;
+            dgViolations.Visibility = Visibility.Visible;
+
+            int stt = 1;
+            var listSource = violations.Select(v => new ViolationQuickDisplay
+            {
+                STT = stt++,
+                Loi = v.ViolationDescription ?? "Vi phạm giao thông",
+                ThoiGian = $"{v.ViolationTime?.ToString(@"hh\:mm")} {v.ViolationDate?.ToString("dd/MM/yyyy")}",
+                DiaDiem = v.Address ?? "Không xác định",
+                TrangThai = v.StatusText
+            }).ToList();
+
+            dgViolations.ItemsSource = listSource;
         }
     }
 }

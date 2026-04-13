@@ -30,7 +30,7 @@ namespace PBL3.Models
         public virtual DbSet<VehicleColor> VehicleColors { get; set; } = null!;
         public virtual DbSet<VehicleType> VehicleTypes { get; set; } = null!;
         public virtual DbSet<Ward> Wards { get; set; } = null!;
-        public DbSet<TrackingOfficer> TrackingOfficers { get; set; }
+        public DbSet<SystemLog> SystemLogs { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

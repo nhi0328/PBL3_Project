@@ -89,7 +89,34 @@
     <Compile Update="Page44.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="Page45.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Page46.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Page47.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Page48.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Page49.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="Page5.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Page50.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Page51.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Page52.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Page53.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="Page6.xaml.cs">

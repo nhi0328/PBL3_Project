@@ -50,6 +50,7 @@ namespace PBL3
             if (_currentUser != null)
             {
                 txtUserName.Text = $"Cán bộ: {_currentUser.OfficerId}";
+                myBell.LoadData(_currentUser as Officer);
             }
         }
 
@@ -66,7 +67,7 @@ namespace PBL3
 
         private void MenuInfo_Click(object sender, RoutedEventArgs e)
         {
-            // NavigationService.Navigate(new Page_ThongTinCanBo(_currentUser));
+            NavigationService.Navigate(new Page15(_currentUser));
         }
 
         private void MenuLogout_Click(object sender, RoutedEventArgs e)

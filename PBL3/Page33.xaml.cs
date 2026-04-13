@@ -1,4 +1,4 @@
-﻿using PBL3.Models;
+using PBL3.Models;
 using PBL3.ViewModels;
 using System;
 using System.Linq;
@@ -29,6 +29,29 @@ namespace PBL3
             if (_currentUser != null)
             {
                 txtUserName.Text = _currentUser.FullName;
+
+                myBell.LoadData(_currentUser as Customer);
+            }
+        }
+
+        private void MenuLogout_Click(object sender, RoutedEventArgs e)
+        {
+            NavigationService.Navigate(new Page1());
+        }
+
+        private void MenuInfo_Click(object sender, RoutedEventArgs e)
+        {
+            NavigationService.Navigate(new Page6()); // Trang th�ng tin c� nh�n
+        }
+
+        private void UserButton_Click(object sender, RoutedEventArgs e)
+        {
+            // M? Menu
+            if (sender is Button btn && btn.ContextMenu != null)
+            {
+                btn.ContextMenu.PlacementTarget = btn;
+                btn.ContextMenu.Placement = System.Windows.Controls.Primitives.PlacementMode.Bottom;
+                btn.ContextMenu.IsOpen = true;
             }
         }
 
@@ -72,13 +95,13 @@ namespace PBL3
 
             if (string.IsNullOrEmpty(newPassword) || string.IsNullOrEmpty(confirmPassword))
             {
-                new CustomMessageBox("Vui lòng điền đầy đủ thông tin!", "Cảnh báo").ShowDialog();
+                new CustomMessageBox("Vui l?ng �i?n �?y �? th�ng tin!", "C?nh b�o").ShowDialog();
                 return;
             }
 
             if (newPassword != confirmPassword)
             {
-                new CustomMessageBox("Mật khẩu mới và mật khẩu xác nhận không khớp!", "Lỗi").ShowDialog();
+                new CustomMessageBox("M?t kh?u m?i v� m?t kh?u x�c nh?n kh�ng kh?p!", "L?i").ShowDialog();
                 return;
             }
 
@@ -94,6 +117,21 @@ namespace PBL3
 
                     _currentUser.Password = newPassword;
 
+                    int targetIdValue = 0;
+                    int.TryParse(customer.Cccd, out targetIdValue);
+
+                    var newLog = new SystemLog
+                    {
+                        Role = 3,                       // 3: Customer
+                        Id = customer.Cccd,             // CCCD c?a ng�?i �ang �?i
+                        Action = 2,                     // 2: C?p nh?t
+                        TargetPrefix = "C",             // C: Customer
+                        TargetValue = targetIdValue.ToString(),
+                        Time = DateTime.Now
+                    };
+                    db.SystemLogs.Add(newLog);
+                    db.SaveChanges();
+
                     // Message box is replaced by visual success text
                     if (tbStatus != null)
                     {
@@ -107,41 +145,41 @@ namespace PBL3
             }
             catch (Exception ex)
             {
-                new CustomMessageBox($"Có lỗi xảy ra: {ex.Message}", "Lỗi").ShowDialog();
+                new CustomMessageBox($"C� l?i x?y ra: {ex.Message}", "L?i").ShowDialog();
             }
         }
 
-        //Chuyển qua trang Tra cứu nhanh
+        //Chuy?n qua trang Tra c?u nhanh
         private void btnTraCuuNhanh_Click(object sender, RoutedEventArgs e)
         {
             NavigationService.Navigate(new Page4(_currentUser as Customer));
         }
 
-        // Chuyển trang Tra cứu luật
+        // Chuy?n trang Tra c?u lu?t
         private void btnTraCuuLuat_Click(object sender, RoutedEventArgs e)
         {
             NavigationService.Navigate(new Page5(_currentUser as Customer));
         }
 
-        // Chuyển trang Quản lý phương tiện
+        // Chuy?n trang Qu?n l? ph��ng ti?n
         private void btnQLPT_Click(object sender, RoutedEventArgs e)
         {
             NavigationService.Navigate(new Page6(_currentUser as Customer));
         }
 
-        //Chuyển trang Quản lý tài khoản
+        //Chuy?n trang Qu?n l? t�i kho?n
         private void btnTaiKhoan_Click(object sender, RoutedEventArgs e)
         {
             NavigationService.Navigate(new Page7(_currentUser as Customer));
         }
 
-        // chuyển trang Phản ánh
+        // chuy?n trang Ph?n �nh
         private void btnPhanAnh_Click(object sender, RoutedEventArgs e)
         {
             NavigationService.Navigate(new Page8(_currentUser as Customer));
         }
 
-        // Đăng xuất
+        // ��ng xu?t
         private void btnLogOut_Click(object sender, RoutedEventArgs e)
         {
             NavigationService.Navigate(new Page1());

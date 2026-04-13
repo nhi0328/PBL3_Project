@@ -33,20 +33,13 @@ namespace PBL3
             if (_currentUser != null)
             {
                 txtUserName.Text = $"Cán bộ: {_currentUser.OfficerId}";
+                myBell.LoadData(_currentUser as Officer);
             }
         }
 
         private void MenuInfo_Click(object sender, RoutedEventArgs e)
         {
             //NavigationService.Navigate(new Page());
-        }
-        private void MenuAdminUI_Click(object sender, RoutedEventArgs e)
-        {
-            NavigationService.Navigate(new Page9());
-        }
-        private void MenuOfficerUI_Click(object sender, RoutedEventArgs e)
-        {
-            //NavigationService.Navigate(new Page10());
         }
         private void MenuLogout_Click(object sender, RoutedEventArgs e)
         {
@@ -55,32 +48,6 @@ namespace PBL3
 
         private void UserButton_Click(object sender, RoutedEventArgs e)
         {
-            if (_currentUser == null) return;
-
-            // PHÂN QUYỀN HIỂN THỊ MENU
-
-            if (_currentUser is Customer)
-            {
-                // Công dân: Ẩn các nút chuyển giao diện và thanh kẻ phụ
-                miAdminUI.Visibility = Visibility.Collapsed;
-                miOfficerUI.Visibility = Visibility.Collapsed;
-                sep1.Visibility = Visibility.Collapsed;
-            }
-            else if (_currentUser is Officer)
-            {
-                // Cán bộ: Được xem giao diện Khách hàng
-                miAdminUI.Visibility = Visibility.Visible;
-                miOfficerUI.Visibility = Visibility.Collapsed;
-                sep1.Visibility = Visibility.Visible;
-            }
-            else if (_currentUser is Admin)
-            {
-                // Quản trị viên: Hiện tất cả các lựa chọn để kiểm tra
-                miAdminUI.Visibility = Visibility.Visible;
-                miOfficerUI.Visibility = Visibility.Visible;
-                sep1.Visibility = Visibility.Visible;
-            }
-
             // Mở Menu
             Button btn = sender as Button;
             if (btn != null && btn.ContextMenu != null)

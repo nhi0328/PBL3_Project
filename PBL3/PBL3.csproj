@@ -9,6 +9,10 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 	</PropertyGroup>
 
+	<ItemGroup>
+	  <Compile Remove="Models\TrackingOfficer.cs" />
+	</ItemGroup>
+
   <ItemGroup>
     <None Remove="Assets\Images\QuocHuy.png" />
   </ItemGroup>

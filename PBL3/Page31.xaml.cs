@@ -1,4 +1,4 @@
-﻿using PBL3.Models;
+using PBL3.Models;
 using PBL3.ViewModels;
 using System;
 using System.Linq;
@@ -22,13 +22,45 @@ namespace PBL3
 
         public Page31() { InitializeComponent(); }
 
-        public Page31(Customer user) : this()
+        public Page31(Customer user)
         {
+            InitializeComponent();
             _currentUser = user;
-            this.Loaded += Page31_Loaded;
+
             if (_currentUser != null)
             {
-                txtUserName.Text = _currentUser.FullName;
+                txtUserName.Text = (_currentUser as Customer)?.FullName;
+                myBell.LoadData(_currentUser as Customer);
+            }
+        }
+        private void MenuLogout_Click(object sender, RoutedEventArgs e)
+        {
+            NavigationService.Navigate(new Page1());
+        }
+
+        private void MenuInfo_Click(object sender, RoutedEventArgs e)
+        {
+            NavigationService.Navigate(new Page6()); // Trang th�ng tin c� nh�n
+        }
+
+        private void UserButton_Click(object sender, RoutedEventArgs e)
+        {
+            // M? Menu
+            if (sender is Button btn && btn.ContextMenu != null)
+            {
+                btn.ContextMenu.PlacementTarget = btn;
+                btn.ContextMenu.Placement = System.Windows.Controls.Primitives.PlacementMode.Bottom;
+                btn.ContextMenu.IsOpen = true;
+            }
+        }
+
+        // Constructor nh?n th�ng tin User
+        public Page31(string tenNguoiDung) : this()
+        {
+            // Ki?m tra n?u c� t�n th? g�n v�o TextBlock
+            if (!string.IsNullOrEmpty(tenNguoiDung))
+            {
+                txtUserName.Text = tenNguoiDung;
             }
         }
 
@@ -75,13 +107,13 @@ namespace PBL3
 
             if (string.IsNullOrEmpty(oldPassword) || string.IsNullOrEmpty(newPassword) || string.IsNullOrEmpty(confirmPassword))
             {
-                new CustomMessageBox("Vui lòng điền đầy đủ thông tin!", "Cảnh báo").ShowDialog();
+                new CustomMessageBox("Vui l?ng �i?n �?y �? th�ng tin!", "C?nh b�o").ShowDialog();
                 return;
             }
 
             if (newPassword != confirmPassword)
             {
-                new CustomMessageBox("Mật khẩu mới và mật khẩu xác nhận không khớp!", "Lỗi").ShowDialog();
+                new CustomMessageBox("M?t kh?u m?i v� m?t kh?u x�c nh?n kh�ng kh?p!", "L?i").ShowDialog();
                 return;
             }
 
@@ -94,16 +126,31 @@ namespace PBL3
                 {
                     if (customer.Password != oldPassword)
                     {
-                        new CustomMessageBox("Sai mật khẩu cũ!", "Lỗi").ShowDialog();
+                        new CustomMessageBox("Sai m?t kh?u c?!", "L?i").ShowDialog();
                         return;
                     }
 
                     customer.Password = newPassword;
                     db.SaveChanges();
-                    
+
+                    int targetIdValue = 0;
+                    int.TryParse(customer.Cccd, out targetIdValue);
+
+                    var newLog = new SystemLog
+                    {
+                        Role = 3,                       // 3: Customer
+                        Id = customer.Cccd,             // CCCD c?a ng�?i th?c hi?n
+                        Action = 2,                     // 2: C?p nh?t
+                        TargetPrefix = "C",             // C: Customer
+                        TargetValue = targetIdValue.ToString(),
+                        Time = DateTime.Now
+                    };
+                    db.SystemLogs.Add(newLog);
+                    db.SaveChanges();
+
                     _currentUser.Password = newPassword;
 
-                    new CustomMessageBox("Đổi mật khẩu thành công!", "Thông báo").ShowDialog();
+                    new CustomMessageBox("�?i m?t kh?u th�nh c�ng!", "Th�ng b�o").ShowDialog();
                     
                     // Clear password boxes
                     pwdOld.Password = "";
@@ -113,7 +160,7 @@ namespace PBL3
             }
             catch (Exception ex)
             {
-                new CustomMessageBox($"Có lỗi xảy ra: {ex.Message}", "Lỗi").ShowDialog();
+                new CustomMessageBox($"C� l?i x?y ra: {ex.Message}", "L?i").ShowDialog();
             }
         }
 
@@ -128,7 +175,7 @@ namespace PBL3
 
             ConfirmDeleteBox confirm = new ConfirmDeleteBox();
 
-            // Nếu người dùng chọn "XÁC NHẬN XÓA" (nút đỏ)
+            // N?u ng�?i d�ng ch?n "X�C NH?N X�A" (n�t �?)
             if (confirm.ShowDialog() == true)
             {
                 try
@@ -138,55 +185,62 @@ namespace PBL3
                     
                     if (customer != null)
                     {
+                        int targetIdValue = 0;
+                        int.TryParse(customer.Cccd, out targetIdValue);
+
+                        var newLog = new SystemLog
+                        {
+                            Role = 3,                       // 3: Customer
+                            Id = customer.Cccd,
+                            Action = 3,                     // 3: X�a
+                            TargetPrefix = "C",             // C: Customer
+                            TargetValue = targetIdValue.ToString(),
+                            Time = DateTime.Now
+                        };
+                        db.SystemLogs.Add(newLog);
                         db.Customers.Remove(customer);
                         db.SaveChanges();
-
-                        new CustomMessageBox("Đã xóa tài khoản thành công!").ShowDialog();
-                        NavigationService.Navigate(new Page1()); // Quay về trang chủ
+                        new CustomMessageBox("�? x�a t�i kho?n th�nh c�ng!").ShowDialog();
+                        NavigationService.Navigate(new Page1()); // Quay v? trang ch?
                     }
                 }
                 catch (Exception ex)
                 {
-                    new CustomMessageBox($"Xóa tài khoản thất bại: {ex.Message}", "Lỗi").ShowDialog();
+                    new CustomMessageBox($"X�a t�i kho?n th?t b?i: {ex.Message}", "L?i").ShowDialog();
                 }
             }
-            // Nếu chọn "HỦY BỎ" thì không làm gì cả, hộp thoại tự đóng
+            // N?u ch?n "H?Y B?" th? kh�ng l�m g? c?, h?p tho?i t? ��ng
         }
 
-        //Chuyển qua trang Tra cứu nhanh
+        //Chuy?n qua trang Tra c?u nhanh
         private void btnTraCuuNhanh_Click(object sender, RoutedEventArgs e)
         {
             NavigationService.Navigate(new Page4(_currentUser as Customer));
         }
 
-        // Chuyển trang Tra cứu luật
+        // Chuy?n trang Tra c?u lu?t
         private void btnTraCuuLuat_Click(object sender, RoutedEventArgs e)
         {
             NavigationService.Navigate(new Page5(_currentUser as Customer));
         }
 
-        // Chuyển trang Quản lý phương tiện
+        // Chuy?n trang Qu?n l? ph��ng ti?n
         private void btnQLPT_Click(object sender, RoutedEventArgs e)
         {
             NavigationService.Navigate(new Page6(_currentUser as Customer));
         }
 
-        //Chuyển trang Quản lý tài khoản
+        //Chuy?n trang Qu?n l? t�i kho?n
         private void btnTaiKhoan_Click(object sender, RoutedEventArgs e)
         {
             NavigationService.Navigate(new Page7(_currentUser as Customer));
         }
 
-        // chuyển trang Phản ánh
+        // chuy?n trang Ph?n �nh
         private void btnPhanAnh_Click(object sender, RoutedEventArgs e)
         {
             NavigationService.Navigate(new Page8(_currentUser as Customer));
         }
 
-        // Đăng xuất
-        private void btnLogOut_Click(object sender, RoutedEventArgs e)
-        {
-            NavigationService.Navigate(new Page1());
-        }
     }
 }

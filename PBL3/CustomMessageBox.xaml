@@ -1,7 +1,8 @@
 ﻿<Window x:Class="PBL3.CustomMessageBox"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Thông báo" Height="200" Width="400"
+        Title="Thông báo" MinHeight="200" Width="400"
+        SizeToContent="Height"
         WindowStyle="None" AllowsTransparency="True" Background="Transparent"
         WindowStartupLocation="CenterScreen" Topmost="True">
 
@@ -23,12 +24,31 @@
 
             <TextBlock Grid.Row="1" x:Name="txtMessage" Text="Đây là nội dung thông báo!" FontSize="18" FontFamily="Calibri" Foreground="#333" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Center" Margin="20"/>
 
-            <Button Grid.Row="2" Content="ĐỒNG Ý" Width="120" Height="35" Background="#C62828" Foreground="White" FontSize="16" FontFamily="Calibri" BorderThickness="0" Cursor="Hand" Click="btnOK_Click">
-                <Button.Resources>
-                    <Style TargetType="Border">
-                        <Setter Property="CornerRadius" Value="5"/>
+            <Button Grid.Row="2" Content="ĐỒNG Ý" Width="120" Height="35" FontSize="16" FontFamily="Calibri" FontWeight="Bold" Cursor="Hand" Click="btnOK_Click">
+                <Button.Style>
+                    <Style TargetType="Button">
+                        <Setter Property="Background" Value="#C62828"/>
+                        <Setter Property="Foreground" Value="White"/>
+                        <Setter Property="BorderThickness" Value="0"/>
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="Button">
+                                    <Border Background="{TemplateBinding Background}" CornerRadius="5">
+                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    </Border>
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter Property="Background" Value="#B71C1C"/>
+                                        </Trigger>
+                                        <Trigger Property="IsPressed" Value="True">
+                                            <Setter Property="Background" Value="#b02323"/>
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
                     </Style>
-                </Button.Resources>
+                </Button.Style>
             </Button>
         </Grid>
     </Border>

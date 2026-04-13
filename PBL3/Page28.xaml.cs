@@ -26,6 +26,48 @@ namespace PBL3
 
         public Page28() { InitializeComponent(); }
 
+        public Page28(Customer user)
+        {
+            InitializeComponent();
+            _currentUser = user;
+
+            if (_currentUser != null)
+            {
+                txtUserName.Text = (_currentUser as Customer)?.FullName;
+                myBell.LoadData(_currentUser as Customer);
+            }
+        }
+        private void MenuLogout_Click(object sender, RoutedEventArgs e)
+        {
+            NavigationService.Navigate(new Page1());
+        }
+
+        private void MenuInfo_Click(object sender, RoutedEventArgs e)
+        {
+            NavigationService.Navigate(new Page6()); // Trang thông tin cá nhân
+        }
+
+        private void UserButton_Click(object sender, RoutedEventArgs e)
+        {
+            // Mở Menu
+            if (sender is Button btn && btn.ContextMenu != null)
+            {
+                btn.ContextMenu.PlacementTarget = btn;
+                btn.ContextMenu.Placement = System.Windows.Controls.Primitives.PlacementMode.Bottom;
+                btn.ContextMenu.IsOpen = true;
+            }
+        }
+
+        // Constructor nhận thông tin User
+        public Page28(string tenNguoiDung) : this()
+        {
+            // Kiểm tra nếu có tên thì gán vào TextBlock
+            if (!string.IsNullOrEmpty(tenNguoiDung))
+            {
+                txtUserName.Text = tenNguoiDung;
+            }
+        }
+
         public Page28(string licensePlate, Customer currentUser) : this()
         {
             _licensePlate = licensePlate;
@@ -150,12 +192,6 @@ namespace PBL3
         private void btnPhanAnh_Click(object sender, RoutedEventArgs e)
         {
             NavigationService.Navigate(new Page8());
-        }
-
-        // Đăng xuất
-        private void btnLogOut_Click(object sender, RoutedEventArgs e)
-        {
-            NavigationService.Navigate(new Page1());
         }
     }
 }

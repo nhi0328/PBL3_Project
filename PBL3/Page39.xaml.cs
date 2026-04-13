@@ -85,6 +85,8 @@ namespace PBL3
             if (_currentUser != null)
             {
                 txtUserName.Text = $"Cán bộ: {_currentUser.OfficerId}";
+
+                myBell.LoadData(_currentUser as Officer);
             }
             this.Loaded += Page39_Loaded;
         }
@@ -206,10 +208,6 @@ namespace PBL3
             NavigationService.Navigate(_currentUser != null ? new Page16(_currentUser) : new Page16());
         }
 
-        private void btnLogOut_Click(object sender, RoutedEventArgs e)
-        {
-            NavigationService.Navigate(new Page1());
-        }
     }
 }
 

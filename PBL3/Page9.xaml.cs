@@ -34,6 +34,8 @@ namespace PBL3
             if (_currentUser != null && txtUserName != null)
             {
                 txtUserName.Text = _currentUser.FullName;
+
+                myBell.LoadData(_currentUser as Customer);
             }
         }
         private void MenuInfo_Click(object sender, RoutedEventArgs e)
