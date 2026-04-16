@@ -39,6 +39,7 @@ namespace PBL3
                 txtUserName.Text = (_currentUser as Customer)?.FullName;
                 myBell.LoadData(_currentUser as Customer);
             }
+            LoadData();
         }
         private void MenuLogout_Click(object sender, RoutedEventArgs e)
         {
@@ -151,6 +152,11 @@ namespace PBL3
         {
             string keyword = txtIdentifier.Text;
             LoadData(keyword);
+        }
+
+        private void btnXemChiTiet_Click(object sender, RoutedEventArgs e)
+        {
+            NavigationService.Navigate(new Page27());
         }
     }
 

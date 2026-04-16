@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PBL3"
         mc:Ignorable="d"
-        Title="Tra c?u lu?t" 
+        Title="Tra cứu luật" 
         d:DesignHeight="792.8" d:DesignWidth="1536"
         FontFamily="Calibri"
         Background="White">
@@ -574,23 +574,23 @@
 
                                                         <StackPanel Orientation="Horizontal" Grid.Row="0" Margin="0,5" Visibility="{Binding HasPhatTienOto, Converter={StaticResource BooleanToVisibilityConverter}}">
                                                             <Ellipse Width="8" Height="8" Fill="#C62828" Margin="0,8,10,0" VerticalAlignment="Top"/>
-                                                            <TextBlock Text="Ph?t ti?n ô tô: " FontSize="18" FontFamily="Calibri" FontWeight="Bold"/>
+                                                            <TextBlock Text="Phạt tiền ô tô: " FontSize="18" FontFamily="Calibri" FontWeight="Bold"/>
                                                             <TextBlock Text="{Binding PhatTienOto}" FontSize="18" FontFamily="Calibri"/>
                                                         </StackPanel>
 
                                                         <StackPanel Orientation="Horizontal" Grid.Row="1" Margin="0,5" Visibility="{Binding HasPhatTienXeMay, Converter={StaticResource BooleanToVisibilityConverter}}">
                                                             <Ellipse Width="8" Height="8" Fill="#C62828" Margin="0,8,10,0" VerticalAlignment="Top"/>
-                                                            <TextBlock Text="Ph?t ti?n xe máy: " FontSize="18" FontFamily="Calibri" FontWeight="Bold"/>
+                                                            <TextBlock Text="Phạt tiền xe máy: " FontSize="18" FontFamily="Calibri" FontWeight="Bold"/>
                                                             <TextBlock Text="{Binding PhatTienXeMay}" FontSize="18" FontFamily="Calibri"/>
                                                         </StackPanel>
 
                                                         <StackPanel Orientation="Horizontal" Grid.Row="2" Margin="0,5" Visibility="{Binding HasTruDiem, Converter={StaticResource BooleanToVisibilityConverter}}">
                                                             <Ellipse Width="8" Height="8" Fill="#C62828" Margin="0,8,10,0" VerticalAlignment="Top"/>
-                                                            <TextBlock Text="H?nh ph?t b? sung: " FontSize="18" FontFamily="Calibri" FontWeight="Bold"/>
+                                                            <TextBlock Text="Hình phạt bổ sung: " FontSize="18" FontFamily="Calibri" FontWeight="Bold"/>
                                                             <TextBlock Text="{Binding TruDiem}" FontSize="18" FontFamily="Calibri"/>
                                                         </StackPanel>
 
-                                                        <Button Grid.Row="3" Content="Xem chi ti?t" HorizontalAlignment="Right" Foreground="#C62828" FontFamily="Calibri" FontSize="18" Padding="15,5" Margin="0,10,0,0" Cursor="Hand" Click="btnXemChiTiet_Click">
+                                                        <Button Grid.Row="3" Content="Xem chi tiết" HorizontalAlignment="Right" Foreground="#C62828" FontFamily="Calibri" FontSize="18" Padding="15,5" Margin="0,10,0,0" Cursor="Hand" Click="btnXemChiTiet_Click">
                                                             <Button.Style>
                                                                 <Style TargetType="Button">
                                                                     <Setter Property="Background" Value="White"/>

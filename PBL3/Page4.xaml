@@ -330,10 +330,10 @@
                                     <ColumnDefinition Width="150"/>
                                 </Grid.ColumnDefinitions>
 
-                                <Border CornerRadius="8" BorderBrush="#CCC" BorderThickness="1" Background="#FAFAFA">
+                                <Border CornerRadius="8" BorderBrush="#CCC" BorderThickness="1" Background="#FAFAFA" x:Name="borderSearch">
                                     <TextBox Grid.Column="1" VerticalContentAlignment="Center" FontSize="20"
                                         Background="Transparent" BorderThickness="0" Foreground="#333" 
-                                            x:Name="txtIdentifier" KeyDown="txtIdentifier_KeyDown">
+                                            x:Name="txtIdentifier" KeyDown="txtIdentifier_KeyDown" TextChanged="txtIdentifier_TextChanged">
                                         <TextBox.Resources>
                                             <Style TargetType="{x:Type TextBox}">
                                                 <Setter Property="Template">
@@ -358,6 +358,14 @@
                                         </TextBox.Resources>
                                     </TextBox>
                                 </Border>
+
+                                <Popup x:Name="popupSuggestions" IsOpen="False" PlacementTarget="{Binding ElementName=borderSearch}" Placement="Bottom" StaysOpen="False" AllowsTransparency="True">
+                                    <Border Background="White" BorderBrush="#CCC" BorderThickness="1" CornerRadius="4" Margin="0,5,0,0">
+                                        <ListBox x:Name="lstSuggestions" SelectionChanged="lstSuggestions_SelectionChanged" 
+                                                 BorderThickness="0" MaxHeight="200" Width="{Binding ElementName=borderSearch, Path=ActualWidth}"
+                                                 ScrollViewer.VerticalScrollBarVisibility="Auto" FontSize="18"/>
+                                    </Border>
+                                </Popup>
 
                                 <Button Grid.Column="1" Margin="15,0,0,0" Background="#C62828" Cursor="Hand" Click="BtnSearch_Click">
                                     <StackPanel Orientation="Horizontal" Width="130" HorizontalAlignment="Center" VerticalAlignment="Center">
@@ -394,7 +402,7 @@
 
                             <TextBlock x:Name="txtErrorMessage" Foreground="Red" FontSize="16" Margin="0,10,0,0" Visibility="Collapsed" HorizontalAlignment="Center"/>
 
-                            <DataGrid x:Name="dgViolations" Margin="0,30,0,0" Height="250" AutoGenerateColumns="False" CanUserAddRows="False" 
+                            <DataGrid x:Name="dgViolations" Margin="0,30,0,0" Height="350" AutoGenerateColumns="False" CanUserAddRows="False" IsReadOnly="True"
                               HeadersVisibility="Column" Background="White" RowHeaderWidth="0" BorderBrush="#EEE" BorderThickness="1">
                                 <DataGrid.ColumnHeaderStyle>
                                     <Style TargetType="DataGridColumnHeader">
@@ -410,18 +418,46 @@
                                 <DataGrid.CellStyle>
                                     <Style TargetType="DataGridCell">
                                         <Setter Property="Padding" Value="10"/>
+                                        <Setter Property="Background" Value="Transparent"/>
+                                        <Setter Property="BorderBrush" Value="Transparent"/>
+                                        <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
                                         <Setter Property="Template">
                                             <Setter.Value>
                                                 <ControlTemplate TargetType="DataGridCell">
-                                                    <Border Padding="{TemplateBinding Padding}" BorderBrush="Transparent" BorderThickness="0" Background="{TemplateBinding Background}">
+                                                    <Border Padding="{TemplateBinding Padding}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="0" Background="{TemplateBinding Background}">
                                                         <ContentPresenter VerticalAlignment="Center"/>
                                                     </Border>
                                                 </ControlTemplate>
                                             </Setter.Value>
                                         </Setter>
                                         <Setter Property="TextBlock.TextAlignment" Value="Center"/>
+
+                                        <Style.Triggers>
+                                            <Trigger Property="IsSelected" Value="True">
+                                                <Setter Property="Background" Value="Transparent"/>
+                                                <Setter Property="BorderBrush" Value="Transparent"/>
+                                                <Setter Property="Foreground" Value="#333333"/>
+                                            </Trigger>
+                                        </Style.Triggers>
                                     </Style>
                                 </DataGrid.CellStyle>
+
+                                <DataGrid.RowStyle>
+                                    <Style TargetType="DataGridRow">
+                                        <Setter Property="Background" Value="White"/>
+                                        <Setter Property="Foreground" Value="#666666"/>
+                                        <Style.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter Property="Background" Value="#F5F5F5"/>
+                                            </Trigger>
+                                            <Trigger Property="IsSelected" Value="True">
+                                                <Setter Property="Background" Value="#ededed"/>
+                                                <Setter Property="Foreground" Value="#333333"/>
+                                                <Setter Property="BorderBrush" Value="Transparent"/>
+                                            </Trigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </DataGrid.RowStyle>
 
                                 <DataGrid.Columns>
                                     <DataGridTextColumn Header="STT" Width="50" Binding="{Binding STT}"/>
@@ -432,7 +468,7 @@
                                     <DataGridTemplateColumn Header="Chi tiết" Width="100">
                                         <DataGridTemplateColumn.CellTemplate>
                                             <DataTemplate>
-                                                <TextBlock Text="Xem >" Foreground="Blue" Cursor="Hand" TextDecorations="Underline" HorizontalAlignment="Center"/>
+                                                <TextBlock Text="Chi tiết" Foreground="Blue" Cursor="Hand" TextDecorations="Underline" HorizontalAlignment="Center"/>
                                             </DataTemplate>
                                         </DataGridTemplateColumn.CellTemplate>
                                     </DataGridTemplateColumn>

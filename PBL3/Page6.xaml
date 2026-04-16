@@ -374,7 +374,7 @@
                     <Border.Effect>
                         <DropShadowEffect BlurRadius="40" Opacity="0.5" ShadowDepth="0" Direction="570"/>
                     </Border.Effect>
-                    <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Margin="5,5,5,0">
+                    <ScrollViewer VerticalScrollBarVisibility="Auto" Margin="5,5,5,0">
                         <ItemsControl x:Name="icVehicles">
                             <ItemsControl.ItemsPanel>
                                 <ItemsPanelTemplate>

@@ -362,7 +362,7 @@
 
                             <Border Grid.Column="0" BorderBrush="#ccc" BorderThickness="1" CornerRadius="5" Height="40" Background="White" Margin="0,0,10,0">
                                 <Grid>
-                                    <TextBox x:Name="txtSearch" VerticalAlignment="Center" Margin="10,0" BorderThickness="0" FontSize="16" FontFamily="Calibri" Text="Tìm kiếm lịch sử..." Foreground="Gray" GotFocus="txtSearch_GotFocus" LostFocus="txtSearch_LostFocus"/>
+                                    <TextBox x:Name="txtSearch" VerticalAlignment="Center" Margin="10,0" BorderThickness="0" FontSize="16" FontFamily="Calibri" Text="Tìm kiếm lịch sử..." Foreground="Gray" GotFocus="txtSearch_GotFocus" LostFocus="txtSearch_LostFocus" TextChanged="txtSearch_TextChanged"/>
                                 </Grid>
                             </Border>
 

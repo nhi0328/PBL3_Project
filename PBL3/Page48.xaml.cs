@@ -98,6 +98,14 @@ namespace PBL3
             }
         }
 
+        private void txtSearch_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (IsLoaded && txtSearch.Text != "Tìm kiếm lịch sử...")
+            {
+                FilterLogs();
+            }
+        }
+
         private void btnSearch_Click(object sender, RoutedEventArgs e)
         {
             FilterLogs();

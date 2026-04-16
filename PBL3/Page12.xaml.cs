@@ -76,31 +76,31 @@ namespace PBL3
         //Chuyển qua trang Tra cứu nhanh
         private void btnTraCuuNhanh_Click(object sender, RoutedEventArgs e)
         {
-            NavigationService.Navigate(new Page4());
+            NavigationService.Navigate(new Page12());
         }
 
         // Chuyển trang Tra cứu luật
         private void btnTraCuuLuat_Click(object sender, RoutedEventArgs e)
         {
-            NavigationService.Navigate(new Page5());
+            NavigationService.Navigate(new Page13());
         }
 
         // Chuyển trang Quản lý phương tiện
         private void btnQLPT_Click(object sender, RoutedEventArgs e)
         {
-            NavigationService.Navigate(new Page6());
+            NavigationService.Navigate(new Page14());
         }
 
         //Chuyển trang Quản lý tài khoản
         private void btnTaiKhoan_Click(object sender, RoutedEventArgs e)
         {
-            NavigationService.Navigate(new Page7());
+            NavigationService.Navigate(new Page15());
         }
 
         // chuyển trang Phản ánh
         private void btnPhanAnh_Click(object sender, RoutedEventArgs e)
         {
-            NavigationService.Navigate(new Page8());
+            NavigationService.Navigate(new Page16());
         }
 
         // Đăng xuất

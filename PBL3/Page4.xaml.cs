@@ -116,6 +116,60 @@ namespace PBL3
         {
             if (e.Key == Key.Enter)
             {
+                popupSuggestions.IsOpen = false;
+                PerformSearch();
+            }
+        }
+
+        private bool _isSelecting = false;
+
+        private void txtIdentifier_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (_isSelecting) return;
+
+            string keyword = txtIdentifier.Text.Trim();
+            if (string.IsNullOrEmpty(keyword))
+            {
+                popupSuggestions.IsOpen = false;
+                return;
+            }
+
+            using var db = new TrafficSafetyDBContext();
+
+            var plates = db.ViolationRecords
+                           .Where(r => r.LicensePlate != null)
+                           .Select(r => r.LicensePlate)
+                           .Distinct()
+                           .ToList();
+
+            var suggestions = plates
+                .Select(p => new { Plate = p, Score = SearchEngine.CalculateScore(p, keyword) })
+                .Where(x => x.Score > 0)
+                .OrderByDescending(x => x.Score)
+                .Take(10)
+                .Select(x => x.Plate)
+                .ToList();
+
+            if (suggestions.Any())
+            {
+                lstSuggestions.ItemsSource = suggestions;
+                popupSuggestions.IsOpen = true;
+            }
+            else
+            {
+                popupSuggestions.IsOpen = false;
+            }
+        }
+
+        private void lstSuggestions_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (lstSuggestions.SelectedItem != null)
+            {
+                _isSelecting = true;
+                txtIdentifier.Text = lstSuggestions.SelectedItem.ToString();
+                txtIdentifier.SelectionStart = txtIdentifier.Text.Length;
+                popupSuggestions.IsOpen = false;
+                _isSelecting = false;
                 PerformSearch();
             }
         }
@@ -123,6 +177,7 @@ namespace PBL3
         private void PerformSearch()
         {
             if (txtIdentifier == null || dgViolations == null || txtErrorMessage == null) return;
+            popupSuggestions.IsOpen = false;
 
             string keyword = txtIdentifier.Text.Trim();
 
@@ -136,6 +191,7 @@ namespace PBL3
             using var db = new TrafficSafetyDBContext();
 
             var violations = db.ViolationRecords
+                               .Include(r => r.Law)
                                .Where(r => r.LicensePlate != null && r.LicensePlate.Contains(keyword))
                                .OrderByDescending(r => r.ViolationDate)
                                .ThenByDescending(r => r.ViolationTime)
@@ -166,7 +222,7 @@ namespace PBL3
             var listSource = violations.Select(v => new ViolationQuickDisplay
             {
                 STT = stt++,
-                Loi = v.ViolationDescription ?? "Vi phạm giao thông",
+                Loi = v.Law?.LawName ?? v.ViolationDescription ?? "Vi phạm giao thông",
                 ThoiGian = $"{v.ViolationTime?.ToString(@"hh\:mm")} {v.ViolationDate?.ToString("dd/MM/yyyy")}",
                 DiaDiem = v.Address ?? "Không xác định",
                 TrangThai = v.StatusText
