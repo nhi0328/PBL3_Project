@@ -13,6 +13,7 @@ namespace PBL3.ViewModels
         public string PointsText { get; set; } = string.Empty;
         public string LastUpdateText { get; set; } = string.Empty;
         public string LicenseNumber { get; set; } = string.Empty;
+        public int DemeritPoints { get; set; } = 0;
         public string ExpiryDateText { get; set; } = string.Empty;
         public string IssueDateText { get; set; } = string.Empty;
         public string PlaceOfIssue { get; set; } = "Đà Nẵng";

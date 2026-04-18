@@ -1,3 +1,4 @@
+#nullable enable
 using Microsoft.Win32;
 using PBL3.Models;
 using System;
@@ -10,6 +11,7 @@ using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
+using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -23,7 +25,7 @@ namespace PBL3
     public partial class Page23 : Page
     {
         // CHỈ NHẬN OFFICER
-        private readonly Officer _currentUser;
+        private readonly Officer _currentUser = null!;
         private readonly int? _recordId;
 
         private string? _selectedEvidenceImagePath;
@@ -150,16 +152,24 @@ namespace PBL3
                 using TrafficSafetyDBContext db = new TrafficSafetyDBContext();
 
                 // 1. Tải danh sách Loại xe
-                var vTypes = db.VehicleTypes
-                    .Select(v => v.VehicleTypeName)
-                    .Where(v => !string.IsNullOrWhiteSpace(v))
-                    .Distinct()
-                    .OrderBy(v => v)
-                    .ToList();
+                var categories = db.Categories
+                                   .Where(c => c.CategoryName != "Đi bộ" && c.CategoryName != "Xe đạp")
+                                   .ToList();
+                if (cmbVehicleType != null)
+                {
+                    cmbVehicleType.ItemsSource = categories;
+                    cmbVehicleType.DisplayMemberPath = "CategoryName";
+                    cmbVehicleType.SelectedValuePath = "CategoryId";
+                }
 
-                _availableVehicleTypes.Clear();
-                _availableVehicleTypes.AddRange(vTypes);
-                RefreshVehicleSuggestions(string.Empty, false);
+                // Tải danh sách Tỉnh/TP
+                if (cboProvince != null)
+                {
+                    var provinces = db.Provinces.ToList();
+                    cboProvince.ItemsSource = provinces;
+                    cboProvince.DisplayMemberPath = "ProvinceName";
+                    cboProvince.SelectedValuePath = "ProvinceId";
+                }
 
                 // 2. Tải danh sách Luật
                 List<string> violations = db.TrafficLaws
@@ -199,60 +209,172 @@ namespace PBL3
             cmbVehicleType.DropDownOpened += CmbVehicleType_DropDownOpened;
         }
 
+        private void cmbVehicleType_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        {
+            if (sender is ComboBox cb)
+            {
+                var tb = cb.Template.FindName("PART_EditableTextBox", cb) as TextBox;
+                if (tb != null && tb.IsFocused)
+                {
+                    string searchText = cb.Text + e.Text;
+
+                    System.ComponentModel.ICollectionView view = CollectionViewSource.GetDefaultView(cb.ItemsSource);
+                    if (view != null)
+                    {
+                        view.Filter = item =>
+                        {
+                            if (string.IsNullOrEmpty(searchText)) return true;
+
+                            string itemName = "";
+                            if (cb == cmbVehicleType && item is Category c) itemName = c.CategoryName;
+                            else return true;
+
+                            return SearchEngine.CalculateScore(itemName, searchText) > 0;
+                        };
+
+                        cb.IsDropDownOpen = true;
+                    }
+                }
+            }
+        }
+
         // ================= GỢI Ý CHO LOẠI XE =================
         private void CmbVehicleType_DropDownOpened(object? sender, EventArgs e)
         {
-            if (!_isUpdatingVehicleSuggestions) RefreshVehicleSuggestions(cmbVehicleType.Text, false);
         }
 
         private void CmbVehicleType_TextChanged(object sender, TextChangedEventArgs e)
         {
-            if (_isUpdatingVehicleSuggestions || e.OriginalSource is not TextBox) return;
-            RefreshVehicleSuggestions(cmbVehicleType.Text, true);
-        }
-
-        private void RefreshVehicleSuggestions(string keyword, bool openDropDown)
-        {
-            if (_availableVehicleTypes.Count == 0)
+            if (e.OriginalSource is not TextBox tb || !tb.IsFocused) return;
+            
+            string searchText = cmbVehicleType.Text;
+            System.ComponentModel.ICollectionView view = CollectionViewSource.GetDefaultView(cmbVehicleType.ItemsSource);
+            if (view != null)
             {
-                cmbVehicleType.Items.Clear();
-                return;
-            }
-
-            var matched = string.IsNullOrWhiteSpace(keyword)
-                ? _availableVehicleTypes.Take(20).ToList()
-                : _availableVehicleTypes.Where(v => v.Contains(keyword, StringComparison.OrdinalIgnoreCase)).ToList();
-
-            _isUpdatingVehicleSuggestions = true;
-            try
-            {
-                cmbVehicleType.Items.Clear();
-                foreach (string item in matched)
+                view.Filter = item =>
                 {
-                    cmbVehicleType.Items.Add(new ComboBoxItem { Content = item });
-                }
+                    if (string.IsNullOrEmpty(searchText)) return true;
+                    if (item is Category c) return SearchEngine.CalculateScore(c.CategoryName, searchText) > 0;
+                    return true;
+                };
 
-                cmbVehicleType.SelectedItem = null;
-                cmbVehicleType.Text = keyword;
-
-                if (GetEditableComboBoxTextBox(cmbVehicleType) is TextBox editableTextBox)
-                {
-                    editableTextBox.CaretIndex = editableTextBox.Text.Length;
-                }
-
-                cmbVehicleType.IsDropDownOpen = openDropDown && matched.Count > 0;
-            }
-            finally
-            {
-                _isUpdatingVehicleSuggestions = false;
+                cmbVehicleType.IsDropDownOpen = true;
             }
         }
 
-        private void cmbVehicleType_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void cboVehicleType_LostFocus(object sender, RoutedEventArgs e)
         {
-            if (!IsLoaded || _isUpdatingVehicleSuggestions) return;
-            // Ở đây mình bỏ việc load lại danh sách lỗi theo xe để tránh giật lag, 
-            // cán bộ chọn loại xe nào thì vẫn hiển thị full lỗi để họ thoải mái tìm kiếm.
+            AddNewVehicleTypeIfNeeded();
+        }
+
+        private void cboVehicleType_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                AddNewVehicleTypeIfNeeded();
+                cmbVehicleType.IsDropDownOpen = false;
+            }
+        }
+
+        private void AddNewVehicleTypeIfNeeded()
+        {
+            string newTypeSearch = cmbVehicleType.Text.Trim();
+            if (string.IsNullOrEmpty(newTypeSearch)) return;
+
+            using var db = new TrafficSafetyDBContext();
+            bool exists = db.Categories.Any(c => c.CategoryName.ToLower() == newTypeSearch.ToLower());
+            if (!exists)
+            {
+                var newCat = new Category { CategoryName = newTypeSearch };
+                db.Categories.Add(newCat);
+                db.SaveChanges();
+
+                // Refresh loại xe
+                var categories = db.Categories
+                                   .Where(c => c.CategoryName != "Đi bộ" && c.CategoryName != "Xe đạp")
+                                   .ToList();
+                cmbVehicleType.ItemsSource = categories;
+                cmbVehicleType.DisplayMemberPath = "CategoryName";
+                cmbVehicleType.SelectedValuePath = "CategoryId";
+                cmbVehicleType.Text = newTypeSearch; // Giữ lại text vừa nhập
+            }
+        }
+
+        private void btnConfirmPlate_Click(object sender, RoutedEventArgs e)
+        {
+            txtLicensePlateStatus.Visibility = Visibility.Collapsed;
+            string plate = txtLicensePlate.Text.Trim();
+            if (string.IsNullOrEmpty(plate)) return;
+
+            using var db = new TrafficSafetyDBContext();
+            bool exists = db.Vehicles.Any(v => v.LicensePlate == plate);
+
+            if (!exists)
+            {
+                txtLicensePlateStatus.Text = $"Biển số xe {plate} chưa được đăng ký.";
+                txtLicensePlateStatus.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#C62828"));
+                txtLicensePlateStatus.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                txtLicensePlateStatus.Text = $"Biển số xe hợp lệ.";
+                txtLicensePlateStatus.Foreground = new SolidColorBrush(Colors.Green);
+                txtLicensePlateStatus.Visibility = Visibility.Visible;
+            }
+        }
+
+        private void cboProvince_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (cboProvince.SelectedValue is int provinceId && cboWard != null)
+            {
+                using var db = new TrafficSafetyDBContext();
+                try
+                {
+                    var property = typeof(TrafficSafetyDBContext).GetProperty("Wards");
+                    if (property != null)
+                    {
+                        IEnumerable<dynamic>? wardsDbSet = property.GetValue(db) as IEnumerable<dynamic>;
+                        if (wardsDbSet != null)
+                        {
+                            var wards = wardsDbSet.Where(w => w.ProvinceId == provinceId).ToList();
+                            cboWard.ItemsSource = wards;
+                            cboWard.DisplayMemberPath = "WardName";
+                            cboWard.SelectedValuePath = "WardId";
+                        }
+                    }
+                }
+                catch { }
+            }
+        }
+
+        private void CmbProvince_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (sender is ComboBox cb)
+            {
+                var tb = cb.Template.FindName("PART_EditableTextBox", cb) as TextBox;
+                if (tb != null && tb.IsFocused)
+                {
+                    string searchText = cb.Text;
+
+                    System.ComponentModel.ICollectionView view = CollectionViewSource.GetDefaultView(cb.ItemsSource);
+                    if (view != null)
+                    {
+                        view.Filter = item =>
+                        {
+                            if (string.IsNullOrEmpty(searchText)) return true;
+
+                            string itemName = "";
+                            if (cb == cboProvince && item is Province p) itemName = p.ProvinceName;
+                            else if (cb == cboWard && item is Ward w) itemName = w.WardName;
+                            else return true;
+
+                            return SearchEngine.CalculateScore(itemName, searchText) > 0;
+                        };
+
+                        cb.IsDropDownOpen = true;
+                    }
+                }
+            }
         }
 
         // ================= GỢI Ý CHO LỖI VI PHẠM =================
@@ -265,6 +387,11 @@ namespace PBL3
         {
             if (_isUpdatingViolationSuggestions || cmbViolationType.SelectedItem is not ComboBoxItem item) return;
             AddSelectedViolation(item.Content?.ToString());
+        }
+
+        private void btnAddViolation_Click(object sender, RoutedEventArgs e)
+        {
+            TryAddViolationFromCurrentText();
         }
 
         private void cmbViolationType_PreviewKeyDown(object sender, KeyEventArgs e)
@@ -557,16 +684,42 @@ namespace PBL3
 
         private static void SetComboBoxSelection(ComboBox comboBox, string value)
         {
-            foreach (object item in comboBox.Items)
+            if (comboBox.ItemsSource != null)
             {
-                if (item is ComboBoxItem comboBoxItem && string.Equals(comboBoxItem.Content?.ToString(), value, StringComparison.OrdinalIgnoreCase))
+                foreach (object item in comboBox.Items)
                 {
-                    comboBox.SelectedItem = comboBoxItem;
-                    return;
+                    string? itemStr = null;
+                    if (!string.IsNullOrEmpty(comboBox.DisplayMemberPath))
+                    {
+                        var prop = item.GetType().GetProperty(comboBox.DisplayMemberPath);
+                        if (prop != null) itemStr = prop.GetValue(item)?.ToString();
+                    }
+                    else
+                    {
+                        itemStr = item.ToString();
+                    }
+
+                    if (string.Equals(itemStr, value, StringComparison.OrdinalIgnoreCase))
+                    {
+                        comboBox.SelectedItem = item;
+                        return;
+                    }
                 }
+                comboBox.Text = value; // Editable ComboBox support without corrupting ItemsSource
             }
-            comboBox.Items.Add(new ComboBoxItem { Content = value });
-            comboBox.SelectedIndex = comboBox.Items.Count - 1;
+            else
+            {
+                foreach (object item in comboBox.Items)
+                {
+                    if (item is ComboBoxItem comboBoxItem && string.Equals(comboBoxItem.Content?.ToString(), value, StringComparison.OrdinalIgnoreCase))
+                    {
+                        comboBox.SelectedItem = comboBoxItem;
+                        return;
+                    }
+                }
+                comboBox.Items.Add(new ComboBoxItem { Content = value });
+                comboBox.SelectedIndex = comboBox.Items.Count - 1;
+            }
         }
 
         // --- LOAD CHI TIẾT VI PHẠM KHI CHỈNH SỬA ---
@@ -606,9 +759,11 @@ namespace PBL3
         // --- NÚT LƯU BIÊN BẢN (THÊM/SỬA LOẠI XE TỰ ĐỘNG) ---
         private void BtnSave_Click(object sender, RoutedEventArgs e)
         {
-            string vehicleTypeName = GetComboBoxText(cmbVehicleType);
+            string vehicleTypeName = cmbVehicleType.Text.Trim();
             string licensePlate = txtLicensePlate.Text.Trim().ToUpperInvariant();
             string location = txtViolationLocation.Text.Trim();
+
+            int? categoryId = null;
 
             if (string.IsNullOrWhiteSpace(vehicleTypeName) || string.IsNullOrWhiteSpace(licensePlate) || string.IsNullOrWhiteSpace(location))
             {
@@ -640,26 +795,47 @@ namespace PBL3
             {
                 using TrafficSafetyDBContext db = new TrafficSafetyDBContext();
 
-                // 1. TỰ ĐỘNG TÌM HOẶC THÊM MỚI LOẠI XE
-                int vehicleTypeId;
-                var existingVehicleType = db.VehicleTypes.FirstOrDefault(vt => vt.VehicleTypeName.ToLower() == vehicleTypeName.ToLower());
-
-                if (existingVehicleType != null)
+                if (!string.IsNullOrEmpty(vehicleTypeName))
                 {
-                    vehicleTypeId = existingVehicleType.VehicleTypeId;
-                }
-                else
-                {
-                    // Nếu gõ tên loại xe lạ hoắc, tự động thêm mới vào CSDL luôn!
-                    var newType = new VehicleType { VehicleTypeName = vehicleTypeName };
-                    db.VehicleTypes.Add(newType);
-                    db.SaveChanges(); // Lưu ngay để lấy ID tự tăng
-                    vehicleTypeId = newType.VehicleTypeId;
+                    var cat = db.Categories.FirstOrDefault(c => c.CategoryName.ToLower() == vehicleTypeName.ToLower());
+                    if (cat != null) categoryId = cat.CategoryId;
                 }
 
-                // Fetch vehicle and driving license first (Moved outside the loop for efficiency and scope fix)
+                // Địa chỉ
+                int? selectedWardId = null;
+                if (cboWard != null && cboWard.SelectedValue != null)
+                {
+                    selectedWardId = (int)cboWard.SelectedValue;
+                }
+
+                // Combine selected laws, delimited by ';'
+                var lawIds = new List<int>();
+                foreach (string violationStr in _selectedViolations)
+                {
+                    TrafficLaw? tLaw = FindTrafficLawByName(db, violationStr);
+                    if (tLaw != null)
+                    {
+                        lawIds.Add(tLaw.LawId);
+                    }
+                }
+
+                string combinedLawIds = string.Join(";", lawIds);
+
+                // Initialize tracking logic and models here ... 
                 var vehicle = db.Vehicles.FirstOrDefault(v => v.LicensePlate == licensePlate);
-                DrivingLicense? drivingLicense = null;
+                if (vehicle == null)
+                {
+                    vehicle = new Vehicle
+                    {
+                        LicensePlate = licensePlate,
+                        VehicleTypeId = categoryId,
+                        Status = 1
+                    };
+                    db.Vehicles.Add(vehicle);
+                }
+
+                // Prepare drivingLicense here before passing later
+                Models.DrivingLicense? drivingLicense = null;
 
                 if (vehicle != null)
                 {
@@ -686,7 +862,7 @@ namespace PBL3
                     }
 
                     record.LicensePlate = licensePlate;
-                    record.CategoryId = vehicleTypeId; // Gán ID của loại xe vừa tìm/tạo được
+                    record.CategoryId = categoryId; // Gán ID của loại xe vừa tìm/tạo được
                     record.LawId = law?.LawId ?? 0;
                     record.ViolationDescription = violationName;
                     record.ViolationDate = violationDate.Date;
@@ -703,7 +879,7 @@ namespace PBL3
                             .Include(d => d.Category)
                             .Where(d => d.LawId == law.LawId)
                             .ToList();
-                        var detailMatch = lawDetails.FirstOrDefault(d => d.CategoryId == vehicleTypeId);
+                        var detailMatch = lawDetails.FirstOrDefault(d => d.CategoryId == categoryId);
                         if (detailMatch != null)
                         {
                             points = detailMatch.DemeritPoints?.ToString() ?? "0";

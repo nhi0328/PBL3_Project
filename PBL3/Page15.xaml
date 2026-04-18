@@ -173,8 +173,6 @@
                     <RowDefinition Height="110"/>
                     <RowDefinition Height="80"/>
                     <RowDefinition Height="80"/>
-                    <RowDefinition Height="150"/>
-                    <RowDefinition Height="70"/>
                 </Grid.RowDefinitions>
                 <Button Click="btnTraCuuNhanh_Click" Background="#C62828" Grid.Row="0" BorderThickness="0" VerticalAlignment="Top" Height="80">
                     <StackPanel Orientation="Horizontal" Width="350">
@@ -310,35 +308,6 @@
                             <Path Fill="White" Data="M12.5062 12.2188C11.1487 12.2267 10.0546 13.3336 10.0625 14.6912 10.0625 14.6912 10.0625 14.6913 10.0625 14.6913L10.0625 44.505C10.1244 45.7896 11.216 46.7809 12.5006 46.719 12.5024 46.719 12.5044 46.7188 12.5062 46.7188L20.125 46.7188 20.125 56.7812 29.6125 46.7188 56.5944 46.7188C57.8805 46.7267 58.9295 45.6906 58.9375 44.4044 58.9375 44.4044 58.9375 44.4044 58.9375 44.4044L58.9375 14.6913C58.9455 13.3337 57.8514 12.2267 56.4938 12.2188 56.4938 12.2188 56.4937 12.2188 56.4937 12.2188ZM53.9062 33.7812 45.2812 33.7812 45.2812 30.9062 53.9062 30.9062ZM40.25 36.6562 53.9062 36.6562 53.9062 39.5312 40.25 39.5312ZM29.4688 36.6562 37.375 36.6562 37.375 39.5312 29.4688 39.5312ZM27.3125 30.9062 41.6875 30.9062 41.6875 33.7812 27.3125 33.7812ZM18.6875 36.6562 26.5938 36.6562 26.5938 39.5312 18.6875 39.5312ZM15.0938 30.9062 24.4375 30.9062 24.4375 33.7812 15.0938 33.7812Z" />
                         </Viewbox>
                         <TextBlock Text="Phản ánh" Foreground="White" FontFamily="Calibri" FontSize="35" VerticalAlignment="Center" Margin="40,0,0,0"/>
-                    </StackPanel>
-                    <Button.Style>
-                        <Style TargetType="Button">
-                            <Setter Property="Template">
-                                <Setter.Value>
-                                    <ControlTemplate TargetType="Button">
-                                        <Border x:Name="border" Background="{TemplateBinding Background}" >
-                                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                        </Border>
-                                        <ControlTemplate.Triggers>
-                                            <Trigger Property="IsMouseOver" Value="True">
-                                                <Setter TargetName="border" Property="Background" Value="#cc7274"/>
-                                            </Trigger>
-                                            <Trigger Property="IsPressed" Value="True">
-                                                <Setter TargetName="border" Property="Background" Value="#dea2a3"/>
-                                            </Trigger>
-                                        </ControlTemplate.Triggers>
-                                    </ControlTemplate>
-                                </Setter.Value>
-                            </Setter>
-                        </Style>
-                    </Button.Style>
-                </Button>
-                <Button Click="btnLogOut_Click" Background="#C62828" Grid.Row="6" BorderThickness="0" VerticalAlignment="Bottom" Margin="0,0,0,0">
-                    <StackPanel Orientation="Horizontal" Width="400">
-                        <TextBlock Text="Đăng xuất" Foreground="White" VerticalAlignment="Center" Margin="100,0,0,0" FontSize="30" FontFamily="Calibri"/>
-                        <Viewbox Width="35" Height="30" Margin="10,0,0,0">
-                            <Path Fill="White" Data="M16,17V14H9V10H16V7L21,12L16,17M14,2A2,2 0 0,1 16,4V9H14V4H5V20H14V15H16V20A2,2 0 0,1 14,22H5A2,2 0 0,1 3,20V4A2,2 0 0,1 5,2H14Z" />
-                        </Viewbox>
                     </StackPanel>
                     <Button.Style>
                         <Style TargetType="Button">
@@ -522,7 +491,7 @@
                             </ComboBox>
                         </Grid>
 
-                        <DataGrid x:Name="dgAccounts" Height="430" AutoGenerateColumns="False" CanUserAddRows="False" HeadersVisibility="Column" Background="White" RowHeaderWidth="0" BorderBrush="#EEE" BorderThickness="1" GridLinesVisibility="All" HorizontalGridLinesBrush="#EEE" VerticalGridLinesBrush="#EEE">
+                        <DataGrid x:Name="dgAccounts" Height="500" AutoGenerateColumns="False" CanUserAddRows="False" IsReadOnly="True" SelectionMode="Single" HeadersVisibility="Column" Background="White" RowHeaderWidth="0" BorderBrush="#EEE" BorderThickness="1" GridLinesVisibility="All" HorizontalGridLinesBrush="#EEE" VerticalGridLinesBrush="#EEE">
                             <DataGrid.ColumnHeaderStyle>
                                 <Style TargetType="DataGridColumnHeader">
                                     <Setter Property="Background" Value="#F5F5F5"/>

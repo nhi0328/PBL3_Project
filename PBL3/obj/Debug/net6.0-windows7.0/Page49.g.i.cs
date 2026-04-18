@@ -205,7 +205,7 @@ namespace PBL3 {
                 return;
             }
             _contentLoaded = true;
-            System.Uri resourceLocater = new System.Uri("/PBL3;V1.0.0.0;component/page49.xaml", System.UriKind.Relative);
+            System.Uri resourceLocater = new System.Uri("/PBL3;component/page49.xaml", System.UriKind.Relative);
             
             #line 1 "..\..\..\Page49.xaml"
             System.Windows.Application.LoadComponent(this, resourceLocater);

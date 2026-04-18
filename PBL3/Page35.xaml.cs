@@ -1,6 +1,8 @@
 ﻿using PBL3.Models;
+using PBL3.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -109,6 +111,73 @@ namespace PBL3
             }
         }
 
+        private void ComboBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (sender is ComboBox cb)
+            {
+                var tb = cb.Template.FindName("PART_EditableTextBox", cb) as TextBox;
+                if (tb != null && tb.IsFocused)
+                {
+                    string searchText = cb.Text;
+
+                    ICollectionView view = CollectionViewSource.GetDefaultView(cb.ItemsSource);
+                    if (view != null)
+                    {
+                        view.Filter = item =>
+                        {
+                            if (string.IsNullOrEmpty(searchText)) return true;
+
+                            string itemName = "";
+                            if (cb == cboVehicleType && item is Category c) itemName = c.CategoryName;
+                            else if (cb == cboProvince && item is Province p) itemName = p.ProvinceName;
+                            else if (cb == cboWard && item is Ward w) itemName = w.WardName;
+                            else return true;
+
+                            return SearchEngine.CalculateScore(itemName, searchText) > 0;
+                        };
+
+                        cb.IsDropDownOpen = true;
+                    }
+                }
+            }
+        }
+
+        private void cboVehicleType_LostFocus(object sender, RoutedEventArgs e)
+        {
+            AddNewVehicleTypeIfNeeded();
+        }
+
+        private void cboVehicleType_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                AddNewVehicleTypeIfNeeded();
+                cboVehicleType.IsDropDownOpen = false;
+            }
+        }
+
+        private void AddNewVehicleTypeIfNeeded()
+        {
+            string newTypeSearch = cboVehicleType.Text.Trim();
+            if (string.IsNullOrEmpty(newTypeSearch)) return;
+
+            using var db = new TrafficSafetyDBContext();
+            bool exists = db.Categories.Any(c => c.CategoryName.ToLower() == newTypeSearch.ToLower());
+            if (!exists)
+            {
+                var newCat = new Category { CategoryName = newTypeSearch };
+                db.Categories.Add(newCat);
+                db.SaveChanges();
+
+                // Refresh loại xe
+                var categories = db.Categories
+                                   .Where(c => c.CategoryName != "Đi bộ" && c.CategoryName != "Xe đạp")
+                                   .ToList();
+                cboVehicleType.ItemsSource = categories;
+                cboVehicleType.Text = newTypeSearch; // Giữ lại text vừa nhập
+            }
+        }
+
         private void btnConfirmPlate_Click(object sender, RoutedEventArgs e)
         {
             txtLicensePlateStatus.Visibility = Visibility.Collapsed;
@@ -153,7 +222,18 @@ namespace PBL3
             {
                 string title = txtTitle.Text.Trim();
                 string plate = txtLicensePlate.Text.Trim();
-                int? categoryId = cboVehicleType.SelectedValue as int?;
+
+                // Lấy CategoryId: Do có thể người dùng nhập chữ trực tiếp nên nếu SelectedItem chưa cập nhật 
+                // ta sẽ tìm lại id của text đó trong DB
+                int? categoryId = null;
+                string vehicleTypeInput = cboVehicleType.Text.Trim();
+                using var db = new TrafficSafetyDBContext();
+                if (!string.IsNullOrEmpty(vehicleTypeInput))
+                {
+                    var cat = db.Categories.FirstOrDefault(c => c.CategoryName.ToLower() == vehicleTypeInput.ToLower());
+                    if (cat != null) categoryId = cat.CategoryId;
+                }
+
                 string addressStr = txtAddress.Text.Trim();
                 string content = txtContent.Text.Trim();
 
@@ -162,8 +242,6 @@ namespace PBL3
                     new CustomMessageBox("Vui lòng nhập đầy đủ Tiêu đề và Nội dung!", "Cảnh báo").ShowDialog();
                     return;
                 }
-
-                using var db = new TrafficSafetyDBContext();
 
                 int? selectedWardId = null;
                 if (cboWard != null && cboWard.SelectedValue != null)

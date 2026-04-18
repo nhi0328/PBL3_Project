@@ -184,7 +184,7 @@ namespace PBL3
         // Chuyển trang Quản lý phương tiện
         private void btnQLPT_Click(object sender, RoutedEventArgs e)
         {
-            NavigationService.Navigate(new Page6(   ));
+            NavigationService.Navigate(new Page6(_currentUser as Customer));
         }
 
         //Chuyển trang Quản lý tài khoản
@@ -199,10 +199,5 @@ namespace PBL3
             NavigationService.Navigate(new Page8(_currentUser as Customer));
         }
 
-        // Đăng xuất
-        private void btnLogOut_Click(object sender, RoutedEventArgs e)
-        {
-            NavigationService.Navigate(new Page1());
-        }
     }
 }

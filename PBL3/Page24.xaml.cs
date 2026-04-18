@@ -149,6 +149,11 @@ namespace PBL3
             NavigationService.Navigate(new Page25(_currentUser, _targetCccd));
         }
 
+        private void btnChiTietPhuongTien_Click(object sender, RoutedEventArgs e)
+        {
+            NavigationService.Navigate(new Page40(_currentUser, _targetCccd));
+        }
+
         private void btnBack_Click(object sender, RoutedEventArgs e)
         {
             if (NavigationService.CanGoBack) NavigationService.GoBack();

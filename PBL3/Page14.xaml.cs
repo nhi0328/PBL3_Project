@@ -6,7 +6,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 
 namespace PBL3
 {
@@ -57,8 +59,13 @@ namespace PBL3
             _isNavigating = false;
             _isDisposed = false;
 
-            _cts?.Cancel();
-            _cts?.Dispose();
+            try
+            {
+                _cts?.Cancel();
+                _cts?.Dispose();
+            }
+            catch (ObjectDisposedException) { }
+
             _cts = new CancellationTokenSource();
 
             try
@@ -103,7 +110,7 @@ namespace PBL3
                     using (var db = new TrafficSafetyDBContext())
                     {
                         // Lấy dữ liệu hồ sơ vi phạm (Map đúng với cấu trúc 12 bảng mới)
-                        var records = db.ViolationRecords.ToList();
+                        var records = db.ViolationRecords.Include(r => r.Law).ToList();
 
                         foreach (var record in records)
                         {
@@ -238,11 +245,11 @@ namespace PBL3
             }
         }
 
-        private void BtnViewDetail_Click(object sender, RoutedEventArgs e)
+        private void dgViolations_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             if (_isNavigating || _isDisposed) return;
-            
-            if (sender is Button button && button.Tag is int recordId)
+
+            if (sender is DataGridRow row && row.Item is ViolationViewModel viewModel)
             {
                 _isNavigating = true;
                 try
@@ -251,7 +258,7 @@ namespace PBL3
                 }
                 catch { }
 
-                NavigationService?.Navigate(new Page22(_currentUser as Officer, recordId));
+                NavigationService?.Navigate(new Page22(_currentUser as Officer, viewModel.RecordId));
             }
         }
 

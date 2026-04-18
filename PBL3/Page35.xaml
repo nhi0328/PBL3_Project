@@ -320,15 +320,18 @@
             <Grid Grid.Row="1" Panel.ZIndex="1">
 
                 <StackPanel>
-                    <TextBlock Text="PHẢN ÁNH" FontSize="35" FontFamily="Calibri" Foreground="#333" HorizontalAlignment="Center" Padding="0,35,0,20"/>
+                    <TextBlock Text="Phản ánh" FontSize="35" FontFamily="Calibri" Foreground="#333" HorizontalAlignment="Center" Padding="0,35,0,20"/>
 
-                    <Border Background="White" CornerRadius="5" Padding="0" Margin="50,0,30,10"
-                            BorderBrush="#CCC" BorderThickness="1" >
-                        <StackPanel Margin="20">
-                            <!-- Tiêu đề Phản ánh -->
+                    <Border Background="White" CornerRadius="20" Margin="50,0,30,10" Height="560">
+                        <Border.Effect>
+                            <DropShadowEffect BlurRadius="40" Opacity="0.3" ShadowDepth="0" Direction="570"/>
+                        </Border.Effect>
+                        <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Margin="10">
+                            <StackPanel Margin="10">
+                                <!-- Tiêu đề Phản ánh -->
                             <TextBlock Text="Tiêu đề phản ánh" FontSize="18" FontFamily="Calibri" Foreground="#333" Margin="0,0,0,5"/>
                             <TextBox x:Name="txtTitle" Height="40" Padding="10,0" FontSize="16" FontFamily="Calibri" 
-                                     VerticalContentAlignment="Center" BorderBrush="#CCC" BorderThickness="1" Margin="0,0,0,15"/>
+                                     VerticalContentAlignment="Center" BorderBrush="#CCC" BorderThickness="1" Margin="0,0,0,15" Tag="Nhập tiêu đề phản ánh"/>
 
                             <!-- Loại xe, Biển số xe, Xác Nhận -->
                             <Grid Margin="0,0,0,15">
@@ -339,8 +342,11 @@
                                 </Grid.ColumnDefinitions>
 
                                 <StackPanel Grid.Column="0" Margin="0,0,15,0" Width="200">
-                                    <TextBlock Text="Chọn Loại xe" FontSize="18" FontFamily="Calibri" Foreground="#333" Margin="0,0,0,5"/>
-                                    <ComboBox x:Name="cboVehicleType" Height="40" FontSize="16" FontFamily="Calibri" VerticalContentAlignment="Center"/>
+                                    <TextBlock Text="Chọn loại xe" FontSize="18" FontFamily="Calibri" Foreground="#333" Margin="0,0,0,5"/>
+                                    <ComboBox x:Name="cboVehicleType" Height="40" FontSize="16" FontFamily="Calibri" VerticalContentAlignment="Center"
+                                              IsEditable="True" StaysOpenOnEdit="True"
+                                              TextBoxBase.TextChanged="ComboBox_TextChanged"
+                                              LostFocus="cboVehicleType_LostFocus" KeyDown="cboVehicleType_KeyDown"/>
                                 </StackPanel>
 
                                 <StackPanel Grid.Column="1" Margin="0,0,15,0">
@@ -350,7 +356,7 @@
                                     <TextBlock x:Name="txtLicensePlateStatus" Text="Biển số xe chưa được đăng ký." Foreground="#C62828" FontSize="14" FontFamily="Calibri" Margin="0,5,0,0" Visibility="Collapsed"/>
                                 </StackPanel>
 
-                                <Button Grid.Column="2" Content="Xác Nhận" x:Name="btnConfirmPlate" Background="#C62828" Foreground="White" 
+                                <Button Grid.Column="2" Content="Xác nhận" x:Name="btnConfirmPlate" Background="#C62828" Foreground="White" 
                                         BorderThickness="0" FontFamily="Calibri" FontSize="16" Height="40" Padding="20,0" 
                                         Cursor="Hand" VerticalAlignment="Top" Margin="0,27,0,0" Click="btnConfirmPlate_Click">
                                     <Button.Resources>
@@ -361,21 +367,24 @@
                                 </Button>
                             </Grid>
 
-                            <!-- đềa điểm Phản ánh -->
-                            <TextBlock Text="Địa điểm Phản ánh" FontSize="18" FontFamily="Calibri" Foreground="#333" Margin="0,0,0,5"/>
+                            <!-- Địa điểm Phản ánh -->
+                            <TextBlock Text="Địa điểm phản ánh" FontSize="18" FontFamily="Calibri" Foreground="#333" Margin="0,0,0,5"/>
                             <Grid Margin="0,0,0,15">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto"/>
                                     <ColumnDefinition Width="Auto"/>
                                     <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions>
-                                
+
                                 <ComboBox Grid.Column="0" x:Name="cboProvince" Width="150" Height="40" FontSize="16" FontFamily="Calibri" 
-                                          VerticalContentAlignment="Center" Margin="0,0,15,0" SelectionChanged="cboProvince_SelectionChanged"/>
-                                
+                                          VerticalContentAlignment="Center" Margin="0,0,15,0" 
+                                          IsEditable="True" StaysOpenOnEdit="True" TextBoxBase.TextChanged="ComboBox_TextChanged"
+                                          SelectionChanged="cboProvince_SelectionChanged"/>
+
                                 <ComboBox Grid.Column="1" x:Name="cboWard" Width="150" Height="40" FontSize="16" FontFamily="Calibri" 
-                                          VerticalContentAlignment="Center" Margin="0,0,15,0"/>
-                                
+                                          VerticalContentAlignment="Center" Margin="0,0,15,0"
+                                          IsEditable="True" StaysOpenOnEdit="True" TextBoxBase.TextChanged="ComboBox_TextChanged"/>
+
                                 <TextBox Grid.Column="2" x:Name="txtAddress" Height="40" Padding="10,0" FontSize="16" FontFamily="Calibri" 
                                          VerticalContentAlignment="Center" BorderBrush="#CCC" BorderThickness="1"/>
                             </Grid>
@@ -427,8 +436,8 @@
                                     </Button.Resources>
                                 </Button>
                             </StackPanel>
-
                         </StackPanel>
+                        </ScrollViewer>
                     </Border>
                 </StackPanel>
             </Grid>

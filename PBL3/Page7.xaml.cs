@@ -88,6 +88,7 @@ namespace PBL3
                         PointsText = $"Điểm còn lại của GPLX: {l.Points}",
                         LastUpdateText = "Cập nhật lần cuối: " + DateTime.Now.ToString("HH:mm dd/MM/yyyy"), // Replace with actual trigger info if needed
                         LicenseNumber = l.LicenseNumber,
+                        DemeritPoints = l.DemeritPoints,
                         ExpiryDateText = l.ExpiryDate.HasValue ? l.ExpiryDate.Value.ToString("dd/MM/yyyy") : "Không thời hạn",
                         IssueDateText = l.IssueDate.ToString("dd - MM - yyyy"),
                         PlaceOfIssue = "Đà Nẵng" // If WARD_ID or similar exist in DrivingLicense can map it
@@ -157,7 +158,25 @@ namespace PBL3
 
         private void btnLichSuTruDiem_Click(object sender, RoutedEventArgs e)
         {
-            NavigationService.Navigate(new Page30(_currentUser));
+            if (_currentUser != null)
+            {
+                using var db = new TrafficSafetyDBContext();
+
+                // 1. Ánh xạ CCCD qua bảng VEHICLES để tìm các biển số xe (LICENSE_PLATE)
+                var vehicles = db.Vehicles.Where(v => v.Cccd == _currentUser.Cccd).Select(v => v.LicensePlate).ToList();
+
+                // 2. Tiếp tục ánh xạ qua bảng VIOLATION_RECORDS để kiểm tra lịch sử trừ điểm
+                var hasViolations = db.ViolationRecords.Any(v => vehicles.Contains(v.LicensePlate) && v.DemeritPoints != null && v.DemeritPoints != "0");
+
+                if (!hasViolations)
+                {
+                    new CustomMessageBox("Hiện tại không có lịch sử vi phạm trừ điểm phạt nguội nào cho các phương tiện của bạn.", "Thông báo").ShowDialog();
+                }
+                else
+                {
+                    NavigationService.Navigate(new Page30(_currentUser));
+                }
+            }
         }
 
         private void btnBaoMat_Click(object sender, RoutedEventArgs e)

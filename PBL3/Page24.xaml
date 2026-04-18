@@ -373,6 +373,7 @@
                                     <RowDefinition Height="40"/>
                                     <RowDefinition Height="40"/>
                                     <RowDefinition Height="40"/>
+                                    <RowDefinition Height="40"/>
                                 </Grid.RowDefinitions>
 
                                 <TextBlock Grid.Row="0" Grid.Column="0" Text="Họ tên:" FontSize="18" Foreground="#333" VerticalAlignment="Center"/>
@@ -395,6 +396,28 @@
 
                                 <TextBlock Grid.Row="6" Grid.Column="0" Text="GPLX:" FontSize="18" Foreground="#333" VerticalAlignment="Center"/>
                                 <Button Grid.Row="6" Grid.Column="1" Content="Chi tiết" FontSize="18" Width="100" Height="30" HorizontalAlignment="Left" Background="White" BorderBrush="#CCC" BorderThickness="1" Foreground="#333" Click="btnChiTietGplx_Click">
+                                    <Button.Style>
+                                        <Style TargetType="Button">
+                                            <Setter Property="Template">
+                                                <Setter.Value>
+                                                    <ControlTemplate TargetType="Button">
+                                                        <Border x:Name="border" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="5">
+                                                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                        </Border>
+                                                        <ControlTemplate.Triggers>
+                                                            <Trigger Property="IsMouseOver" Value="True">
+                                                                <Setter TargetName="border" Property="Background" Value="#F0F0F0"/>
+                                                            </Trigger>
+                                                        </ControlTemplate.Triggers>
+                                                    </ControlTemplate>
+                                                </Setter.Value>
+                                            </Setter>
+                                        </Style>
+                                    </Button.Style>
+                                </Button>
+
+                                <TextBlock Grid.Row="7" Grid.Column="0" Text="Phương tiện:" FontSize="18" Foreground="#333" VerticalAlignment="Center"/>
+                                <Button Grid.Row="7" Grid.Column="1" Content="Chi tiết" FontSize="18" Width="100" Height="30" HorizontalAlignment="Left" Background="White" BorderBrush="#CCC" BorderThickness="1" Foreground="#333" Click="btnChiTietPhuongTien_Click">
                                     <Button.Style>
                                         <Style TargetType="Button">
                                             <Setter Property="Template">

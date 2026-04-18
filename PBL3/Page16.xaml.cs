@@ -49,7 +49,7 @@ namespace PBL3
                 using (var db = new TrafficSafetyDBContext())
                 {
                     // Lấy tất cả phản ánh
-                    var query = db.Complaints.AsQueryable();
+                    var query = db.Complaints.Include(c => c.Category).AsQueryable();
 
                     // Tìm kiếm theo từ khóa (Biển số xe, ID người gửi, Tiêu đề hoặc Nội dung)
                     if (!string.IsNullOrEmpty(searchText) && searchText != "Tìm kiếm phản ánh...")
@@ -86,12 +86,9 @@ namespace PBL3
                     {
                         STT = stt++,
                         ComplaintId = c.ComplaintId,
-                        CCCD = c.SenderCitizenId ?? "Không rõ",
-
-                        LoaiPhanAnh = (c.Content != null && c.Content.Contains("Tai nạn")) ? "Tai nạn giao thông" :
-                                     ((c.Content != null && (c.Content.Contains("vi phạm") || c.Content.Contains("Lỗi"))) ? "Lỗi vi phạm giao thông" : "Biển báo/Khác"),
-
                         TieuDe = c.Title ?? "Không có tiêu đề",
+                        LoaiXe = c.Category?.CategoryName ?? "Chưa rõ",
+                        BienSoXe = c.LicensePlate ?? "Không có",
                         SubmittedDate = c.SubmitDate != DateTime.MinValue ? c.SubmitDate.ToString("dd/MM/yyyy HH:mm") : "Chưa cập nhật",
 
                         // Xử lý hiển thị màu Status
@@ -147,7 +144,8 @@ namespace PBL3
             {
                 using (var db = new TrafficSafetyDBContext())
                 {
-                    var list = db.Complaints.Where(c => c.Status == 0)
+                    var list = db.Complaints.Include(c => c.Category)
+                                            .Where(c => c.Status == 0)
                                             .OrderByDescending(c => c.SubmitDate)
                                             .ToList();
                     int stt = 1;
@@ -155,10 +153,9 @@ namespace PBL3
                     {
                         STT = stt++,
                         ComplaintId = c.ComplaintId,
-                        CCCD = c.SenderCitizenId ?? "Không rõ",
-                        LoaiPhanAnh = (c.Content != null && c.Content.Contains("Tai nạn")) ? "Tai nạn giao thông" :
-                                     ((c.Content != null && (c.Content.Contains("vi phạm") || c.Content.Contains("Lỗi"))) ? "Lỗi vi phạm giao thông" : "Biển báo/Khác"),
                         TieuDe = c.Title ?? "Không có tiêu đề",
+                        LoaiXe = c.Category?.CategoryName ?? "Chưa rõ",
+                        BienSoXe = c.LicensePlate ?? "Không có",
                         SubmittedDate = c.SubmitDate != DateTime.MinValue ? c.SubmitDate.ToString("dd/MM/yyyy HH:mm") : "Chưa cập nhật",
                         Status = "Chưa xử lý",
                         StatusColor = "#C62828"
@@ -173,26 +170,19 @@ namespace PBL3
             }
         }
 
-        private void BtnDetails_Click(object sender, RoutedEventArgs e)
+        private void dgComplaints_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            if (sender is Button button)
+            if (sender is DataGridRow row && row.Item != null)
             {
-                // Lấy ID từ Tag (hoặc CommandParameter) tùy vào XAML của Nhi thiết kế
-                int complaintId = 0;
+                var type = row.Item.GetType();
+                var prop = type.GetProperty("ComplaintId");
 
-                if (button.Tag != null)
+                if (prop != null)
                 {
-                    int.TryParse(button.Tag.ToString(), out complaintId);
-                }
-                else if (button.CommandParameter != null)
-                {
-                    int.TryParse(button.CommandParameter.ToString(), out complaintId);
-                }
-
-                // Chuyển trang nếu đã lấy được ID
-                if (complaintId != 0)
-                {
-                    NavigationService.Navigate(new Page26(_currentUser as Officer, complaintId));
+                    if (int.TryParse(prop.GetValue(row.Item)?.ToString(), out int complaintId) && complaintId != 0)
+                    {
+                        NavigationService.Navigate(new Page26(_currentUser as Officer, complaintId));
+                    }
                 }
             }
         }

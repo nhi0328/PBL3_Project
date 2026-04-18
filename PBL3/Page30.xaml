@@ -324,12 +324,12 @@
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
 
-                    <Button Content="&lt; Quay lại" Background="Transparent" BorderThickness="0" FontFamily="Calibri" FontSize="18" HorizontalAlignment="Left" Margin="0,0,0,15" Cursor="Hand"/>
+                    <Button Content="&lt; Quay lại" Background="Transparent" Foreground="#666" BorderThickness="0" FontFamily="Calibri" FontSize="16" HorizontalAlignment="Left" Margin="0,0,0,15" Cursor="Hand" Click="Button_Click"/>
 
-                    <DataGrid Grid.Row="1" Background="White" AutoGenerateColumns="False" CanUserAddRows="False" HeadersVisibility="Column" GridLinesVisibility="All" BorderBrush="#CCC" BorderThickness="1" RowHeight="40" ColumnHeaderHeight="45">
+                    <DataGrid x:Name="dgDemerits" Grid.Row="1" Background="White" AutoGenerateColumns="False" CanUserAddRows="False" HeadersVisibility="Column" GridLinesVisibility="All" BorderBrush="#CCC" BorderThickness="1" RowHeight="40" ColumnHeaderHeight="45">
                         <DataGrid.Resources>
                             <!-- Header Style -->
                             <Style TargetType="DataGridColumnHeader">
@@ -365,12 +365,11 @@
                             <!-- Số điểm bị trừ -->
                             <DataGridTextColumn Header="Số điểm bị trừ" Width="2*" Binding="{Binding SoDiemBiTru}"/>
 
-
+                            <!-- Số điểm còn lại -->
                             <DataGridTextColumn Header="Số điểm còn lại" Width="2*" Binding="{Binding SoDiemConLai}"/>
 
-
                             <!-- Hành động -->
-                            <DataGridTemplateColumn Header="Hành động" Width="2*">
+                            <DataGridTemplateColumn Header="Hành động" Width="1.5*">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
                                         <Button Content="Chi tiết" FontFamily="Calibri" FontSize="16" Background="White" Foreground="#333" BorderBrush="#999" BorderThickness="1" Cursor="Hand" Padding="20,4" Margin="0,0,0,0" Height="28">

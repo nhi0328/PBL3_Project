@@ -477,16 +477,17 @@
 
                         <Grid Grid.Row="0">
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="1.1*"/>
+                                <ColumnDefinition Width="2*"/>
                                 <ColumnDefinition Width="20"/>
                                 <ColumnDefinition Width="3.4*"/>
+                                <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
 
                             <StackPanel Grid.Column="0">
-                                <TextBlock Text="Chọn loại phương tiện" Style="{StaticResource FormLabelStyle}"/>
-                                    <ComboBox x:Name="cmbVehicleType" Style="{StaticResource FormComboBoxStyle}" SelectedIndex="0" IsEditable="True" IsTextSearchEnabled="False" StaysOpenOnEdit="True" Background="White" Foreground="Black" SelectionChanged="cmbVehicleType_SelectionChanged">
-                                    </ComboBox>
-                                </StackPanel>
+                                <TextBlock Text="Chọn loại xe" Style="{StaticResource FormLabelStyle}"/>
+                                <ComboBox x:Name="cmbVehicleType" Style="{StaticResource FormComboBoxStyle}" SelectedIndex="0" IsEditable="True" IsTextSearchEnabled="False" StaysOpenOnEdit="True" Background="White" Foreground="Black" LostFocus="cboVehicleType_LostFocus" KeyDown="cboVehicleType_KeyDown" PreviewTextInput="cmbVehicleType_PreviewTextInput">
+                                </ComboBox>
+                            </StackPanel>
 
                             <StackPanel Grid.Column="2">
                                 <TextBlock Text="Biển số xe" Style="{StaticResource FormLabelStyle}"/>
@@ -517,23 +518,50 @@
                                         </Style>
                                     </TextBox.Resources>
                                 </TextBox>
+                                <TextBlock x:Name="txtLicensePlateStatus" Text="Biển số xe 30A-123.45 chưa được đăng ký." Foreground="#C62828" FontSize="14" FontFamily="Calibri" Margin="0,5,0,0" Visibility="Collapsed"/>
                             </StackPanel>
+
+                            <Button Grid.Column="3" Content="Xác nhận" x:Name="btnConfirmPlate" Background="#C62828" Foreground="White" 
+                                    BorderThickness="0" FontFamily="Calibri" FontSize="16" Height="40" Padding="20,0" 
+                                    Cursor="Hand" VerticalAlignment="Top" Margin="15,27,0,0" Click="btnConfirmPlate_Click">
+                                <Button.Resources>
+                                    <Style TargetType="Border">
+                                        <Setter Property="CornerRadius" Value="5"/>
+                                    </Style>
+                                </Button.Resources>
+                            </Button>
                         </Grid>
 
                         <StackPanel Grid.Row="2">
                             <TextBlock Text="Lỗi vi phạm" Style="{StaticResource FormLabelStyle}"/>
-                            <ComboBox x:Name="cmbViolationType"
-                                      Style="{StaticResource FormComboBoxStyle}"
-                                      SelectedIndex="0"
-                                      IsEditable="True"
-                                      IsTextSearchEnabled="False"
-                                      StaysOpenOnEdit="True"
-                                      MaxDropDownHeight="240"
-                                      ScrollViewer.VerticalScrollBarVisibility="Auto"
-                                      SelectionChanged="cmbViolationType_SelectionChanged"
-                                      PreviewKeyDown="cmbViolationType_PreviewKeyDown">
-                            </ComboBox>
-                            <WrapPanel x:Name="SelectedViolationsPanel" Margin="0,12,0,0"/>
+                            <WrapPanel x:Name="SelectedViolationsPanel" Margin="0,0,0,12"/>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="15"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <ComboBox Grid.Column="0" x:Name="cmbViolationType"
+                                          Style="{StaticResource FormComboBoxStyle}"
+                                          SelectedIndex="0"
+                                          IsEditable="True"
+                                          IsTextSearchEnabled="False"
+                                          StaysOpenOnEdit="True"
+                                          MaxDropDownHeight="240"
+                                          ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                          SelectionChanged="cmbViolationType_SelectionChanged"
+                                          PreviewKeyDown="cmbViolationType_PreviewKeyDown">
+                                </ComboBox>
+                                <Button Grid.Column="2" Content="Thêm lỗi vi phạm" x:Name="btnAddViolation" Background="#C62828" Foreground="White" 
+                                        BorderThickness="0" FontFamily="Calibri" FontSize="16" Height="40" Padding="15,0" 
+                                        Cursor="Hand" Click="btnAddViolation_Click">
+                                    <Button.Resources>
+                                        <Style TargetType="Border">
+                                            <Setter Property="CornerRadius" Value="5"/>
+                                        </Style>
+                                    </Button.Resources>
+                                </Button>
+                            </Grid>
                         </StackPanel>
 
                         <Grid Grid.Row="4">
@@ -545,6 +573,7 @@
                                 <ColumnDefinition Width="3.2*"/>
                             </Grid.ColumnDefinitions>
 
+                            <!-- Chọn ngày vi phạm -->
                             <StackPanel Grid.Column="0">
                                 <TextBlock Text="Ngày vi phạm" Style="{StaticResource FormLabelStyle}"/>
                                 <Border Background="White" CornerRadius="10" BorderBrush="#EEE" BorderThickness="1" Height="40">
@@ -557,10 +586,7 @@
                                                 <ColumnDefinition Width="*"/>
                                                 <ColumnDefinition Width="Auto"/>
                                             </Grid.ColumnDefinitions>
-                                            <TextBlock x:Name="txtDateDisplay" FontFamily="Calibri" FontSize="20" Text="dd/mm/yyyy" VerticalAlignment="Center" Foreground="Gray"/>
-                                            <Viewbox Grid.Column="1" Width="30" Height="30" HorizontalAlignment="Right">
-                                                <Path Data="M19,19H5V8H19M16,1V3H8V1H6V3H5C3.89,3 3,3.89 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V5C21,3.89 20.1,3 19,1H18V3H16V1M17,12H12V17H17V12Z" Fill="#C62828"/>
-                                            </Viewbox>
+                                            <TextBlock x:Name="txtDateDisplay" FontFamily="Calibri" FontSize="18" Text="dd/mm/yyyy" VerticalAlignment="Center" Foreground="Gray"/>
                                         </Grid>
                                         <DatePicker x:Name="RealDatePicker" SelectedDateChanged="RealDatePicker_SelectedDateChanged" CalendarClosed="RealDatePicker_CalendarClosed" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Opacity="0" IsHitTestVisible="False"/>
                                         <Border x:Name="DateOverlay" Background="Transparent" Cursor="Hand" MouseLeftButtonDown="DateOverlay_Click"/>
@@ -568,14 +594,33 @@
                                 </Border>
                             </StackPanel>
 
+                            <!-- Giờ vi phạm -->
                             <StackPanel Grid.Column="2">
                                 <TextBlock Text="Giờ vi phạm" Style="{StaticResource FormLabelStyle}"/>
-                                <TextBox x:Name="txtViolationTime" Style="{StaticResource FormInputStyle}" Text=""/>
+                                <TextBox x:Name="txtViolationTime" Style="{StaticResource FormInputStyle}" Text="" FontSize="18" VerticalContentAlignment="Center"/>
                             </StackPanel>
 
                             <StackPanel Grid.Column="4">
                                 <TextBlock Text="Địa điểm vi phạm" Style="{StaticResource FormLabelStyle}"/>
-                                <TextBox x:Name="txtViolationLocation" Style="{StaticResource FormInputStyle}" Text=""/>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <ComboBox Grid.Column="0" x:Name="cboProvince" Width="130" Height="40" FontSize="16" FontFamily="Calibri" 
+                                              VerticalContentAlignment="Center" Margin="0,0,10,0" 
+                                              IsEditable="True" StaysOpenOnEdit="True" TextBoxBase.TextChanged="CmbProvince_TextChanged"
+                                              SelectionChanged="cboProvince_SelectionChanged"/>
+
+                                    <ComboBox Grid.Column="1" x:Name="cboWard" Width="130" Height="40" FontSize="16" FontFamily="Calibri" 
+                                              VerticalContentAlignment="Center" Margin="0,0,10,0"
+                                              IsEditable="True" StaysOpenOnEdit="True" TextBoxBase.TextChanged="CmbProvince_TextChanged"/>
+
+                                    <TextBox Grid.Column="2" x:Name="txtViolationLocation" Height="40" Padding="10,0" FontSize="16" FontFamily="Calibri" 
+                                             VerticalContentAlignment="Center" BorderBrush="#CCC" BorderThickness="1"/>
+                                </Grid>
                             </StackPanel>
                         </Grid>
 

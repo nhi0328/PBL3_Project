@@ -19,7 +19,6 @@ namespace PBL3
     public partial class Page30 : Page
     {
         private readonly Customer _currentUser;
-        private readonly string _licenseType;
 
         public Page30() { InitializeComponent(); }
 
@@ -33,6 +32,7 @@ namespace PBL3
                 txtUserName.Text = (_currentUser as Customer)?.FullName;
                 myBell.LoadData(_currentUser as Customer);
             }
+            this.Loaded += Page30_Loaded;
         }
         private void MenuLogout_Click(object sender, RoutedEventArgs e)
         {
@@ -65,23 +65,63 @@ namespace PBL3
             }
         }
 
-        public Page30(Customer user, string licenseType = null) : this()
-        {
-            _currentUser = user;
-            _licenseType = licenseType;
-            this.Loaded += Page30_Loaded;
-            if (_currentUser != null)
-            {
-                txtUserName.Text = _currentUser.FullName;
-            }
-        }
-
         private void Page30_Loaded(object sender, RoutedEventArgs e)
         {
             if (_currentUser != null)
             {
-                // TODO: Load violation history for the license type if specified
-                // Use _licenseType to filter violations if needed
+                using var db = new TrafficSafetyDBContext();
+
+                // 1. Từ CCCD tìm ra danh sách biển số xe
+                var vehicles = db.Vehicles.Where(v => v.Cccd == _currentUser.Cccd).Select(v => v.LicensePlate).ToList();
+
+                // 2. Tìm tất cả các lỗi vi phạm có trừ điểm của các xe đó
+                var violations = db.ViolationRecords
+                    .Where(v => vehicles.Contains(v.LicensePlate) && v.DemeritPoints != null && v.DemeritPoints != "0")
+                    .Join(db.TrafficLaws, v => v.LawId, l => l.LawId, (v, l) => new { v, l })
+                    .OrderByDescending(x => x.v.ViolationDate)
+                    .Select(x => new
+                    {
+                        NgayTruDiem = x.v.ViolationDate,
+                        SoDiemBiTru = x.v.DemeritPoints,
+                        LoiViPham = x.l.LawName ?? "Lỗi không xác định"
+                    }).ToList();
+
+                var items = new List<object>();
+                int stt = 1;
+                int currentPoints = 12; // Base demerit points 
+
+                var backwardsList = violations.OrderBy(v => v.NgayTruDiem).ToList();
+
+                foreach (var v in backwardsList)
+                {
+                    if (int.TryParse(v.SoDiemBiTru, out int deduction))
+                    {
+                        currentPoints -= deduction;
+                    }
+                }
+
+                int displayPoints = currentPoints;
+                var finalItems = new List<object>();
+
+                foreach (var v in violations)
+                {
+                    displayPoints += int.TryParse(v.SoDiemBiTru, out int deduction) ? deduction : 0;
+
+                    finalItems.Add(new
+                    {
+                        STT = stt++,
+                        NgayTruDiem = v.NgayTruDiem?.ToString("dd/MM/yyyy"),
+                        SoDiemBiTru = v.SoDiemBiTru,
+                        LoiViPham = v.LoiViPham,
+                        SoDiemConLai = (displayPoints - (int.TryParse(v.SoDiemBiTru, out int d) ? d : 0)).ToString() // Display points after deduction
+                    });
+                }
+
+                var dataGrid = this.FindName("dgDemerits") as DataGrid;
+                if (dataGrid != null)
+                {
+                    dataGrid.ItemsSource = finalItems;
+                }
             }
         }
 
@@ -121,10 +161,9 @@ namespace PBL3
             NavigationService.Navigate(new Page8(_currentUser as Customer));
         }
 
-        // Đăng xuất
-        private void btnLogOut_Click(object sender, RoutedEventArgs e)
+        private void Button_Click(object sender, RoutedEventArgs e)
         {
-            NavigationService.Navigate(new Page1());
+            NavigationService.GoBack();
         }
     }
 }

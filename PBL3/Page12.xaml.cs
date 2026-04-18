@@ -114,5 +114,11 @@ namespace PBL3
         {
             string keyword = txtIdentifier.Text;
         }
+
+        // Chuyển trang Chi tiết
+        private void btnChiTiet_Click(object sender, RoutedEventArgs e)
+        {
+            NavigationService.Navigate(new Page19());
+        }
     }
 }

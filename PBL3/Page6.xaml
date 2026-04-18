@@ -7,8 +7,9 @@
         mc:Ignorable="d"
         Title="Quản lý phương tiện" 
         d:DesignHeight="792.8" d:DesignWidth="1536"
-        Background="White">
-    
+        Background="White"
+        Loaded="Page6_Loaded">
+
     <Page.Resources>
         <Style TargetType="{x:Type ScrollBar}">
             <Setter Property="Width" Value="5"/>
@@ -198,7 +199,7 @@
                                 <RowDefinition Height="55"/>
                                 <RowDefinition Height="55"/>
                             </Grid.RowDefinitions>
-                            <TextBlock Grid.Row="0" Text="Quản lý" Foreground="#C62828" FontFamily="Calibri" FontSize="35" VerticalAlignment="Center" Margin="40,15,0,0"/>
+                            <TextBlock Grid.Row="0" Text="Thông tin" Foreground="#C62828" FontFamily="Calibri" FontSize="35" VerticalAlignment="Center" Margin="40,15,0,0"/>
                             <TextBlock Grid.Row="1" Text="phương tiện" Foreground="#C62828" FontFamily="Calibri" FontSize="35" VerticalAlignment="Center" Margin="40,0,0,15"/>
                         </Grid>
                     </StackPanel>
@@ -378,22 +379,28 @@
                         <ItemsControl x:Name="icVehicles">
                             <ItemsControl.ItemsPanel>
                                 <ItemsPanelTemplate>
-                                    <UniformGrid Columns="3" Margin="5" VerticalAlignment="Top"/>
+                                    <WrapPanel Orientation="Horizontal" Margin="5" />
                                 </ItemsPanelTemplate>
                             </ItemsControl.ItemsPanel>
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
-                                    <Border Style="{StaticResource VehicleCardStyle}" MouseLeftButtonDown="VehicleCard_MouseLeftButtonDown" Background="White" Cursor="Hand">
-                                        <StackPanel>
-                                            <TextBlock Text="{Binding LicensePlate}" FontSize="25" FontFamily="Calibri" Height="30" Margin="0,0,0,0"/>
-                                            <TextBlock Text="{Binding DetailsText}" FontSize="15" FontFamily="Calibri" Height="18" Foreground="Gray"/>
-                                            <TextBlock Text="{Binding VehicleName}" FontSize="15" FontFamily="Calibri"/>
-                                            <Image Source="{Binding ImagePath}" Height="150" Margin="30,-30,0,0"/>
-                                            <StackPanel Orientation="Horizontal" Margin="0,0,0,5">
-                                                <TextBlock Text="{Binding IconText}" Foreground="{Binding StatusColor}" Margin="10,-12,5,0" FontSize="18"/>
-                                                <TextBlock Text="{Binding ViolationText}" Foreground="{Binding StatusColor}" Margin="0,-10,0,0" FontSize="18" FontFamily="Calibri" VerticalAlignment="Bottom"/>
+                                    <Border Width="330" Height="220" Margin="0,0,20,20" Background="White" CornerRadius="10" BorderBrush="#EEE" BorderThickness="1" MouseLeftButtonDown="VehicleCard_MouseLeftButtonDown" Cursor="Hand">
+                                        <Border.Effect>
+                                            <DropShadowEffect BlurRadius="15" Opacity="0.1" ShadowDepth="5"/>
+                                        </Border.Effect>
+                                        <Grid>
+                                            <StackPanel Margin="15">
+                                                <TextBlock Text="{Binding LicensePlate}" FontSize="22" FontFamily="Calibri" Foreground="#333" Margin="0,0,0,5"/>
+                                                <TextBlock Text="{Binding DetailsText}" FontSize="14" FontFamily="Calibri" Foreground="#666" Margin="0,0,0,2"/>
+                                                <TextBlock Text="{Binding VehicleName}" FontSize="14" FontFamily="Calibri" Foreground="#333" Margin="0,0,0,0"/>
+
+                                                <Image Source="{Binding ImagePath}" Height="110" Stretch="Uniform" Margin="0,-10,0,0" HorizontalAlignment="Right" VerticalAlignment="Top"/>
                                             </StackPanel>
-                                        </StackPanel>
+                                            <StackPanel Orientation="Horizontal" VerticalAlignment="Bottom" Margin="15,0,0,15">
+                                                <TextBlock Text="{Binding IconText}" Foreground="{Binding StatusColor}" Margin="0,0,5,0" FontSize="18" FontFamily="Segoe UI Emoji" VerticalAlignment="Center"/>
+                                                <TextBlock Text="{Binding ViolationText}" Foreground="{Binding StatusColor}" FontSize="16" FontFamily="Calibri" VerticalAlignment="Center"/>
+                                            </StackPanel>
+                                        </Grid>
                                     </Border>
                                 </DataTemplate>
                             </ItemsControl.ItemTemplate>

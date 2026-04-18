@@ -83,50 +83,23 @@ namespace PBL3
                     .Select(v => new
                     {
                         LicensePlate = v.LicensePlate,
-                        TypeId = v.VehicleTypeId,
-                        ViolationCount = v.ViolationRecords.Count()
+                        VehicleName = v.VehicleType != null ? v.VehicleType.VehicleTypeName : "Không xác định",
+                        CategoryName = v.VehicleType != null && v.VehicleType.Category != null ? v.VehicleType.Category.CategoryName : "Không rõ loại",
+                        ColorName = v.VehicleType != null && v.VehicleType.Color != null ? v.VehicleType.Color.ColorName : "Không rõ màu",
+                        ImagePath = v.VehicleType != null && v.VehicleType.ImagePath != null ? v.VehicleType.ImagePath : "/Assets/Images/default_vehicle.png",
+                        ViolationCount = v.ViolationRecords.Count(vr => vr.Status == 0) // Chỉ đếm số lỗi chưa xử lý
                     })
                     .ToList();
 
-                var vehicleTypes = db.VehicleTypes.ToList();
-                var categories = db.Categories.ToList();
-                var colors = db.VehicleColors.ToList();
-
-                var vehicleViewModels = new List<VehicleViewModel>();
-                foreach(var v in vehicles)
+                var vehicleViewModels = vehicles.Select(v => new VehicleViewModel
                 {
-                    var vType = vehicleTypes.FirstOrDefault(vt => vt.VehicleTypeId == v.TypeId);
-                    string vehicleName = "Không xác định";
-                    string details = "";
-                    string img = "/Assets/Images/default_vehicle.png";
-
-                    if (vType != null)
-                    {
-                        vehicleName = vType.VehicleTypeName;
-                        var cat = categories.FirstOrDefault(c => c.CategoryId == vType.CategoryId);
-                        var col = colors.FirstOrDefault(c => c.ColorId == vType.ColorId);
-
-                        string catName = cat != null ? cat.CategoryName : "Không rõ loại";
-                        string colName = col != null ? col.ColorName : "Không rõ màu";
-
-                        details = $"{catName} - {colName}";
-
-                        if (!string.IsNullOrEmpty(vType.ImagePath))
-                        {
-                            img = vType.ImagePath;
-                        }
-                    }
-
-                    vehicleViewModels.Add(new VehicleViewModel
-                    {
-                        LicensePlate = v.LicensePlate,
-                        VehicleName = vehicleName,
-                        DetailsText = details,
-                        ImagePath = img,
-                        HasViolations = v.ViolationCount > 0,
-                        ViolationCount = v.ViolationCount
-                    });
-                }
+                    LicensePlate = v.LicensePlate,
+                    VehicleName = v.VehicleName,
+                    DetailsText = $"{v.CategoryName} - {v.ColorName}",
+                    ImagePath = v.ImagePath,
+                    HasViolations = v.ViolationCount > 0,
+                    ViolationCount = v.ViolationCount
+                }).ToList();
 
                 icVehicles.ItemsSource = vehicleViewModels;
             }

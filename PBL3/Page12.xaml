@@ -150,7 +150,7 @@
                                 <RowDefinition Height="55"/>
                                 <RowDefinition Height="55"/>
                             </Grid.RowDefinitions>
-                            <TextBlock Grid.Row="0" Text="Nhập lỗi" Foreground="White" FontFamily="Calibri" FontSize="35" VerticalAlignment="Center" Margin="40,15,0,0"/>
+                            <TextBlock Grid.Row="0" Text="Lập biên bản" Foreground="White" FontFamily="Calibri" FontSize="35" VerticalAlignment="Center" Margin="40,15,0,0"/>
                             <TextBlock Grid.Row="1" Text="vi phạm" Foreground="White" FontFamily="Calibri" FontSize="35" VerticalAlignment="Center" Margin="40,0,0,15"/>
                         </Grid>
                     </StackPanel>
@@ -181,7 +181,7 @@
                         <Viewbox Width="44" Height="50" Margin="10,0,0,0">
                             <Path Fill="White" Stretch="Uniform" Data="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,5A3,3 0 0,0 9,8A3,3 0 0,0 12,11A3,3 0 0,0 15,8A3,3 0 0,0 12,5M12,12.2C14.67,12.2 19,13.7 19,17V20H5V17C5,13.7 9.33,12.2 12,12.2M12,13.2C9.5,13.2 6,14.37 6,17V19H18V17C18,14.37 14.5,13.2 12,13.2Z" />
                         </Viewbox>
-                        <TextBlock Text="Thông tin tài khoản" Foreground="White" FontFamily="Calibri" FontSize="35" VerticalAlignment="Center" Margin="40,0,0,0"/>
+                        <TextBlock Text="Tài khoản" Foreground="White" FontFamily="Calibri" FontSize="35" VerticalAlignment="Center" Margin="40,0,0,0"/>
                     </StackPanel>
                     <Button.Style>
                         <Style TargetType="Button">
@@ -430,7 +430,13 @@
                                     <DataGridTemplateColumn Header="Chi tiết" Width="100">
                                         <DataGridTemplateColumn.CellTemplate>
                                             <DataTemplate>
-                                                <TextBlock Text="Xem >" Foreground="Blue" Cursor="Hand" TextDecorations="Underline" HorizontalAlignment="Center"/>
+                                                <Button Content="Chi tiết" Background="Transparent" BorderThickness="0" Foreground="Blue" Cursor="Hand" HorizontalAlignment="Center" Click="btnChiTiet_Click">
+                                                    <Button.Template>
+                                                        <ControlTemplate TargetType="Button">
+                                                            <TextBlock Text="{TemplateBinding Content}" TextDecorations="Underline" />
+                                                        </ControlTemplate>
+                                                    </Button.Template>
+                                                </Button>
                                             </DataTemplate>
                                         </DataGridTemplateColumn.CellTemplate>
                                     </DataGridTemplateColumn>
