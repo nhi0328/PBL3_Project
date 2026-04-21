@@ -119,6 +119,9 @@
     <Compile Update="Page53.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="Page54.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="Page6.xaml.cs">
       <SubType>Code</SubType>
     </Compile>

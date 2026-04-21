@@ -14,10 +14,14 @@ namespace PBL3
         private readonly LuatItem _currentLuat;
         private readonly bool _isEditMode;
 
+        public System.Collections.ObjectModel.ObservableCollection<VehicleFineItem> Fines { get; set; } = new System.Collections.ObjectModel.ObservableCollection<VehicleFineItem>();
+        public System.Collections.ObjectModel.ObservableCollection<string> AvailableCategories { get; set; } = new System.Collections.ObjectModel.ObservableCollection<string>();
+
         // Constructor mặc định
         public Page21()
         {
             InitializeComponent();
+            LoadCategories();
         }
 
         // Constructor chính nhận dữ liệu
@@ -26,6 +30,8 @@ namespace PBL3
             InitializeComponent();
             _currentUser = user;
             _currentLuat = luat;
+
+            LoadCategories();
 
             if (_currentUser != null)
             {
@@ -40,16 +46,18 @@ namespace PBL3
                 _isEditMode = true;
                 txtTieuDe.Text = _currentLuat.TenLoi;
                 txtNghiDinh.Text = _currentLuat.CanCu;
-                txtNgayBanHanh.Text = _currentLuat.NgayBanHanh;
-                txtNgayHieuLuc.Text = _currentLuat.NgayHieuLuc;
-                txtMucPhatXeMay.Text = _currentLuat.PhatTienXeMay;
-                txtMucPhatOto.Text = _currentLuat.PhatTienOto;
 
-                // Tách số từ chuỗi "Trừ X điểm"
-                string truDiemNum = string.Join("", (_currentLuat.TruDiem ?? "").Where(char.IsDigit));
-                txtTruDiem.Text = truDiemNum;
+                if (DateTime.TryParseExact(_currentLuat.NgayBanHanh, "dd/MM/yyyy", null, System.Globalization.DateTimeStyles.None, out DateTime pIssue))
+                    txtNgayBanHanh.Text = pIssue.ToString("dd/MM/yyyy");
 
-                UpdateNoiDung();
+                if (DateTime.TryParseExact(_currentLuat.NgayHieuLuc, "dd/MM/yyyy", null, System.Globalization.DateTimeStyles.None, out DateTime pEffective))
+                    txtNgayHieuLuc.Text = pEffective.ToString("dd/MM/yyyy");
+
+                if (!string.IsNullOrWhiteSpace(_currentLuat.PhatTienXeMay))
+                    Fines.Add(new VehicleFineItem { LoaiXe = "Xe máy", MucPhat = _currentLuat.PhatTienXeMay, TruDiem = _currentLuat.TruDiem });
+                
+                if (!string.IsNullOrWhiteSpace(_currentLuat.PhatTienOto))
+                    Fines.Add(new VehicleFineItem { LoaiXe = "Ô tô", MucPhat = _currentLuat.PhatTienOto, TruDiem = _currentLuat.TruDiem, CanRemove = true });
             }
             // NẾU KHÔNG CÓ -> CHẾ ĐỘ THÊM MỚI
             else
@@ -57,29 +65,95 @@ namespace PBL3
                 _isEditMode = false;
             }
 
-            // Đăng ký sự kiện TextChanged để tự động cập nhật Nội dung
-            txtMucPhatXeMay.TextChanged += (s, e) => UpdateNoiDung();
-            txtMucPhatOto.TextChanged += (s, e) => UpdateNoiDung();
-            txtTruDiem.TextChanged += (s, e) => UpdateNoiDung();
+            if (Fines.Count == 0)
+                Fines.Add(new VehicleFineItem());
+
+            // Ensure first item cannot be removed, others can
+            for (int i = 0; i < Fines.Count; i++)
+            {
+                Fines[i].CanRemove = i > 0;
+            }
+
+            icPhuongTien.ItemsSource = Fines;
         }
 
-        // --- CẬP NHẬT TEXTBLOCK XEM TRƯỚC NỘI DUNG ---
-        private void UpdateNoiDung()
+        private void LoadCategories()
         {
-            string noidung = "";
-            if (!string.IsNullOrWhiteSpace(txtMucPhatXeMay.Text))
+            try
             {
-                noidung += $"- Phạt tiền từ {txtMucPhatXeMay.Text} đồng đối với người điều khiển xe mô tô, xe máy\n";
+                using (var db = new Models.TrafficSafetyDBContext())
+                {
+                    var categories = db.Categories.Select(c => c.CategoryName).ToList();
+                    AvailableCategories.Clear();
+                    foreach (var cat in categories)
+                    {
+                        AvailableCategories.Add(cat);
+                    }
+                }
             }
-            if (!string.IsNullOrWhiteSpace(txtMucPhatOto.Text))
+            catch (Exception ex)
             {
-                noidung += $"- Phạt tiền từ {txtMucPhatOto.Text} đồng đối với người điều khiển xe Ô tô\n";
+                new CustomMessageBox("Lỗi khi tải danh sách phương tiện: " + ex.Message, "Lỗi").ShowDialog();
             }
-            if (!string.IsNullOrWhiteSpace(txtTruDiem.Text))
+        }
+
+        private void LoaiXeComboBox_LostFocus(object sender, RoutedEventArgs e)
+        {
+            if (sender is ComboBox cb && !string.IsNullOrWhiteSpace(cb.Text))
             {
-                noidung += $"- Trừ {txtTruDiem.Text} điểm bằng lái xe";
+                string typedVehicle = cb.Text.Trim();
+
+                // See if it is already in our loaded categories list (case-insensitive)
+                bool exists = AvailableCategories.Any(c => c.Equals(typedVehicle, StringComparison.OrdinalIgnoreCase));
+
+                if (!exists)
+                {
+                    // Show confirmation window to add it to database
+                    var confirmResult = System.Windows.MessageBox.Show(
+                        $"Loại xe '{typedVehicle}' chưa có trong hệ thống.\nBạn có muốn thêm loại xe này vào danh sách không?",
+                        "Xác nhận thêm mới",
+                        System.Windows.MessageBoxButton.YesNo,
+                        System.Windows.MessageBoxImage.Question);
+
+                    if (confirmResult == System.Windows.MessageBoxResult.Yes)
+                    {
+                        try
+                        {
+                            using (var db = new Models.TrafficSafetyDBContext())
+                            {
+                                var newCat = new Models.Category { CategoryName = typedVehicle };
+                                db.Categories.Add(newCat);
+                                db.SaveChanges();
+                                
+                                AvailableCategories.Add(newCat.CategoryName);
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            new CustomMessageBox("Lỗi khi thêm mới loại xe: " + ex.Message, "Lỗi").ShowDialog();
+                        }
+                    }
+                    else
+                    {
+                        // Revert text to empty if they chose 'No'
+                        cb.Text = "";
+                    }
+                }
             }
-            txtNoiDung.Text = noidung.TrimEnd();
+        }
+
+        private void btnThemPhuongTien_Click(object sender, RoutedEventArgs e)
+        {
+            var newItem = new VehicleFineItem { CanRemove = true };
+            Fines.Add(newItem);
+        }
+
+        private void btnXoaPhuongTien_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is Button btn && btn.DataContext is VehicleFineItem item)
+            {
+                Fines.Remove(item);
+            }
         }
 
         // --- NÚT LƯU LUẬT (DÙNG ENTITY FRAMEWORK) ---
@@ -128,14 +202,12 @@ namespace PBL3
                     db.SaveChanges();
 
                     // 3. THÊM CHI TIẾT MỨC PHẠT VÀO BẢNG TRAFFIC_LAW_DETAILS
-                    if (!string.IsNullOrWhiteSpace(txtMucPhatXeMay.Text))
+                    foreach (var fine in Fines)
                     {
-                        db.TrafficLawDetails.Add(CreateLawDetail(lawToSave.LawId, "Xe máy", txtMucPhatXeMay.Text));
-                    }
-
-                    if (!string.IsNullOrWhiteSpace(txtMucPhatOto.Text))
-                    {
-                        db.TrafficLawDetails.Add(CreateLawDetail(lawToSave.LawId, "Ô tô", txtMucPhatOto.Text));
+                        if (!string.IsNullOrWhiteSpace(fine.LoaiXe) || !string.IsNullOrWhiteSpace(fine.MucPhat) || !string.IsNullOrWhiteSpace(fine.TruDiem))
+                        {
+                            db.TrafficLawDetails.Add(CreateLawDetail(db, lawToSave.LawId, fine.LoaiXe, fine.MucPhat, fine.TruDiem));
+                        }
                     }
 
                     // Lưu tất cả các thay đổi
@@ -155,11 +227,11 @@ namespace PBL3
         }
 
         // --- HÀM TẠO ĐỐI TƯỢNG CHI TIẾT LUẬT (Hàm này nãy Nhi bị rớt mất nè) ---
-        private TrafficLawDetail CreateLawDetail(int lawId, string vehicleType, string fineAmount)
+        private TrafficLawDetail CreateLawDetail(TrafficSafetyDBContext db, int lawId, string vehicleType, string fineAmount, string truDiemTxt)
         {
             // Parse điểm trừ
             int demeritPoints = 0;
-            if (int.TryParse(txtTruDiem.Text, out int points))
+            if (int.TryParse(string.Join("", (truDiemTxt ?? "").Where(char.IsDigit)), out int points))
             {
                 demeritPoints = points;
             }
@@ -173,10 +245,27 @@ namespace PBL3
             if (DateTime.TryParseExact(txtNgayHieuLuc.Text, "dd/MM/yyyy", null, System.Globalization.DateTimeStyles.None, out DateTime parsedEff))
                 effectiveDate = parsedEff;
 
+            int? categoryId = null;
+            if (!string.IsNullOrWhiteSpace(vehicleType))
+            {
+                var cat = db.Categories.FirstOrDefault(c => c.CategoryName.ToLower() == vehicleType.ToLower());
+                if (cat != null)
+                {
+                    categoryId = cat.CategoryId;
+                }
+                else
+                {
+                    var newCat = new Category { CategoryName = vehicleType };
+                    db.Categories.Add(newCat);
+                    db.SaveChanges();
+                    categoryId = newCat.CategoryId;
+                }
+            }
+
             return new TrafficLawDetail
             {
                 LawId = lawId,
-                CategoryId = null,
+                CategoryId = categoryId,
                 FineAmount = fineAmount,
                 DemeritPoints = demeritPoints,
                 Decree = txtNghiDinh.Text ?? string.Empty,
@@ -209,5 +298,86 @@ namespace PBL3
         private void btnLBBVP_Click(object sender, RoutedEventArgs e) => NavigationService?.Navigate(new Page14(_currentUser));
         private void btnTaiKhoan_Click(object sender, RoutedEventArgs e) => NavigationService?.Navigate(new Page15(_currentUser));
         private void btnPhanAnh_Click(object sender, RoutedEventArgs e) => NavigationService?.Navigate(new Page16(_currentUser));
+
+        private void RealDatePickerBanHanh_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (RealDatePickerBanHanh.SelectedDate is DateTime selectedDate)
+                txtNgayBanHanh.Text = selectedDate.ToString("dd/MM/yyyy");
+        }
+
+        private void DateOverlayBanHanh_Click(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            DateOverlayBanHanh.IsHitTestVisible = false;
+            RealDatePickerBanHanh.IsHitTestVisible = true;
+            RealDatePickerBanHanh.Opacity = 0.01;
+
+            Dispatcher.BeginInvoke(new Action(() =>
+            {
+                RealDatePickerBanHanh.Focus();
+                RealDatePickerBanHanh.IsDropDownOpen = true;
+            }), System.Windows.Threading.DispatcherPriority.Background);
+        }
+
+        private void RealDatePickerBanHanh_CalendarClosed(object sender, RoutedEventArgs e)
+        {
+            RealDatePickerBanHanh.IsHitTestVisible = false;
+            RealDatePickerBanHanh.Opacity = 0;
+            DateOverlayBanHanh.IsHitTestVisible = true;
+        }
+
+        private void RealDatePickerHieuLuc_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (RealDatePickerHieuLuc.SelectedDate is DateTime selectedDate)
+                txtNgayHieuLuc.Text = selectedDate.ToString("dd/MM/yyyy");
+        }
+
+        private void DateOverlayHieuLuc_Click(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            DateOverlayHieuLuc.IsHitTestVisible = false;
+            RealDatePickerHieuLuc.IsHitTestVisible = true;
+            RealDatePickerHieuLuc.Opacity = 0.01;
+
+            Dispatcher.BeginInvoke(new Action(() =>
+            {
+                RealDatePickerHieuLuc.Focus();
+                RealDatePickerHieuLuc.IsDropDownOpen = true;
+            }), System.Windows.Threading.DispatcherPriority.Background);
+        }
+
+        private void RealDatePickerHieuLuc_CalendarClosed(object sender, RoutedEventArgs e)
+        {
+            RealDatePickerHieuLuc.IsHitTestVisible = false;
+            RealDatePickerHieuLuc.Opacity = 0;
+            DateOverlayHieuLuc.IsHitTestVisible = true;
+        }
+    }
+
+    public class VehicleFineItem : System.ComponentModel.INotifyPropertyChanged
+    {
+        private string _loaiXe = "";
+        public string LoaiXe { get => _loaiXe; set { _loaiXe = value; OnPropertyChanged(nameof(LoaiXe)); } }
+
+        private string _mucPhat = "";
+        public string MucPhat { get => _mucPhat; set { _mucPhat = value; OnPropertyChanged(nameof(MucPhat)); } }
+
+        private string _truDiem = "";
+        public string TruDiem { get => _truDiem; set { _truDiem = value; OnPropertyChanged(nameof(TruDiem)); } }
+
+        private bool _canRemove = false;
+        public bool CanRemove 
+        { 
+            get => _canRemove; 
+            set 
+            { 
+                _canRemove = value; 
+                OnPropertyChanged(nameof(CanRemove)); 
+                OnPropertyChanged(nameof(RemoveBtnVisibility)); 
+            } 
+        }
+
+        public System.Windows.Visibility RemoveBtnVisibility => CanRemove ? System.Windows.Visibility.Visible : System.Windows.Visibility.Collapsed;
+
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        protected void OnPropertyChanged(string name) { PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(name)); }
     }
 }

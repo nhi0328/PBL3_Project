@@ -188,6 +188,11 @@ namespace PBL3
         {
             NavigationService.Navigate(new Page1());
         }
+
+        private void btnCreat_Click(object sender, RoutedEventArgs e)
+        {
+            NavigationService.Navigate(new Page53(_currentUser, null));
+        }
     }
 }
 

@@ -19,7 +19,8 @@ namespace PBL3
 {
     public partial class Page53 : Page
     {
-        private readonly Admin _currentUser;
+        private readonly Officer _currentUser;
+        private readonly string _targetCccd;
 
         // Constructor mặc định
         public Page53()
@@ -29,154 +30,175 @@ namespace PBL3
         }
 
         // Constructor chính
-        public Page53(Admin user) : this()
+        public Page53(Officer user, string targetCccd = null) : this()
         {
             _currentUser = user;
+            _targetCccd = targetCccd;
             if (_currentUser != null)
             {
-                txtUserName.Text = $"Quản trị viên"; // Hoặc _currentUser.HoTen nếu có
-
-                myBell.LoadData(_currentUser as Admin);
+                txtUserName.Text = $"Cán bộ: {_currentUser.OfficerId}";
+                myBell.LoadData(_currentUser as Officer);
             }
         }
 
-        public Page53(Admin user, int complaintId) : this(user)
+        // Tạm thời thêm lại Constructor phụ cho Page47/Page48 để code không lỗi
+        public Page53(Admin admin, int complaintId) : this()
         {
-            // Do something with complaintId later
+            // Do nothing, Admin pages should navigate to the correct Admin complaint detail page instead.
         }
 
-        private async void Page53_Loaded(object sender, RoutedEventArgs e)
+        private void Page53_Loaded(object sender, RoutedEventArgs e)
         {
-            if (System.ComponentModel.DesignerProperties.GetIsInDesignMode(this)) return;
-            LoadCategories();
+            if (!string.IsNullOrEmpty(_targetCccd))
+            {
+                var btn = this.FindName("btnTaoTaiKhoan") as Button;
+                if (btn != null) btn.Content = "Cập nhật";
+                LoadCustomerData(_targetCccd);
+            }
         }
 
-        private void LoadCategories()
+        private void LoadCustomerData(string cccd)
+        {
+            using (var db = new TrafficSafetyDBContext())
+            {
+                var customer = db.Customers.FirstOrDefault(c => c.Cccd == cccd);
+                if (customer != null)
+                {
+                    txtHoTen.Text = customer.FullName;
+                    txtHoTen.Foreground = Brushes.Black;
+
+                    txtCccd.Text = customer.Cccd;
+                    txtCccd.Foreground = Brushes.Black;
+                    txtCccd.IsReadOnly = true; 
+
+                    txtNgaySinh.Text = customer.Dob?.ToString("dd/MM/yyyy") ?? "dd/mm/yyyy";
+                    if (txtNgaySinh.Text != "dd/mm/yyyy") txtNgaySinh.Foreground = Brushes.Black;
+
+                    if (customer.Gender == "Nam") cmbGioiTinh.SelectedIndex = 1;
+                    else if (customer.Gender == "Nữ") cmbGioiTinh.SelectedIndex = 2;
+
+                    txtPhone.Text = customer.Phone;
+                    if (!string.IsNullOrEmpty(txtPhone.Text)) txtPhone.Foreground = Brushes.Black;
+                    else { txtPhone.Text = "Nhập SĐT"; txtPhone.Foreground = Brushes.Gray; }
+
+                    txtEmail.Text = customer.Email;
+                    if (!string.IsNullOrEmpty(txtEmail.Text)) txtEmail.Foreground = Brushes.Black;
+                    else { txtEmail.Text = "Nhập Email"; txtEmail.Foreground = Brushes.Gray; }
+                }
+            }
+        }
+
+        private void btnTaoTaiKhoan_Click(object sender, RoutedEventArgs e)
         {
             try
             {
-                using var db = new TrafficSafetyDBContext();
-                var categories = db.Categories
-                                   .Where(c => c.CategoryName != "Đi bộ" && c.CategoryName != "Xe đạp")
-                                   .ToList();
-                cboVehicleType.ItemsSource = categories;
-                if (categories.Any())
+                using (var db = new TrafficSafetyDBContext())
                 {
-                    cboVehicleType.SelectedIndex = 0;
+                    var cccd = txtCccd.Text.Trim();
+                    if (string.IsNullOrEmpty(cccd) || cccd == "Nhập CCCD")
+                    {
+                        MessageBox.Show("Vui lòng nhập CCCD hợp lệ.", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Warning);
+                        return;
+                    }
+
+                    var customer = db.Customers.FirstOrDefault(c => c.Cccd == cccd);
+                    bool isNew = false;
+
+                    if (customer == null)
+                    {
+                        customer = new Customer { Cccd = cccd, Password = cccd }; // Default password for new account
+                        isNew = true;
+                    }
+
+                    customer.FullName = txtHoTen.Text.Trim() == "Nhập họ tên" ? string.Empty : txtHoTen.Text.Trim();
+
+                    if (DateTime.TryParseExact(txtNgaySinh.Text.Trim(), "dd/MM/yyyy", null, System.Globalization.DateTimeStyles.None, out DateTime dob))
+                    {
+                        customer.Dob = dob;
+                    }
+
+                    if (cmbGioiTinh.SelectedIndex == 1) customer.Gender = "Nam";
+                    else if (cmbGioiTinh.SelectedIndex == 2) customer.Gender = "Nữ";
+
+                    customer.Phone = txtPhone.Text.Trim() == "Nhập SĐT" ? null : txtPhone.Text.Trim();
+                    customer.Email = txtEmail.Text.Trim() == "Nhập Email" ? null : txtEmail.Text.Trim();
+
+                    if (isNew) db.Customers.Add(customer);
+
+                    db.SaveChanges();
+
+                    // --- BẮT ĐẦU: GHI LOG & TẠO THÔNG BÁO ---
+                    int actionType = isNew ? 1 : 2; // 1: Tạo mới, 2: Cập nhật
+
+                    // Lấy ra ID người thực hiện. Ở màn này thường là Cán bộ (Officer) hoặc Quản trị viên (Admin)
+                    // (Theo Constructor khai báo thì _currentUser ở đây là Officer)
+                    string actorId = _currentUser != null ? _currentUser.OfficerId : "UNKNOWN";
+                    int roleType = 2; // 2 = Cán bộ
+
+                    // 1. Ghi vào SYSTEMLOGS
+                    var log = new SystemLog
+                    {
+                        Action = actionType,
+                        Id = actorId,
+                        Role = roleType,
+                        TargetPrefix = "C",
+                        TargetValue = cccd,
+                        Time = DateTime.Now
+                    };
+                    db.SystemLogs.Add(log);
+
+                    // 2. Ghi vào NOTIFICATION cho Công dân
+                    var noti = new Notification
+                    {
+                        TargetRole = 3, // 3 = Công dân
+                        TargetId = cccd,
+                        Content = isNew 
+                            ? "Tài khoản của bạn đã được tạo thành công trên không gian số." 
+                            : "Thông tin của bạn đã được cập nhật bởi cơ quan chức năng.",
+                        CreatedAt = DateTime.Now,
+                        IsRead = false
+                    };
+                    db.Notifications.Add(noti);
+
+                    db.SaveChanges(); // Lưu lại thay đổi (Log & Notification)
+                    // --- KẾT THÚC: GHI LOG & TẠO THÔNG BÁO ---
+
+                    // Tải lại thông báo cho Header/UserControl
+                    myBell.LoadData(_currentUser as Officer);
+
+                    MessageBox.Show(isNew ? "Tạo tài khoản thành công!" : "Cập nhật dữ liệu từ bảng CUSTOMERS thành công!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
                 }
             }
             catch (Exception ex)
             {
-                new CustomMessageBox("Lỗi tải loại phương tiện: " + ex.Message, "Lỗi").ShowDialog();
+                MessageBox.Show("Lỗi: " + ex.Message, "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
-        private void BtnSearch_Click(object sender, RoutedEventArgs e)
+        private void btnUploadImage_Click(object sender, RoutedEventArgs e)
         {
-            PerformSearch();
+            // Empty placeholder to fix build errors
         }
 
-
-        private void PerformSearch()
+        private void TextBox_GotFocus(object sender, RoutedEventArgs e)
         {
-            if (txtIdentifier == null || dgViolations == null || txtErrorMessage == null || bdWarning == null || txtWarningMessage == null) return;
-
-            string keyword = txtIdentifier.Text.Trim();
-
-            if (string.IsNullOrEmpty(keyword))
+            if (sender is TextBox tb && (tb.Text == "Nhập họ tên" || tb.Text == "Nhập CCCD" || tb.Text == "dd/mm/yyyy" || tb.Text == "Nhập SĐT" || tb.Text == "Nhập Email"))
             {
-                txtErrorMessage.Visibility = Visibility.Collapsed;
-                bdWarning.Visibility = Visibility.Collapsed;
-                dgViolations.Visibility = Visibility.Collapsed;
-                return;
+                tb.Text = "";
+                tb.Foreground = Brushes.Black;
             }
+        }
 
-            using var db = new TrafficSafetyDBContext();
-
-            var violations = db.ViolationRecords.Include(r => r.Law).Where(r => r.LicensePlate != null && r.LicensePlate.Contains(keyword)).ToList();
-
-            if (!violations.Any())
+        private void TextBox_LostFocus(object sender, RoutedEventArgs e)
+        {
+            if (sender is TextBox tb && string.IsNullOrWhiteSpace(tb.Text))
             {
-                var vehicle = db.Vehicles.FirstOrDefault(v => v.LicensePlate.Contains(keyword));
-
-                if (vehicle != null)
-                {
-                    txtErrorMessage.Text = $"Biển số xe {vehicle.LicensePlate} hiện tại không có lỗi vi phạm nào.";
-                }
-                else
-                {
-                    txtErrorMessage.Text = $"Không tìm thấy dữ liệu phương tiện hoặc vi phạm nào cho từ khóa: '{keyword}'.";
-                }
-
-                txtErrorMessage.Visibility = Visibility.Visible;
-                bdWarning.Visibility = Visibility.Collapsed;
-                dgViolations.Visibility = Visibility.Collapsed;
-                return;
-            }
-
-            txtErrorMessage.Visibility = Visibility.Collapsed;
-
-            // Nhóm theo thời gian, ưu tiên nhóm có lỗi chưa xử lý (Status = 0) lên đầu
-            var grouped = violations.GroupBy(v => new { v.LicensePlate, v.ViolationDate, v.ViolationTime })
-                                    .OrderBy(g => g.All(v => v.Status != 0)) // Nhóm có ít nhất 1 lỗi Status == 0 sẽ lên đầu (vì All return False, False < True)
-                                    .ThenByDescending(g => g.Key.ViolationDate)
-                                    .ThenByDescending(g => g.Key.ViolationTime)
-                                    .ToList();
-
-            int stt = 1;
-            int totalUnprocessed = 0;
-            var listSource = new List<ViolationGroupDisplay>();
-
-            foreach (var group in grouped)
-            {
-                var first = group.First();
-                int groupUnprocessedCount = group.Count(v => v.Status == 0);
-                totalUnprocessed += groupUnprocessedCount;
-
-                bool isProcessed = groupUnprocessedCount == 0;
-
-                var listLoi = new List<ViolationDetailDisplay>();
-                int loiCount = 1;
-                int totalInGroup = group.Count();
-
-                foreach (var v in group)
-                {
-                    string loiName = v.Law?.LawName ?? v.ViolationDescription ?? "Vi phạm giao thông";
-                    string prefix = totalInGroup > 1 ? $"{loiCount}. " : "";
-
-                    string timeStr = v.ViolationTime?.ToString(@"hh\:mm") ?? "";
-                    string dateStr = v.ViolationDate?.ToString("dd/MM/yyyy") ?? "";
-
-                    string extraTime = (loiCount == totalInGroup) ? $"{dateStr} - {timeStr}" : "";
-
-                    listLoi.Add(new ViolationDetailDisplay { MoTaLoi = prefix + loiName, ThoiGian = extraTime });
-                    loiCount++;
-                }
-
-                listSource.Add(new ViolationGroupDisplay
-                {
-                    STT = stt++,
-                    BienSo = first.LicensePlate,
-                    DanhSachLoi = listLoi,
-                    TrangThaiIcon = isProcessed ? "✔" : "⚠",
-                    TrangThaiText = isProcessed ? "Đã xử lý" : "Chưa xử lý",
-                    TrangThaiBg = isProcessed ? "#E8F5E9" : "#C62828",
-                    TrangThaiFg = isProcessed ? "#2E7D32" : "White",
-                    RecordId = first.ViolationRecordId
-                });
-            }
-
-            dgViolations.ItemsSource = listSource;
-            dgViolations.Visibility = Visibility.Visible;
-
-            if (totalUnprocessed > 0)
-            {
-                txtWarningMessage.Text = $"Hệ thống ghi nhận có {totalUnprocessed} lỗi vi phạm chưa được xử lý!";
-                bdWarning.Visibility = Visibility.Visible;
-            }
-            else
-            {
-                bdWarning.Visibility = Visibility.Collapsed;
+                tb.Foreground = Brushes.Gray;
+                if (tb.Name == "txtHoTen") tb.Text = "Nhập họ tên";
+                else if (tb.Name == "txtCccd") tb.Text = "Nhập CCCD";
+                else if (tb.Name == "txtNgaySinh") tb.Text = "dd/mm/yyyy";
+                else if (tb.Name == "txtPhone") tb.Text = "Nhập SĐT";
+                else if (tb.Name == "txtEmail") tb.Text = "Nhập Email";
             }
         }
 
@@ -216,32 +238,27 @@ namespace PBL3
 
         private void btnTraCuuNhanh_Click(object sender, RoutedEventArgs e)
         {
-            NavigationService.Navigate(new Page44(_currentUser));
+            NavigationService.Navigate(new Page12(_currentUser));
         }
 
         private void btnTraCuuLuat_Click(object sender, RoutedEventArgs e)
         {
-            NavigationService.Navigate(new Page45(_currentUser));
+            NavigationService.Navigate(new Page13(_currentUser));
+        }
+
+        private void btnLBBVP_Click(object sender, RoutedEventArgs e)
+        {
+            NavigationService.Navigate(new Page14(_currentUser));
         }
 
         private void btnTaiKhoan_Click(object sender, RoutedEventArgs e)
         {
-            NavigationService.Navigate(new Page46(_currentUser));
+            NavigationService.Navigate(new Page15(_currentUser));
         }
 
         private void btnPhanAnh_Click(object sender, RoutedEventArgs e)
         {
-            NavigationService.Navigate(new Page47(_currentUser));
-        }
-
-        private void btnLichSu_Click(object sender, RoutedEventArgs e)
-        {
-            NavigationService.Navigate(new Page48(_currentUser));
-        }
-
-        private void btnThongKe_Click(object sender, RoutedEventArgs e)
-        {
-            NavigationService.Navigate(new Page49(_currentUser));
+            NavigationService.Navigate(new Page16(_currentUser));
         }
     }
 }

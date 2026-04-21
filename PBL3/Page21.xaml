@@ -364,36 +364,29 @@
             </Border>
 
             <Grid Grid.Row="1" Panel.ZIndex="1">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="100"/>
-                    <RowDefinition Height="*"/>
-                </Grid.RowDefinitions>
 
-                <Grid Grid.Row="0" Margin="0,20,0,0">
-                    <TextBlock Text="LUẬT" FontSize="40" FontFamily="Calibri" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                </Grid>
+                <StackPanel>
+                    <TextBlock Text="LUẬT" FontSize="40" FontFamily="Calibri" HorizontalAlignment="Center" Padding="0,35,0,20"/>
 
-                <Border Grid.Row="1" Background="White" CornerRadius="20" Padding="0" Margin="30,0,30,30">
-                    <Border.Effect>
-                        <DropShadowEffect BlurRadius="40" Opacity="0.3" ShadowDepth="0" Direction="570"/>
-                    </Border.Effect>
-                    <Grid Margin="30,20,30,20">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="*"/>
-                            <RowDefinition Height="Auto"/>
-                        </Grid.RowDefinitions>
+                    <Border Background="White" CornerRadius="10" Padding="0" Margin="50,0,30,10">
+                        <Border.Effect>
+                            <DropShadowEffect BlurRadius="40" Opacity="0.3" ShadowDepth="0" Direction="270"/>
+                        </Border.Effect>
+                        <Grid Margin="30,20,30,20">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
 
                         <TextBlock Grid.Row="0" Text="Tiêu đề" FontSize="18" FontFamily="Calibri" Foreground="#333" Margin="0,0,0,5"/>
                         <Border Grid.Row="1" Margin="0,0,0,15" BorderBrush="#CCC" BorderThickness="1" CornerRadius="5">
-                            <TextBox x:Name="txtTieuDe" FontSize="18" FontFamily="Calibri" Padding="10,5" BorderThickness="0" Background="Transparent">
+                            <TextBox x:Name="txtTieuDe" Text="Tên luật" Foreground="Gray" FontSize="18" FontFamily="Calibri" Padding="10,5" BorderThickness="0" Background="Transparent">
                                 <TextBox.Style>
                                     <Style TargetType="TextBox">
                                         <Style.Resources>
@@ -419,7 +412,7 @@
                         <!-- Nghị định -->
                         <TextBlock Grid.Row="2" Text="Nghị định" FontSize="18" FontFamily="Calibri" Foreground="#333" Margin="0,0,0,5"/>
                         <Border Grid.Row="3" Margin="0,0,0,15" BorderBrush="#CCC" BorderThickness="1" CornerRadius="5">
-                            <TextBox x:Name="txtNghiDinh" FontSize="18" FontFamily="Calibri" Padding="10,5" BorderThickness="0" Background="Transparent">
+                            <TextBox x:Name="txtNghiDinh" Text="Nghị định" Foreground="Gray" FontSize="18" FontFamily="Calibri" Padding="10,5" BorderThickness="0" Background="Transparent">
                                 <TextBox.Style>
                                     <Style TargetType="TextBox">
                                         <Style.Resources>
@@ -452,178 +445,165 @@
 
                             <StackPanel Grid.Column="0">
                                 <TextBlock Text="Ngày ban hành" FontSize="18" FontFamily="Calibri" Foreground="#333" Margin="0,0,0,5"/>
-                                <Border BorderBrush="#CCC" BorderThickness="1" CornerRadius="5">
-                                    <TextBox x:Name="txtNgayBanHanh" FontSize="18" FontFamily="Calibri" Padding="10,5" BorderThickness="0" Background="Transparent">
-                                        <TextBox.Style>
-                                            <Style TargetType="TextBox">
-                                                <Style.Resources>
-                                                    <VisualBrush x:Key="CueBannerBrush" AlignmentX="Left" AlignmentY="Center" Stretch="None">
-                                                        <VisualBrush.Visual>
-                                                            <Label Content="dd/mm/yyyy" Foreground="Gray" FontSize="18" FontFamily="Calibri" Padding="5,0,0,0"/>
-                                                        </VisualBrush.Visual>
-                                                    </VisualBrush>
-                                                </Style.Resources>
-                                                <Style.Triggers>
-                                                    <Trigger Property="Text" Value="">
-                                                        <Setter Property="Background" Value="{StaticResource CueBannerBrush}"/>
-                                                    </Trigger>
-                                                    <Trigger Property="IsKeyboardFocused" Value="True">
-                                                        <Setter Property="Background" Value="Transparent"/>
-                                                    </Trigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </TextBox.Style>
-                                    </TextBox>
+                                <Border Background="White" CornerRadius="10" BorderBrush="#EEE" BorderThickness="1" Height="40">
+                                    <Border.Effect>
+                                        <DropShadowEffect BlurRadius="10" Opacity="0.1" ShadowDepth="2"/>
+                                    </Border.Effect>
+                                    <Grid>
+                                        <Grid Margin="15,0">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock x:Name="txtNgayBanHanh" FontFamily="Calibri" FontSize="18" Text="dd/mm/yyyy" VerticalAlignment="Center" Foreground="Gray"/>
+                                        </Grid>
+                                        <DatePicker x:Name="RealDatePickerBanHanh" SelectedDateChanged="RealDatePickerBanHanh_SelectedDateChanged" CalendarClosed="RealDatePickerBanHanh_CalendarClosed" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Opacity="0" IsHitTestVisible="False"/>
+                                        <Border x:Name="DateOverlayBanHanh" Background="Transparent" Cursor="Hand" MouseLeftButtonDown="DateOverlayBanHanh_Click"/>
+                                    </Grid>
                                 </Border>
                             </StackPanel>
 
                             <StackPanel Grid.Column="2">
                                 <TextBlock Text="Ngày có hiệu lực" FontSize="18" FontFamily="Calibri" Foreground="#333" Margin="0,0,0,5"/>
-                                <Border BorderBrush="#CCC" BorderThickness="1" CornerRadius="5">
-                                    <TextBox x:Name="txtNgayHieuLuc" FontSize="18" FontFamily="Calibri" Padding="10,5" BorderThickness="0" Background="Transparent">
-                                        <TextBox.Style>
-                                            <Style TargetType="TextBox">
-                                                <Style.Resources>
-                                                    <VisualBrush x:Key="CueBannerBrush" AlignmentX="Left" AlignmentY="Center" Stretch="None">
-                                                        <VisualBrush.Visual>
-                                                            <Label Content="dd/mm/yyyy" Foreground="Gray" FontSize="18" FontFamily="Calibri" Padding="5,0,0,0"/>
-                                                        </VisualBrush.Visual>
-                                                    </VisualBrush>
-                                                </Style.Resources>
-                                                <Style.Triggers>
-                                                    <Trigger Property="Text" Value="">
-                                                        <Setter Property="Background" Value="{StaticResource CueBannerBrush}"/>
-                                                    </Trigger>
-                                                    <Trigger Property="IsKeyboardFocused" Value="True">
-                                                        <Setter Property="Background" Value="Transparent"/>
-                                                    </Trigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </TextBox.Style>
-                                    </TextBox>
+                                <Border Background="White" CornerRadius="10" BorderBrush="#EEE" BorderThickness="1" Height="40">
+                                    <Border.Effect>
+                                        <DropShadowEffect BlurRadius="10" Opacity="0.1" ShadowDepth="2"/>
+                                    </Border.Effect>
+                                    <Grid>
+                                        <Grid Margin="15,0">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock x:Name="txtNgayHieuLuc" FontFamily="Calibri" FontSize="18" Text="dd/mm/yyyy" VerticalAlignment="Center" Foreground="Gray"/>
+                                        </Grid>
+                                        <DatePicker x:Name="RealDatePickerHieuLuc" SelectedDateChanged="RealDatePickerHieuLuc_SelectedDateChanged" CalendarClosed="RealDatePickerHieuLuc_CalendarClosed" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Opacity="0" IsHitTestVisible="False"/>
+                                        <Border x:Name="DateOverlayHieuLuc" Background="Transparent" Cursor="Hand" MouseLeftButtonDown="DateOverlayHieuLuc_Click"/>
+                                    </Grid>
                                 </Border>
                             </StackPanel>
                         </Grid>
 
                         <!-- Mức phạt & Trừ điểm -->
-                        <Grid Grid.Row="5" Margin="0,0,0,15">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="10"/>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="20"/>
-                                <ColumnDefinition Width="0.8*"/>
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                            </Grid.RowDefinitions>
+                        <ItemsControl Grid.Row="5" Margin="0,0,0,15" x:Name="icPhuongTien" Background="Transparent">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid Margin="0,5">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="10"/>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="20"/>
+                                            <ColumnDefinition Width="0.8*"/>
+                                            <ColumnDefinition Width="30"/>
+                                        </Grid.ColumnDefinitions>
 
-                            <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Text="Mức phạt" FontSize="18" FontFamily="Calibri" Foreground="#333" Margin="0,0,0,5"/>
-                            <TextBlock Grid.Row="0" Grid.Column="4" Text="Trừ điểm bằng lái" FontSize="18" FontFamily="Calibri" Foreground="#333" Margin="0,0,0,5"/>
+                                        <Border Grid.Column="0" BorderBrush="#CCC" BorderThickness="1" CornerRadius="5">
+                                            <ComboBox Text="{Binding LoaiXe, UpdateSourceTrigger=PropertyChanged}" 
+                                                      ItemsSource="{Binding RelativeSource={RelativeSource AncestorType=Page}, Path=AvailableCategories}"
+                                                      IsEditable="True"
+                                                      Foreground="Gray" FontSize="18" FontFamily="Calibri" Padding="10,5" BorderThickness="0" Background="Transparent"
+                                                      LostFocus="LoaiXeComboBox_LostFocus">
+                                                <ComboBox.Style>
+                                                    <Style TargetType="ComboBox">
+                                                        <Style.Resources>
+                                                            <VisualBrush x:Key="CueBannerBrush" AlignmentX="Left" AlignmentY="Center" Stretch="None">
+                                                                <VisualBrush.Visual>
+                                                                    <Label Content="Loại xe" Foreground="Gray" FontSize="18" FontFamily="Calibri" Padding="5,0,0,0"/>
+                                                                </VisualBrush.Visual>
+                                                            </VisualBrush>
+                                                        </Style.Resources>
+                                                        <Style.Triggers>
+                                                            <Trigger Property="Text" Value="">
+                                                                <Setter Property="Background" Value="{StaticResource CueBannerBrush}"/>
+                                                            </Trigger>
+                                                            <Trigger Property="IsKeyboardFocusWithin" Value="True">
+                                                                <Setter Property="Background" Value="Transparent"/>
+                                                            </Trigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </ComboBox.Style>
+                                            </ComboBox>
+                                        </Border>
 
-                            <Border Grid.Row="1" Grid.Column="0" BorderBrush="#CCC" BorderThickness="1" CornerRadius="5">
-                                <TextBox x:Name="txtMucPhatXeMay" FontSize="18" FontFamily="Calibri" Padding="10,5" BorderThickness="0" Background="Transparent">
-                                    <TextBox.Style>
-                                        <Style TargetType="TextBox">
-                                            <Style.Resources>
-                                                <VisualBrush x:Key="CueBannerBrush" AlignmentX="Left" AlignmentY="Center" Stretch="None">
-                                                    <VisualBrush.Visual>
-                                                        <Label Content="Xe máy / xe máy điện" Foreground="Gray" FontSize="18" FontFamily="Calibri" Padding="5,0,0,0"/>
-                                                    </VisualBrush.Visual>
-                                                </VisualBrush>
-                                            </Style.Resources>
-                                            <Style.Triggers>
-                                                <Trigger Property="Text" Value="">
-                                                    <Setter Property="Background" Value="{StaticResource CueBannerBrush}"/>
-                                                </Trigger>
-                                                <Trigger Property="IsKeyboardFocused" Value="True">
-                                                    <Setter Property="Background" Value="Transparent"/>
-                                                </Trigger>
-                                            </Style.Triggers>
-                                        </Style>
-                                    </TextBox.Style>
-                                </TextBox>
-                            </Border>
+                                        <Border Grid.Column="2" BorderBrush="#CCC" BorderThickness="1" CornerRadius="5">
+                                            <TextBox Text="{Binding MucPhat, UpdateSourceTrigger=PropertyChanged}" Foreground="Gray" FontSize="18" FontFamily="Calibri" Padding="10,5" BorderThickness="0" Background="Transparent">
+                                                <TextBox.Style>
+                                                    <Style TargetType="TextBox">
+                                                        <Style.Resources>
+                                                            <VisualBrush x:Key="CueBannerBrush" AlignmentX="Left" AlignmentY="Center" Stretch="None">
+                                                                <VisualBrush.Visual>
+                                                                    <Label Content="Mức phạt" Foreground="Gray" FontSize="18" FontFamily="Calibri" Padding="5,0,0,0"/>
+                                                                </VisualBrush.Visual>
+                                                            </VisualBrush>
+                                                        </Style.Resources>
+                                                        <Style.Triggers>
+                                                            <Trigger Property="Text" Value="">
+                                                                <Setter Property="Background" Value="{StaticResource CueBannerBrush}"/>
+                                                            </Trigger>
+                                                            <Trigger Property="IsKeyboardFocused" Value="True">
+                                                                <Setter Property="Background" Value="Transparent"/>
+                                                            </Trigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </TextBox.Style>
+                                            </TextBox>
+                                        </Border>
 
-                            <Border Grid.Row="1" Grid.Column="2" BorderBrush="#CCC" BorderThickness="1" CornerRadius="5">
-                                <TextBox x:Name="txtMucPhatOto" FontSize="18" FontFamily="Calibri" Padding="10,5" BorderThickness="0" Background="Transparent">
-                                    <TextBox.Style>
-                                        <Style TargetType="TextBox">
-                                            <Style.Resources>
-                                                <VisualBrush x:Key="CueBannerBrush" AlignmentX="Left" AlignmentY="Center" Stretch="None">
-                                                    <VisualBrush.Visual>
-                                                        <Label Content="Xe ô tô" Foreground="Gray" FontSize="18" FontFamily="Calibri" Padding="5,0,0,0"/>
-                                                    </VisualBrush.Visual>
-                                                </VisualBrush>
-                                            </Style.Resources>
-                                            <Style.Triggers>
-                                                <Trigger Property="Text" Value="">
-                                                    <Setter Property="Background" Value="{StaticResource CueBannerBrush}"/>
-                                                </Trigger>
-                                                <Trigger Property="IsKeyboardFocused" Value="True">
-                                                    <Setter Property="Background" Value="Transparent"/>
-                                                </Trigger>
-                                            </Style.Triggers>
-                                        </Style>
-                                    </TextBox.Style>
-                                </TextBox>
-                            </Border>
+                                        <Border Grid.Column="4" BorderBrush="#CCC" BorderThickness="1" CornerRadius="5">
+                                            <TextBox Text="{Binding TruDiem, UpdateSourceTrigger=PropertyChanged}" Foreground="Gray" FontSize="18" FontFamily="Calibri" Padding="10,5" BorderThickness="0" Background="Transparent">
+                                                <TextBox.Style>
+                                                    <Style TargetType="TextBox">
+                                                        <Style.Resources>
+                                                            <VisualBrush x:Key="CueBannerBrush" AlignmentX="Left" AlignmentY="Center" Stretch="None">
+                                                                <VisualBrush.Visual>
+                                                                    <Label Content="Điểm trừ" Foreground="Gray" FontSize="18" FontFamily="Calibri" Padding="5,0,0,0"/>
+                                                                </VisualBrush.Visual>
+                                                            </VisualBrush>
+                                                        </Style.Resources>
+                                                        <Style.Triggers>
+                                                            <Trigger Property="Text" Value="">
+                                                                <Setter Property="Background" Value="{StaticResource CueBannerBrush}"/>
+                                                            </Trigger>
+                                                            <Trigger Property="IsKeyboardFocused" Value="True">
+                                                                <Setter Property="Background" Value="Transparent"/>
+                                                            </Trigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </TextBox.Style>
+                                            </TextBox>
+                                        </Border>
 
-                            <Border Grid.Row="1" Grid.Column="4" BorderBrush="#CCC" BorderThickness="1" CornerRadius="5">
-                                <TextBox x:Name="txtTruDiem" FontSize="18" FontFamily="Calibri" Padding="10,5" BorderThickness="0" Background="Transparent">
-                                    <TextBox.Style>
-                                        <Style TargetType="TextBox">
-                                            <Style.Resources>
-                                                <VisualBrush x:Key="CueBannerBrush" AlignmentX="Left" AlignmentY="Center" Stretch="None">
-                                                    <VisualBrush.Visual>
-                                                        <Label Content="Điểm trừ" Foreground="Gray" FontSize="18" FontFamily="Calibri" Padding="5,0,0,0"/>
-                                                    </VisualBrush.Visual>
-                                                </VisualBrush>
-                                            </Style.Resources>
-                                            <Style.Triggers>
-                                                <Trigger Property="Text" Value="">
-                                                    <Setter Property="Background" Value="{StaticResource CueBannerBrush}"/>
-                                                </Trigger>
-                                                <Trigger Property="IsKeyboardFocused" Value="True">
-                                                    <Setter Property="Background" Value="Transparent"/>
-                                                </Trigger>
-                                            </Style.Triggers>
-                                        </Style>
-                                    </TextBox.Style>
-                                </TextBox>
-                            </Border>
-                        </Grid>
+                                        <Button Grid.Column="5" Content="✕"
+                                                Visibility="{Binding RemoveBtnVisibility}" 
+                                                Click="btnXoaPhuongTien_Click" 
+                                                Background="Transparent" BorderThickness="0" 
+                                                Foreground="Gray" FontSize="18" 
+                                                Cursor="Hand" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                                Margin="5,0,0,0"/>
+                                    </Grid>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
 
-                        <!-- Nội dung -->
-                        <TextBlock Grid.Row="6" Text="Nội dung" FontSize="18" FontFamily="Calibri" Foreground="#333" Margin="0,0,0,5"/>
-                        <Border Grid.Row="7" Grid.RowSpan="2" Margin="0,0,0,20" BorderBrush="#CCC" BorderThickness="1" CornerRadius="5">
-                            <TextBox x:Name="txtNoiDung" FontSize="18" FontFamily="Calibri" Padding="10,5" BorderThickness="0" Background="Transparent" AcceptsReturn="True" TextWrapping="Wrap">
-                                <TextBox.Style>
-                                    <Style TargetType="TextBox">
-                                        <Style.Resources>
-                                            <VisualBrush x:Key="CueBannerBrush" AlignmentX="Left" AlignmentY="Top" Stretch="None">
-                                                <VisualBrush.Visual>
-                                                    <Label Content="Nội dung" Foreground="Gray" FontSize="18" FontFamily="Calibri" Padding="5,5,0,0"/>
-                                                </VisualBrush.Visual>
-                                            </VisualBrush>
-                                        </Style.Resources>
-                                        <Style.Triggers>
-                                            <Trigger Property="Text" Value="">
-                                                <Setter Property="Background" Value="{StaticResource CueBannerBrush}"/>
-                                            </Trigger>
-                                            <Trigger Property="IsKeyboardFocused" Value="True">
-                                                <Setter Property="Background" Value="Transparent"/>
-                                            </Trigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </TextBox.Style>
-                            </TextBox>
-                        </Border>
+                        <Button Grid.Row="6" Content="+Thêm phương tiện" HorizontalAlignment="Left" Width="140" Height="40" Background="#C62828" Foreground="White" BorderThickness="0" FontSize="16" FontFamily="Calibri" Cursor="Hand" Margin="0,0,15,15" Click="btnThemPhuongTien_Click">
+                            <Button.Template>
+                                <ControlTemplate TargetType="Button">
+                                    <Border x:Name="brdLuu" Background="{TemplateBinding Background}" CornerRadius="5">
+                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    </Border>
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter TargetName="brdLuu" Property="Background" Value="#A02020"/>
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Button.Template>
+                        </Button>
 
                         <!-- Buttons -->
-                        <StackPanel Grid.Row="9" Orientation="Horizontal" Margin="0,0,0,0">
-                            <Button x:Name="btnLuu" Content="Lưu thông tin" Width="140" Height="40" Background="#C62828" Foreground="White" BorderThickness="0" FontSize="16" FontFamily="Calibri" Cursor="Hand" Margin="0,0,15,0" Click="btnLuu_Click">
+                        <StackPanel Grid.Row="7" Orientation="Horizontal" Margin="0,0,0,0">
+                            <Button x:Name="btnLuu" Content="Lưu thông tin" Width="140" Height="40" Background="#C62828" Foreground="White" BorderThickness="0" FontSize="16" FontFamily="Calibri" Cursor="Hand" Margin="0,10,15,0" Click="btnLuu_Click">
                                 <Button.Template>
                                     <ControlTemplate TargetType="Button">
                                         <Border x:Name="brdLuu" Background="{TemplateBinding Background}" CornerRadius="5">
@@ -655,6 +635,7 @@
                         </StackPanel>
                     </Grid>
                 </Border>
+                </StackPanel>
             </Grid>
         </Grid>
     </Grid>

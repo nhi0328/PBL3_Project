@@ -169,3 +169,7 @@ D:\OneDrive - The University of Technology\PBL3\PBL3\obj\Debug\net6.0-windows7.0
 D:\OneDrive - The University of Technology\PBL3\PBL3\obj\Debug\net6.0-windows7.0\Page52.baml
 D:\OneDrive - The University of Technology\PBL3\PBL3\obj\Debug\net6.0-windows7.0\Page53.g.cs
 D:\OneDrive - The University of Technology\PBL3\PBL3\obj\Debug\net6.0-windows7.0\Page53.baml
+D:\OneDrive - The University of Technology\PBL3\PBL3\obj\Debug\net6.0-windows7.0\ConfirmAddBox.baml
+D:\OneDrive - The University of Technology\PBL3\PBL3\obj\Debug\net6.0-windows7.0\ConfirmAddBox.g.cs
+D:\OneDrive - The University of Technology\PBL3\PBL3\obj\Debug\net6.0-windows7.0\Page54.g.cs
+D:\OneDrive - The University of Technology\PBL3\PBL3\obj\Debug\net6.0-windows7.0\Page54.baml

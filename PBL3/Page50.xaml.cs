@@ -20,6 +20,7 @@ namespace PBL3
     public partial class Page50 : Page
     {
         private readonly Admin _currentUser;
+        private readonly int? _recordId;
 
         // Constructor mặc định
         public Page50()
@@ -29,9 +30,10 @@ namespace PBL3
         }
 
         // Constructor chính
-        public Page50(Admin user) : this()
+        public Page50(Admin user, int? recordId = null) : this()
         {
             _currentUser = user;
+            _recordId = recordId;
             if (_currentUser != null)
             {
                 txtUserName.Text = $"Quản trị viên"; // Hoặc _currentUser.HoTen nếu có
@@ -42,155 +44,98 @@ namespace PBL3
         private async void Page50_Loaded(object sender, RoutedEventArgs e)
         {
             if (System.ComponentModel.DesignerProperties.GetIsInDesignMode(this)) return;
-            LoadCategories();
+            LoadViolationDetail();
+        }
+
+        private void LoadViolationDetail()
+        {
+            if (_recordId is null) return;
+
+            // Lấy thông tin từ Service (giống Page19)
+            var detail = ViolationLookupService.GetViolationDetail(_recordId.Value);
+
+            if (detail == null)
+            {
+                new CustomMessageBox("Không tìm thấy thông tin chi tiết vi phạm này trên hệ thống.").ShowDialog();
+                return;
+            }
+
+            // Gán dữ liệu lên các thành phần giao diện
+            txtHeaderTitle.Text = detail.HeaderTitle;
+            txtHeaderSubtitle.Text = detail.HeaderSubtitle;
+            txtVehicleTypeValue.Text = detail.VehicleType;
+            txtViolationDateValue.Text = detail.ViolationDate;
+            txtViolationTimeValue.Text = detail.ViolationTime;
+            txtViolationLocationValue.Text = detail.ViolationLocation;
+            txtViolationDescriptionValue.Text = detail.ViolationDescription;
+            txtFineRangeValue.Text = detail.FineRange;
+            txtPaymentLocationValue.Text = detail.PaymentLocation;
+            txtStatusValue.Text = detail.StatusText;
+
+            // Đổi màu text Trạng thái
+            txtStatusValue.Foreground = detail.IsProcessed ? Brushes.ForestGreen : Brushes.Firebrick;
+
+            // Kiểm tra an toàn trước khi gán để tránh lỗi XAML chưa khởi tạo
+            if (txtEvidenceCaption != null) txtEvidenceCaption.Text = detail.EvidenceCaption;
+            if (txtLastUpdatedValue != null) txtLastUpdatedValue.Text = detail.LastUpdated;
+
+            // Xử lý hiển thị Hình ảnh bằng chứng
+            if (!string.IsNullOrWhiteSpace(detail.EvidenceImagePath) && imgEvidence != null)
+            {
+                Uri evidenceUri = BuildEvidenceUri(detail.EvidenceImagePath);
+                if (evidenceUri != null)
+                {
+                    try
+                    {
+                        imgEvidence.Source = new BitmapImage(evidenceUri);
+                        imgEvidence.Visibility = Visibility.Visible;
+
+                        if (txtEvidencePlaceholder != null)
+                            txtEvidencePlaceholder.Visibility = Visibility.Collapsed;
+                    }
+                    catch { /* Im lặng bỏ qua nếu ảnh bị lỗi file */ }
+                }
+            }
+        }
+
+        private static Uri BuildEvidenceUri(string evidenceImagePath)
+        {
+            if (Uri.TryCreate(evidenceImagePath, UriKind.Absolute, out Uri absoluteUri))
+            {
+                return absoluteUri;
+            }
+
+            string fullPath = System.IO.Path.Combine(
+                AppDomain.CurrentDomain.BaseDirectory,
+                evidenceImagePath.TrimStart('/', '\\').Replace('/', System.IO.Path.DirectorySeparatorChar));
+
+            if (System.IO.File.Exists(fullPath))
+            {
+                return new Uri(fullPath, UriKind.Absolute);
+            }
+
+            return Uri.TryCreate(evidenceImagePath, UriKind.Relative, out Uri relativeUri)
+                ? relativeUri
+                : null;
         }
 
         private void LoadCategories()
         {
-            try
-            {
-                using var db = new TrafficSafetyDBContext();
-                var categories = db.Categories
-                                   .Where(c => c.CategoryName != "Đi bộ" && c.CategoryName != "Xe đạp")
-                                   .ToList();
-                cboVehicleType.ItemsSource = categories;
-                if (categories.Any())
-                {
-                    cboVehicleType.SelectedIndex = 0;
-                }
-            }
-            catch (Exception ex)
-            {
-                new CustomMessageBox("Lỗi tải loại phương tiện: " + ex.Message, "Lỗi").ShowDialog();
-            }
+            // Do not need to load categories since the combobox is removed
         }
 
-        private void BtnSearch_Click(object sender, RoutedEventArgs e)
+        private void BtnBack_Click(object sender, RoutedEventArgs e)
         {
-            PerformSearch();
-        }
-
-
-        private void PerformSearch()
-        {
-            if (txtIdentifier == null || dgViolations == null || txtErrorMessage == null || bdWarning == null || txtWarningMessage == null) return;
-
-            string keyword = txtIdentifier.Text.Trim();
-
-            if (string.IsNullOrEmpty(keyword))
+            if (NavigationService.CanGoBack)
             {
-                txtErrorMessage.Visibility = Visibility.Collapsed;
-                bdWarning.Visibility = Visibility.Collapsed;
-                dgViolations.Visibility = Visibility.Collapsed;
-                return;
-            }
-
-            using var db = new TrafficSafetyDBContext();
-
-            var violations = db.ViolationRecords.Include(r => r.Law).Where(r => r.LicensePlate != null && r.LicensePlate.Contains(keyword)).ToList();
-
-            if (!violations.Any())
-            {
-                var vehicle = db.Vehicles.FirstOrDefault(v => v.LicensePlate.Contains(keyword));
-
-                if (vehicle != null)
-                {
-                    txtErrorMessage.Text = $"Biển số xe {vehicle.LicensePlate} hiện tại không có lỗi vi phạm nào.";
-                }
-                else
-                {
-                    txtErrorMessage.Text = $"Không tìm thấy dữ liệu phương tiện hoặc vi phạm nào cho từ khóa: '{keyword}'.";
-                }
-
-                txtErrorMessage.Visibility = Visibility.Visible;
-                bdWarning.Visibility = Visibility.Collapsed;
-                dgViolations.Visibility = Visibility.Collapsed;
-                return;
-            }
-
-            txtErrorMessage.Visibility = Visibility.Collapsed;
-
-            // Nhóm theo thời gian, ưu tiên nhóm có lỗi chưa xử lý (Status = 0) lên đầu
-            var grouped = violations.GroupBy(v => new { v.LicensePlate, v.ViolationDate, v.ViolationTime })
-                                    .OrderBy(g => g.All(v => v.Status != 0)) // Nhóm có ít nhất 1 lỗi Status == 0 sẽ lên đầu (vì All return False, False < True)
-                                    .ThenByDescending(g => g.Key.ViolationDate)
-                                    .ThenByDescending(g => g.Key.ViolationTime)
-                                    .ToList();
-
-            int stt = 1;
-            int totalUnprocessed = 0;
-            var listSource = new List<ViolationGroupDisplay>();
-
-            foreach (var group in grouped)
-            {
-                var first = group.First();
-                int groupUnprocessedCount = group.Count(v => v.Status == 0);
-                totalUnprocessed += groupUnprocessedCount;
-
-                bool isProcessed = groupUnprocessedCount == 0;
-
-                var listLoi = new List<ViolationDetailDisplay>();
-                int loiCount = 1;
-                int totalInGroup = group.Count();
-
-                foreach (var v in group)
-                {
-                    string loiName = v.Law?.LawName ?? v.ViolationDescription ?? "Vi phạm giao thông";
-                    string prefix = totalInGroup > 1 ? $"{loiCount}. " : "";
-
-                    string timeStr = v.ViolationTime?.ToString(@"hh\:mm") ?? "";
-                    string dateStr = v.ViolationDate?.ToString("dd/MM/yyyy") ?? "";
-
-                    string extraTime = (loiCount == totalInGroup) ? $"{dateStr} - {timeStr}" : "";
-
-                    listLoi.Add(new ViolationDetailDisplay { MoTaLoi = prefix + loiName, ThoiGian = extraTime });
-                    loiCount++;
-                }
-
-                listSource.Add(new ViolationGroupDisplay
-                {
-                    STT = stt++,
-                    BienSo = first.LicensePlate,
-                    DanhSachLoi = listLoi,
-                    TrangThaiIcon = isProcessed ? "✔" : "⚠",
-                    TrangThaiText = isProcessed ? "Đã xử lý" : "Chưa xử lý",
-                    TrangThaiBg = isProcessed ? "#E8F5E9" : "#C62828",
-                    TrangThaiFg = isProcessed ? "#2E7D32" : "White",
-                    RecordId = first.ViolationRecordId
-                });
-            }
-
-            dgViolations.ItemsSource = listSource;
-            dgViolations.Visibility = Visibility.Visible;
-
-            if (totalUnprocessed > 0)
-            {
-                txtWarningMessage.Text = $"Hệ thống ghi nhận có {totalUnprocessed} lỗi vi phạm chưa được xử lý!";
-                bdWarning.Visibility = Visibility.Visible;
+                NavigationService.GoBack();
             }
             else
             {
-                bdWarning.Visibility = Visibility.Collapsed;
+                NavigationService.Navigate(new Page44(_currentUser));
             }
         }
-
-        // Xử lý sự kiện nút Chi tiết
-        private void BtnDetail_Click(object sender, RoutedEventArgs e)
-        {
-            if (sender is Button btn && btn.DataContext is ViolationGroupDisplay data)
-            {
-                try
-                {
-                    // BẮT BUỘC PHẢI NHÉT `data.RecordId` VÀO TRONG NGOẶC NHƯ VẦY:
-                    NavigationService.Navigate(new Page17(data.RecordId));
-                }
-                catch (Exception ex)
-                {
-                    new CustomMessageBox("Lỗi khi chuyển trang: " + ex.Message, "Lỗi").ShowDialog();
-                }
-            }
-        }
-
+        
         private void UserButton_Click(object sender, RoutedEventArgs e)
         {
             if (sender is Button btn && btn.ContextMenu != null)

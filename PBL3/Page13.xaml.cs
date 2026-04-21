@@ -197,8 +197,7 @@ namespace PBL3
         // --- CÁC NÚT CHỨC NĂNG TRÊN LƯỚI ---
         private void btnThemLuat_Click(object sender, RoutedEventArgs e)
         {
-            // Truyền sang trang Thêm Luật (Ví dụ Page21)
-            // NavigationService.Navigate(new Page21(null, _currentUser));
+            NavigationService.Navigate(new Page21(null, _currentUser));
         }
 
         private void btnXemChiTiet_Click(object sender, RoutedEventArgs e)

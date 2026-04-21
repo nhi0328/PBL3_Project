@@ -263,7 +263,6 @@
         <Grid Grid.Column="1">
             <Grid.RowDefinitions>
                 <RowDefinition Height="100"/>
-                <RowDefinition Height="80"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
@@ -337,154 +336,101 @@
             </Border>
 
             <Grid Grid.Row="1" Panel.ZIndex="1">
-                <TextBlock Grid.Row="0" Text="QUẢN LÝ TÀI KHOẢN" FontSize="35" FontFamily="Calibri" Foreground="#333" HorizontalAlignment="Center" Padding="0,35,0,20"/>
-            </Grid>
-            <Grid Grid.Row="2" Margin="0,0,0,0">
-                <Border Background="White" CornerRadius="20" Padding="0" Margin="50,0,30,10">
-                    <Border.Effect>
-                        <DropShadowEffect BlurRadius="40" Opacity="0.3" ShadowDepth="0" Direction="570"/>
-                    </Border.Effect>
+                <StackPanel>
+                    <TextBlock Text="CHI TIẾT TRA CỨU NHANH" FontSize="35" FontFamily="Calibri" Foreground="#333" HorizontalAlignment="Center" Padding="0,35,0,20"/>
 
-                    <StackPanel Margin="20">
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="200" />
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="150" />
-                            </Grid.ColumnDefinitions>
+                    <Border Background="White" CornerRadius="20" Padding="0" Margin="50,0,30,10">
+                        <Border.Effect>
+                            <DropShadowEffect BlurRadius="40" Opacity="0.3" ShadowDepth="0" Direction="570"/>
+                        </Border.Effect>
 
-                            <StackPanel Grid.Column="0" Margin="0,0,15,0">
-                                <TextBlock Text="Chọn loại xe" FontSize="18" Foreground="Black" Margin="0,0,0,10" />
-                                <Border CornerRadius="8" BorderBrush="#CCC" BorderThickness="1" Background="White" Height="40">
-                                    <ComboBox x:Name="cboVehicleType" FontSize="18" VerticalContentAlignment="Center" Background="White" BorderThickness="0" DisplayMemberPath="CategoryName" SelectedValuePath="CategoryId">
-                                    </ComboBox>
+                        <StackPanel Margin="10">
+                            <Button Content="&lt; Quay lại" HorizontalAlignment="Left" VerticalAlignment="Top" Background="Transparent" BorderThickness="0" FontSize="20" Cursor="Hand" Click="BtnBack_Click" Width="100"/>
+                            <Grid Margin="20">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="25"/>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+
+                                <Border Grid.Row="0" Background="#F7E2E7" CornerRadius="8" Padding="18,14">
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="&#x26A0;" Foreground="#C62828" FontSize="20" Margin="0,0,12,0" VerticalAlignment="Top"/>
+                                        <StackPanel>
+                                            <TextBlock x:Name="txtHeaderTitle" Foreground="#C62828" FontSize="26" FontFamily="Calibri"/>
+                                            <TextBlock x:Name="txtHeaderSubtitle" Foreground="#C62828" FontSize="17" FontFamily="Calibri" TextWrapping="Wrap"/>
+                                        </StackPanel>
+                                    </StackPanel>
                                 </Border>
-                            </StackPanel>
 
-                            <StackPanel Grid.Column="1" Margin="0,0,15,0">
-                                <TextBlock Text="Biển số xe" FontSize="18" Foreground="Black" Margin="0,0,0,10" />
-                                <Border CornerRadius="8" BorderBrush="#CCC" BorderThickness="1" Background="White" Height="40">
-                                    <TextBox x:Name="txtIdentifier" VerticalContentAlignment="Center" FontSize="20" Background="Transparent" BorderThickness="0" Foreground="#333" Padding="10,0" />
-                                </Border>
-                                <TextBlock x:Name="txtErrorMessage" Text="Biển số xe 30A-123.45 chưa được đăng ký." Foreground="#c72421" FontSize="14" Margin="5,5,0,0" Visibility="Collapsed" />
-                            </StackPanel>
+                                <Grid Grid.Row="2" Margin="0,0,0,50">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="40"/>
+                                        <ColumnDefinition Width="280"/>
+                                    </Grid.ColumnDefinitions>
 
-                            <Button Grid.Column="2" Height="40" VerticalAlignment="Bottom" Background="#C62828" Cursor="Hand" Click="BtnSearch_Click">
-                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
-                                    <Viewbox Width="20" Height="20" Margin="0,0,5,0">
-                                        <Path Fill="White" Data="M9.5,3A6.5,6.5 0 0,1 16,9.5C16,11.11 15.41,12.59 14.44,13.73L14.71,14H15.5L20.5,19L19,20.5L14,15.5V14.71L13.73,14.44C12.59,15.41 11.11,16 9.5,16A6.5,6.5 0 0,1 3,9.5A6.5,6.5 0 0,1 9.5,3M9.5,5C7,5 5,7 5,9.5C5,12 7,14 9.5,14C12,14 14,12 14,9.5C14,7 12,5 9.5,5Z" />
-                                    </Viewbox>
-                                    <TextBlock Text="Tra cứu" FontSize="18" VerticalAlignment="Center" Foreground="White" />
-                                </StackPanel>
+                                    <Grid Grid.Column="0">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="170"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                        </Grid.RowDefinitions>
 
-                                <Button.Style>
-                                    <Style TargetType="Button">
-                                        <Setter Property="Template">
-                                            <Setter.Value>
-                                                <ControlTemplate TargetType="Button">
-                                                    <Border x:Name="border" Background="{TemplateBinding Background}" CornerRadius="8">
-                                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                                    </Border>
-                                                    <ControlTemplate.Triggers>
-                                                        <Trigger Property="IsMouseOver" Value="True">
-                                                            <Setter TargetName="border" Property="Background" Value="#B71C1C"/>
-                                                        </Trigger>
-                                                        <Trigger Property="IsPressed" Value="True">
-                                                            <Setter TargetName="border" Property="Background" Value="#800000"/>
-                                                        </Trigger>
-                                                    </ControlTemplate.Triggers>
-                                                </ControlTemplate>
-                                            </Setter.Value>
-                                        </Setter>
-                                    </Style>
-                                </Button.Style>
-                            </Button>
-                        </Grid>
+                                        <TextBlock Grid.Row="0" Grid.Column="0" Text="Loại phương tiện:" FontSize="17" Margin="0,0,15,12"/>
+                                        <TextBlock x:Name="txtVehicleTypeValue" Grid.Row="0" Grid.Column="1" FontSize="17" Foreground="#6B6B6B" Margin="0,0,0,12"/>
 
-                        <Border x:Name="bdWarning" Background="#FDECEE" CornerRadius="8" Margin="0,10,0,10" Padding="15" Visibility="Collapsed">
-                            <StackPanel Orientation="Horizontal">
-                                <Path Data="M13,14H11V10H13M13,18H11V16H13M1,21H23L12,2L1,21Z" Fill="#c72421" Stretch="Uniform" Width="20" Height="20" Margin="0,0,10,0"/>
-                                <TextBlock x:Name="txtWarningMessage" Text="Phương tiện 30A-123.45 có 2 lỗi vi phạm giao thông chưa được xử lý!" Foreground="#c72421" FontSize="16" VerticalAlignment="Center" />
-                            </StackPanel>
-                        </Border>
+                                        <TextBlock Grid.Row="1" Grid.Column="0" Text="Ngày vi phạm:" FontSize="17" Margin="0,0,15,12"/>
+                                        <TextBlock x:Name="txtViolationDateValue" Grid.Row="1" Grid.Column="1" FontSize="17" Foreground="#6B6B6B" Margin="0,0,0,12"/>
 
-                        <DataGrid x:Name="dgViolations" Margin="0,10,0,0" Height="450" AutoGenerateColumns="False" CanUserAddRows="False" HeadersVisibility="Column" Background="White" RowHeaderWidth="0" BorderBrush="#DDD" BorderThickness="1" GridLinesVisibility="All" HorizontalGridLinesBrush="#DDD" VerticalGridLinesBrush="#DDD">
-                            <DataGrid.ColumnHeaderStyle>
-                                <Style TargetType="DataGridColumnHeader">
-                                    <Setter Property="Background" Value="#F5F5F5"/>
-                                    <Setter Property="Foreground" Value="#333"/>
-                                    <Setter Property="FontWeight" Value="Bold"/>
-                                    <Setter Property="Padding" Value="10,15"/>
-                                    <Setter Property="HorizontalContentAlignment" Value="Center"/>
-                                    <Setter Property="BorderThickness" Value="0,0,1,1"/>
-                                    <Setter Property="BorderBrush" Value="#DDD"/>
-                                </Style>
-                            </DataGrid.ColumnHeaderStyle>
-                            <DataGrid.CellStyle>
-                                <Style TargetType="DataGridCell">
-                                    <Setter Property="Padding" Value="10"/>
-                                    <Setter Property="Template">
-                                        <Setter.Value>
-                                            <ControlTemplate TargetType="DataGridCell">
-                                                <Border Padding="{TemplateBinding Padding}" BorderBrush="Transparent" BorderThickness="0" Background="{TemplateBinding Background}">
-                                                    <ContentPresenter VerticalAlignment="Center"/>
-                                                </Border>
-                                            </ControlTemplate>
-                                        </Setter.Value>
-                                    </Setter>
-                                    <Setter Property="TextBlock.TextAlignment" Value="Center"/>
-                                </Style>
-                            </DataGrid.CellStyle>
+                                        <TextBlock Grid.Row="2" Grid.Column="0" Text="Giờ vi phạm:" FontSize="17" Margin="0,0,15,12"/>
+                                        <TextBlock x:Name="txtViolationTimeValue" Grid.Row="2" Grid.Column="1" FontSize="17" Foreground="#6B6B6B" Margin="0,0,0,12"/>
 
-                            <DataGrid.Columns>
-                                <DataGridTextColumn Header="STT" Width="60" Binding="{Binding STT}"/>
-                                <DataGridTextColumn Header="Biển số xe" Width="150" Binding="{Binding BienSo}"/>
-                                <DataGridTemplateColumn Header="Lỗi vi phạm" Width="*">
-                                    <DataGridTemplateColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <ItemsControl ItemsSource="{Binding DanhSachLoi}">
-                                                <ItemsControl.ItemTemplate>
-                                                    <DataTemplate>
-                                                        <StackPanel Margin="0,5,0,5">
-                                                            <TextBlock Text="{Binding MoTaLoi}" TextWrapping="Wrap" FontSize="16" Foreground="#333" />
-                                                            <TextBlock Text="{Binding ThoiGian}" Foreground="#888" FontSize="14" Margin="0,2,0,0" />
-                                                        </StackPanel>
-                                                    </DataTemplate>
-                                                </ItemsControl.ItemTemplate>
-                                            </ItemsControl>
-                                        </DataTemplate>
-                                    </DataGridTemplateColumn.CellTemplate>
-                                </DataGridTemplateColumn>
-                                <DataGridTemplateColumn Header="Hành động" Width="150">
-                                    <DataGridTemplateColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <Border Background="{Binding TrangThaiBg}" CornerRadius="5" Padding="15,8" HorizontalAlignment="Center">
-                                                <StackPanel Orientation="Horizontal">
-                                                    <TextBlock Text="{Binding TrangThaiIcon}" Margin="0,0,6,0" Foreground="{Binding TrangThaiFg}" FontSize="14" VerticalAlignment="Center"/>
-                                                    <TextBlock Text="{Binding TrangThaiText}" Foreground="{Binding TrangThaiFg}" FontSize="14" VerticalAlignment="Center"/>
-                                                </StackPanel>
-                                            </Border>
-                                        </DataTemplate>
-                                    </DataGridTemplateColumn.CellTemplate>
-                                </DataGridTemplateColumn>
-                                <DataGridTemplateColumn Header="Chi tiết" Width="100">
-                                    <DataGridTemplateColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <Button Content="Chi tiết" Background="Transparent" BorderThickness="1" Cursor="Hand" Click="BtnDetail_Click">
-                                                <Button.Template>
-                                                    <ControlTemplate TargetType="Button">
-                                                        <TextBlock Text="{TemplateBinding Content}" HorizontalAlignment="Center" VerticalAlignment="Center" />
-                                                    </ControlTemplate>
-                                                </Button.Template>
-                                            </Button>
-                                        </DataTemplate>
-                                    </DataGridTemplateColumn.CellTemplate>
-                                </DataGridTemplateColumn>
-                            </DataGrid.Columns>
-                        </DataGrid>
+                                        <TextBlock Grid.Row="3" Grid.Column="0" Text="Địa điểm vi phạm:" FontSize="17" Margin="0,0,15,12"/>
+                                        <TextBlock x:Name="txtViolationLocationValue" Grid.Row="3" Grid.Column="1" FontSize="17" Foreground="#C65D5D" TextWrapping="Wrap" Margin="0,0,0,12"/>
 
-                    </StackPanel>
-                </Border>
+                                        <TextBlock Grid.Row="4" Grid.Column="0" Text="Mô tả vi phạm:" FontSize="17" Margin="0,0,15,12" VerticalAlignment="Top"/>
+                                        <TextBlock x:Name="txtViolationDescriptionValue" Grid.Row="4" Grid.Column="1" FontSize="17" Foreground="#6B6B6B" TextWrapping="Wrap" Margin="0,0,0,12"/>
+
+                                        <TextBlock Grid.Row="5" Grid.Column="0" Text="Mức phạt:" FontSize="17" Margin="0,0,15,12"/>
+                                        <TextBlock x:Name="txtFineRangeValue" Grid.Row="5" Grid.Column="1" FontSize="17" Foreground="#6B6B6B" Margin="0,0,0,12"/>
+
+                                        <TextBlock Grid.Row="6" Grid.Column="0" Text="Địa điểm đóng phạt:" FontSize="17" Margin="0,0,15,12"/>
+                                        <TextBlock x:Name="txtPaymentLocationValue" Grid.Row="6" Grid.Column="1" FontSize="17" Foreground="#6B6B6B" TextWrapping="Wrap" Margin="0,0,0,12"/>
+
+                                        <TextBlock Grid.Row="7" Grid.Column="0" Text="Trạng thái:" FontSize="17" Margin="0,0,15,0"/>
+                                        <TextBlock x:Name="txtStatusValue" Grid.Row="7" Grid.Column="1" FontSize="17" Margin="0,0,0,0"/>
+                                    </Grid>
+
+                                    <StackPanel Grid.Column="2">
+                                        <TextBlock Text="Hình ảnh vi phạm:" FontSize="17" Margin="0,0,0,10" HorizontalAlignment="Center"/>
+                                        <Border Background="White" BorderBrush="#E4E4E4" BorderThickness="1" CornerRadius="6" Padding="8">
+                                            <Grid>
+                                                <Image x:Name="imgEvidence" Width="240" Height="150" Stretch="UniformToFill" Visibility="Collapsed"/>
+                                                <TextBlock x:Name="txtEvidencePlaceholder" Text="Chưa có hình minh họa" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#888" FontSize="16"/>
+                                            </Grid>
+                                        </Border>
+                                        <TextBlock x:Name="txtEvidenceCaption" Foreground="#6B6B6B" HorizontalAlignment="Center" Margin="0,8,0,0"/>
+                                    </StackPanel>
+                                </Grid>
+                                <Grid Grid.Row="3">
+                                    <TextBlock Text="Cập nhật lần cuối:" FontSize="17" HorizontalAlignment="Center" Foreground="#6B6B6B"/>
+                                    <TextBlock x:Name="txtLastUpdatedValue" FontSize="17" Foreground="#6B6B6B" HorizontalAlignment="Center"/>
+                                </Grid>
+                            </Grid>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
             </Grid>
         </Grid>
     </Grid>

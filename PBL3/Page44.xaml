@@ -340,7 +340,7 @@
                 <TextBlock Grid.Row="0" Text="TRA CỨU NHANH" FontSize="35" FontFamily="Calibri" Foreground="#333" HorizontalAlignment="Center" Padding="0,35,0,20"/>
             </Grid>
             <Grid Grid.Row="2" Margin="0,0,0,0">
-                <Border Background="White" CornerRadius="20" Padding="0" Margin="50,0,30,10">
+                <Border Background="White" CornerRadius="20" Padding="0" Margin="50,0,30,30">
                     <Border.Effect>
                         <DropShadowEffect BlurRadius="40" Opacity="0.3" ShadowDepth="0" Direction="570"/>
                     </Border.Effect>

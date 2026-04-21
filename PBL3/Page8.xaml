@@ -321,7 +321,7 @@
             <Grid Grid.Row="1" Panel.ZIndex="1">
 
                 <StackPanel>
-                    <TextBlock Text="Phản ánh" FontSize="35" FontFamily="Calibri" Foreground="#333" HorizontalAlignment="Center" Padding="0,35,0,20"/>
+                    <TextBlock Text="PHẢN ÁNH PHƯƠNG TIỆN VI PHẠM GIAO THÔNG" FontSize="35" FontFamily="Calibri" Foreground="#333" HorizontalAlignment="Center" Padding="0,35,0,20"/>
 
                     <Border Background="White" CornerRadius="20" Padding="0" Margin="50,0,30,10">
                         <Border.Effect>

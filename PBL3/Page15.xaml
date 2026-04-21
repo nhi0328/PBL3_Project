@@ -422,9 +422,11 @@
                     <StackPanel Margin="20">
                         <Grid Height="40" Margin="0,0,0,15">
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="2*"/>
                                 <ColumnDefinition Width="130"/>
                                 <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="140"/>
+                                <ColumnDefinition Width="0.1*"/>
                                 <ColumnDefinition Width="120"/>
                             </Grid.ColumnDefinitions>
 
@@ -486,7 +488,35 @@
                                 </Button.Style>
                             </Button>
 
-                            <ComboBox x:Name="cmbFilter" Grid.Column="3" Style="{StaticResource ModernComboBox}" Margin="10,0,0,0">
+                            <Button Grid.Column="3" Background="#C62828" Cursor="Hand" Click="btnCreat_Click" Grid.ColumnSpan="2" Margin="0,0,21,0">
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                    <TextBlock Text="Tạo tài khoản" FontSize="18" FontFamily="Calibri" Foreground="White" VerticalAlignment="Center" />
+                                </StackPanel>
+
+                                <Button.Style>
+                                    <Style TargetType="Button">
+                                        <Setter Property="Template">
+                                            <Setter.Value>
+                                                <ControlTemplate TargetType="Button">
+                                                    <Border x:Name="border" Background="{TemplateBinding Background}" CornerRadius="10">
+                                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                    </Border>
+                                                    <ControlTemplate.Triggers>
+                                                        <Trigger Property="IsMouseOver" Value="True">
+                                                            <Setter TargetName="border" Property="Background" Value="#A02020"/>
+                                                        </Trigger>
+                                                        <Trigger Property="IsPressed" Value="True">
+                                                            <Setter TargetName="border" Property="Background" Value="#800000"/>
+                                                        </Trigger>
+                                                    </ControlTemplate.Triggers>
+                                                </ControlTemplate>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </Style>
+                                </Button.Style>
+                            </Button>
+
+                            <ComboBox x:Name="cmbFilter" Grid.Column="5" Style="{StaticResource ModernComboBox}" Margin="10,0,0,0">
                                 <ComboBoxItem Content="Tất cả" IsSelected="True"/>
                             </ComboBox>
                         </Grid>

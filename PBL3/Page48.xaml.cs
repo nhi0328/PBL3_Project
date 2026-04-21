@@ -181,7 +181,7 @@ namespace PBL3
                     }
                     else if (prefix == "L")
                     {
-                        NavigationService.Navigate(new Page52(_currentUser));
+                        NavigationService.Navigate(new Page52(null, _currentUser));
                     }
                     else if (prefix == "O")
                     {

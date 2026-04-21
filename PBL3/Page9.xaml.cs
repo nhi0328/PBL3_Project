@@ -98,9 +98,17 @@ namespace PBL3
         // Xử lý sự kiện nút Tìm kiếm
         private void btnSearch_Click(object sender, RoutedEventArgs e)
         {
-            string keyword = txtIdentifier.Text;
-            new CustomMessageBox($"Đang tìm kiếm luật với từ khóa: {keyword}").ShowDialog();
+            // string keyword = txtIdentifier.Text;
+            // new CustomMessageBox($"Đang tìm kiếm luật với từ khóa: {keyword}").ShowDialog();
             // Viết logic tìm kiếm SQL ở đây...
+        }
+
+        private void BtnBack_Click(object sender, RoutedEventArgs e)
+        {
+            if (NavigationService?.CanGoBack == true)
+            {
+                NavigationService.GoBack();
+            }
         }
     }
 }

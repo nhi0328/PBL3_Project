@@ -179,5 +179,56 @@ namespace PBL3
         private void btnLBBVP_Click(object sender, RoutedEventArgs e) => NavigationService.Navigate(new Page14(_currentUser));
         private void btnTaiKhoan_Click(object sender, RoutedEventArgs e) => NavigationService.Navigate(new Page15(_currentUser));
         private void btnPhanAnh_Click(object sender, RoutedEventArgs e) => NavigationService.Navigate(new Page16(_currentUser));
+
+        private void btnChinhSua_Click(object sender, RoutedEventArgs e)
+        {
+            NavigationService.Navigate(new Page53(_currentUser, _targetCccd));
+        }
+
+        private void btnXoaTaiKhoan_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                if (MessageBox.Show("Bạn có chắc chắn muốn xóa tài khoản này?", "Xác nhận", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
+                {
+                    using (var db = new Models.TrafficSafetyDBContext())
+                    {
+                        var customer = db.Customers.FirstOrDefault(c => c.Cccd == _targetCccd);
+                        if (customer != null)
+                        {
+                            db.Customers.Remove(customer);
+
+                            // --- BẮT ĐẦU: GHI LOG & TẠO THÔNG BÁO ---
+                            string actorId = _currentUser != null ? _currentUser.OfficerId : "UNKNOWN";
+
+                            // Ghi lại hành động Xóa (Action = 3)
+                            var log = new SystemLog
+                            {
+                                Action = 3, // 3: Xóa
+                                Id = actorId,
+                                Role = 2, // 2: Cán bộ
+                                TargetPrefix = "C", // C: Công dân
+                                TargetValue = _targetCccd,
+                                Time = DateTime.Now
+                            };
+                            db.SystemLogs.Add(log);
+
+                            // Lưu vào db
+                            db.SaveChanges();
+
+                            myBell.LoadData(_currentUser as Officer);
+                            // --- KẾT THÚC: GHI LOG & TẠO THÔNG BÁO ---
+
+                            MessageBox.Show("Xóa tài khoản thành công!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
+                            NavigationService.Navigate(new Page15(_currentUser));
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Lỗi: " + ex.Message, "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
     }
 }

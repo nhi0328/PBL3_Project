@@ -183,7 +183,7 @@ namespace PBL3
                 try
                 {
                     // BẮT BUỘC PHẢI NHÉT `data.RecordId` VÀO TRONG NGOẶC NHƯ VẦY:
-                    NavigationService.Navigate(new Page17(data.RecordId));
+                    NavigationService.Navigate(new Page50(_currentUser, data.RecordId));
                 }
                 catch (Exception ex)
                 {
