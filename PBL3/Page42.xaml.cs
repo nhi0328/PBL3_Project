@@ -1,4 +1,4 @@
-﻿using Microsoft.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 using PBL3.Models;
 using System;
 using System.Threading.Tasks;
@@ -20,13 +20,13 @@ namespace PBL3
         private bool isEditMode = false;
         private string cccdForAddMode = string.Empty;
 
-        // Constructor mặc định
+        // Constructor m?c �?nh
         public Page42()
         {
             InitializeComponent();
         }
 
-        // Constructor test không có Officer
+        // Constructor test kh�ng c� Officer
         public Page42(string targetData)
         {
             InitializeComponent();
@@ -34,7 +34,7 @@ namespace PBL3
             this.Loaded += Page42_Loaded;
         }
 
-        // Constructor chính
+        // Constructor ch�nh
         public Page42(Officer user, string targetData)
         {
             InitializeComponent();
@@ -43,7 +43,7 @@ namespace PBL3
 
             if (_currentUser != null)
             {
-                txtUserName.Text = $"Cán bộ: {_currentUser.OfficerId}";
+                txtUserName.Text = $"C�n b?: {_currentUser.OfficerId}";
 
                 myBell.LoadData(_currentUser as Officer);
             }
@@ -74,7 +74,7 @@ namespace PBL3
             }
             catch (Exception ex)
             {
-                new CustomMessageBox("Lỗi tải chi tiết: " + ex.Message, "Lỗi kết nối").ShowDialog();
+                new CustomMessageBox("L?i t?i chi ti?t: " + ex.Message, "L?i k?t n?i").ShowDialog();
             }
         }
 
@@ -86,7 +86,7 @@ namespace PBL3
             {
                 using var db = new TrafficSafetyDBContext();
 
-                // Thử tìm phương tiện với _targetData làm biển số
+                // Th? t?m ph��ng ti?n v?i _targetData l�m bi?n s?
                 var vehicle = await Task.Run(() => db.Vehicles
                     .Include(v => v.VehicleType)
                     .ThenInclude(vt => vt.Category)
@@ -119,7 +119,7 @@ namespace PBL3
             }
             catch (Exception ex)
             {
-                new CustomMessageBox("Lỗi tải chi tiết: " + ex.Message, "Lỗi kết nối").ShowDialog();
+                new CustomMessageBox("L?i t?i chi ti?t: " + ex.Message, "L?i k?t n?i").ShowDialog();
             }
         }
 
@@ -133,7 +133,7 @@ namespace PBL3
 
         private void btnLuu_Click(object sender, RoutedEventArgs e)
         {
-            new CustomMessageBox("Đã lưu thông tin phương tiện thành công!", "Thông báo").ShowDialog();
+            new CustomMessageBox("�? l�u th�ng tin ph��ng ti?n th�nh c�ng!", "Th�ng b�o").ShowDialog();
             if (NavigationService.CanGoBack)
             {
                 NavigationService.GoBack();
@@ -170,7 +170,12 @@ namespace PBL3
             }
         }
 
-        private void MenuInfo_Click(object sender, RoutedEventArgs e) { }
+        private void MenuInfo_Click(object sender, RoutedEventArgs e) {
+            if (_currentUser is Officer officer)
+            {
+                new OfficerProfileWindow(officer).ShowDialog();
+            }
+        }
 
         private void MenuLogout_Click(object sender, RoutedEventArgs e)
         {
@@ -204,5 +209,6 @@ namespace PBL3
 
     }
 }
+
 
 

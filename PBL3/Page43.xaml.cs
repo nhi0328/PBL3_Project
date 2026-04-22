@@ -1,4 +1,4 @@
-Ôªøusing Microsoft.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 using PBL3.Models;
 using System;
 using System.Threading.Tasks;
@@ -18,13 +18,13 @@ namespace PBL3
         private readonly Officer _currentUser;
         private readonly int _violationId;
 
-        // Constructor m·∫∑c ƒë·ªãnh
+        // Constructor m?c ?nh
         public Page43()
         {
             InitializeComponent();
         }
 
-        // Constructor test kh√¥ng c√≥ Officer
+        // Constructor test khÙng cÛ Officer
         public Page43(int violationId)
         {
             InitializeComponent();
@@ -32,7 +32,7 @@ namespace PBL3
             this.Loaded += Page43_Loaded;
         }
 
-        // Constructor ch√≠nh
+        // Constructor chÌnh
         public Page43(Officer user, int violationId)
         {
             InitializeComponent();
@@ -41,7 +41,7 @@ namespace PBL3
 
             if (_currentUser != null)
             {
-                txtUserName.Text = $"C√°n b·ªô: {_currentUser.OfficerId}";
+                txtUserName.Text = $"C·n b?: {_currentUser.OfficerId}";
 
                 myBell.LoadData(_currentUser as Officer);
             }
@@ -73,29 +73,29 @@ namespace PBL3
 
                     txtBienSoHeader.Text = violation.LicensePlate;
 
-                    var descriptionList = violation.ViolationDescription?.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries) ?? new[] { "Ch∆∞a c√≥ th√¥ng tin" };
+                    var descriptionList = violation.ViolationDescription?.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries) ?? new[] { "Ch˝a cÛ thÙng tin" };
                     if (descriptionList.Length > 1) {
                         txtLoiHeader.Text = string.Join("\n", descriptionList.Select((s, index) => $"{index + 1}. {s}"));
                     } else {
-                         txtLoiHeader.Text = descriptionList.FirstOrDefault() ?? "Ch∆∞a c√≥ th√¥ng tin";
+                         txtLoiHeader.Text = descriptionList.FirstOrDefault() ?? "Ch˝a cÛ thÙng tin";
                     }
 
-                    txtLoaiXe.Text = vehicle?.VehicleType?.Category?.CategoryName ?? "Ch∆∞a x√°c ƒë·ªãnh";
-                    txtNgayViPham.Text = violation.ViolationDate?.ToString("dd/MM/yyyy") ?? "Ch∆∞a x√°c ƒë·ªãnh";
-                    txtGioViPham.Text = violation.ViolationTime?.ToString(@"hh\:mm") ?? "Ch∆∞a x√°c ƒë·ªãnh";
-                    txtDiaDiemViPham.Text = violation.Address ?? "Ch∆∞a r√µ";
-                    txtMoTaViPham.Text = violation.ViolationDescription ?? "Ch∆∞a c√≥ chi ti·∫øt";
+                    txtLoaiXe.Text = vehicle?.VehicleType?.Category?.CategoryName ?? "Ch˝a x·c ?nh";
+                    txtNgayViPham.Text = violation.ViolationDate?.ToString("dd/MM/yyyy") ?? "Ch˝a x·c ?nh";
+                    txtGioViPham.Text = violation.ViolationTime?.ToString(@"hh\:mm") ?? "Ch˝a x·c ?nh";
+                    txtDiaDiemViPham.Text = violation.Address ?? "Ch˝a r?";
+                    txtMoTaViPham.Text = violation.ViolationDescription ?? "Ch˝a cÛ chi ti?t";
 
                     // We can format the fines/points further if needed based on the table
-                    txtMucPhat.Text = "Ch∆∞a c·∫≠p nh·∫≠t";
-                    txtTruDiem.Text = violation.DemeritPoints ?? "0 ƒêi·ªÉm";
-                    txtDiaDiemDongPhat.Text = "Ch∆∞a c·∫≠p nh·∫≠t";
+                    txtMucPhat.Text = "Ch˝a c?p nh?t";
+                    txtTruDiem.Text = violation.DemeritPoints ?? "0 –i?m";
+                    txtDiaDiemDongPhat.Text = "Ch˝a c?p nh?t";
 
                     if (violation.Status == 0) {
-                        txtTrangThai.Text = "Ch∆∞a x·ª≠ l√Ω";
+                        txtTrangThai.Text = "Ch˝a x? l?";
                         txtTrangThai.Foreground = new SolidColorBrush(Color.FromRgb(198, 40, 40));
                     } else {
-                        txtTrangThai.Text = "ƒê√£ x·ª≠ l√Ω";
+                        txtTrangThai.Text = "–? x? l?";
                         txtTrangThai.Foreground = new SolidColorBrush(Color.FromRgb(76, 175, 80));
                     }
 
@@ -110,13 +110,13 @@ namespace PBL3
             }
             catch (Exception ex)
             {
-                new CustomMessageBox("L·ªói t·∫£i chi ti·∫øt vi ph·∫°m: " + ex.Message, "L·ªói k·∫øt n·ªëi").ShowDialog();
+                new CustomMessageBox("L?i t?i chi ti?t vi ph?m: " + ex.Message, "L?i k?t n?i").ShowDialog();
             }
         }
 
         private void btnLuu_Click(object sender, RoutedEventArgs e)
         {
-            new CustomMessageBox("Ch·ª©c nƒÉng ƒëang ph√°t tri·ªÉn", "Th√¥ng b√°o").ShowDialog();
+            new CustomMessageBox("Ch?c n„ng ang ph·t tri?n", "ThÙng b·o").ShowDialog();
         }
 
         private void btnHuy_Click(object sender, RoutedEventArgs e)
@@ -149,7 +149,12 @@ namespace PBL3
             }
         }
 
-        private void MenuInfo_Click(object sender, RoutedEventArgs e) { }
+        private void MenuInfo_Click(object sender, RoutedEventArgs e) {
+            if (_currentUser is Officer officer)
+            {
+                new OfficerProfileWindow(officer).ShowDialog();
+            }
+        }
 
         private void MenuLogout_Click(object sender, RoutedEventArgs e)
         {
@@ -183,5 +188,6 @@ namespace PBL3
 
     }
 }
+
 
 

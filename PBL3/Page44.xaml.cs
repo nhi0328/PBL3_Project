@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -21,20 +21,20 @@ namespace PBL3
     {
         private readonly Admin _currentUser;
 
-        // Constructor mặc định
+        // Constructor m?c �?nh
         public Page44()
         {
             InitializeComponent();
             this.Loaded += Page44_Loaded;
         }
 
-        // Constructor chính
+        // Constructor ch�nh
         public Page44(Admin user) : this()
         {
             _currentUser = user;
             if (_currentUser != null)
             {
-                txtUserName.Text = _currentUser.FullName; // Hoặc _currentUser.HoTen nếu có
+                txtUserName.Text = _currentUser.FullName; // Ho?c _currentUser.HoTen n?u c�
 
                 myBell.LoadData(_currentUser as Admin);
             }
@@ -52,7 +52,7 @@ namespace PBL3
             {
                 using var db = new TrafficSafetyDBContext();
                 var categories = db.Categories
-                                   .Where(c => c.CategoryName != "Đi bộ" && c.CategoryName != "Xe đạp")
+                                   .Where(c => c.CategoryName != "�i b?" && c.CategoryName != "Xe �?p")
                                    .ToList();
                 cboVehicleType.ItemsSource = categories;
                 if (categories.Any())
@@ -62,7 +62,7 @@ namespace PBL3
             }
             catch (Exception ex)
             {
-                new CustomMessageBox("Lỗi tải loại phương tiện: " + ex.Message, "Lỗi").ShowDialog();
+                new CustomMessageBox("L?i t?i lo?i ph��ng ti?n: " + ex.Message, "L?i").ShowDialog();
             }
         }
 
@@ -96,11 +96,11 @@ namespace PBL3
 
                 if (vehicle != null)
                 {
-                    txtErrorMessage.Text = $"Biển số xe {vehicle.LicensePlate} hiện tại không có lỗi vi phạm nào.";
+                    txtErrorMessage.Text = $"Bi?n s? xe {vehicle.LicensePlate} hi?n t?i kh�ng c� l?i vi ph?m n�o.";
                 }
                 else
                 {
-                    txtErrorMessage.Text = $"Không tìm thấy dữ liệu phương tiện hoặc vi phạm nào cho từ khóa: '{keyword}'.";
+                    txtErrorMessage.Text = $"Kh�ng t?m th?y d? li?u ph��ng ti?n ho?c vi ph?m n�o cho t? kh�a: '{keyword}'.";
                 }
 
                 txtErrorMessage.Visibility = Visibility.Visible;
@@ -111,9 +111,9 @@ namespace PBL3
 
             txtErrorMessage.Visibility = Visibility.Collapsed;
 
-            // Nhóm theo thời gian, ưu tiên nhóm có lỗi chưa xử lý (Status = 0) lên đầu
+            // Nh�m theo th?i gian, �u ti�n nh�m c� l?i ch�a x? l? (Status = 0) l�n �?u
             var grouped = violations.GroupBy(v => new { v.LicensePlate, v.ViolationDate, v.ViolationTime })
-                                    .OrderBy(g => g.All(v => v.Status != 0)) // Nhóm có ít nhất 1 lỗi Status == 0 sẽ lên đầu (vì All return False, False < True)
+                                    .OrderBy(g => g.All(v => v.Status != 0)) // Nh�m c� �t nh?t 1 l?i Status == 0 s? l�n �?u (v? All return False, False < True)
                                     .ThenByDescending(g => g.Key.ViolationDate)
                                     .ThenByDescending(g => g.Key.ViolationTime)
                                     .ToList();
@@ -136,7 +136,7 @@ namespace PBL3
 
                 foreach (var v in group)
                 {
-                    string loiName = v.Law?.LawName ?? v.ViolationDescription ?? "Vi phạm giao thông";
+                    string loiName = v.Law?.LawName ?? v.ViolationDescription ?? "Vi ph?m giao th�ng";
                     string prefix = totalInGroup > 1 ? $"{loiCount}. " : "";
 
                     string timeStr = v.ViolationTime?.ToString(@"hh\:mm") ?? "";
@@ -153,8 +153,8 @@ namespace PBL3
                     STT = stt++,
                     BienSo = first.LicensePlate,
                     DanhSachLoi = listLoi,
-                    TrangThaiIcon = isProcessed ? "✔" : "⚠",
-                    TrangThaiText = isProcessed ? "Đã xử lý" : "Chưa xử lý",
+                    TrangThaiIcon = isProcessed ? "?" : "?",
+                    TrangThaiText = isProcessed ? "�? x? l?" : "Ch�a x? l?",
                     TrangThaiBg = isProcessed ? "#E8F5E9" : "#C62828",
                     TrangThaiFg = isProcessed ? "#2E7D32" : "White",
                     RecordId = first.ViolationRecordId
@@ -166,7 +166,7 @@ namespace PBL3
 
             if (totalUnprocessed > 0)
             {
-                txtWarningMessage.Text = $"Hệ thống ghi nhận có {totalUnprocessed} lỗi vi phạm chưa được xử lý!";
+                txtWarningMessage.Text = $"H? th?ng ghi nh?n c� {totalUnprocessed} l?i vi ph?m ch�a ��?c x? l?!";
                 bdWarning.Visibility = Visibility.Visible;
             }
             else
@@ -175,19 +175,19 @@ namespace PBL3
             }
         }
 
-        // Xử lý sự kiện nút Chi tiết
+        // X? l? s? ki?n n�t Chi ti?t
         private void BtnDetail_Click(object sender, RoutedEventArgs e)
         {
             if (sender is Button btn && btn.DataContext is ViolationGroupDisplay data)
             {
                 try
                 {
-                    // BẮT BUỘC PHẢI NHÉT `data.RecordId` VÀO TRONG NGOẶC NHƯ VẦY:
+                    // B?T BU?C PH?I NH�T `data.RecordId` V�O TRONG NGO?C NH� V?Y:
                     NavigationService.Navigate(new Page50(_currentUser, data.RecordId));
                 }
                 catch (Exception ex)
                 {
-                    new CustomMessageBox("Lỗi khi chuyển trang: " + ex.Message, "Lỗi").ShowDialog();
+                    new CustomMessageBox("L?i khi chuy?n trang: " + ex.Message, "L?i").ShowDialog();
                 }
             }
         }
@@ -202,7 +202,7 @@ namespace PBL3
             }
         }
 
-        private void MenuInfo_Click(object sender, RoutedEventArgs e) { }
+        private void MenuInfo_Click(object sender, RoutedEventArgs e) { if (_currentUser is Admin admin) { new AdminProfileWindow(admin).ShowDialog(); } }
 
         private void MenuLogout_Click(object sender, RoutedEventArgs e)
         {
@@ -240,6 +240,7 @@ namespace PBL3
         }
     }
 }
+
 
 
 

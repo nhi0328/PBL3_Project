@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -23,20 +23,20 @@ namespace PBL3
         private ObservableCollection<LuatItem> lstLuat = new ObservableCollection<LuatItem>();
         private readonly Admin _currentUser;
 
-        // Constructor mặc định
+        // Constructor m?c �?nh
         public Page45()
         {
             InitializeComponent();
             this.Loaded += Page45_Loaded;
         }
 
-        // Constructor chính
+        // Constructor ch�nh
         public Page45(Admin user) : this()
         {
             _currentUser = user;
             if (_currentUser != null)
             {
-                txtUserName.Text = _currentUser.FullName; // Hoặc _currentUser.HoTen nếu có
+                txtUserName.Text = _currentUser.FullName; // Ho?c _currentUser.HoTen n?u c�
 
                 myBell.LoadData(_currentUser as Admin);
             }
@@ -56,7 +56,7 @@ namespace PBL3
 
                 using (var db = new TrafficSafetyDBContext())
                 {
-                    // Lấy Luật kèm theo Chi tiết mức phạt của nó (Quan hệ 1-N)
+                    // L?y Lu?t k�m theo Chi ti?t m?c ph?t c?a n� (Quan h? 1-N)
                     var trafficLaws = db.TrafficLaws
                                         .Include(l => l.Details)
                                             .ThenInclude(d => d.Category)
@@ -70,25 +70,25 @@ namespace PBL3
                             TenLoi = law.LawName ?? string.Empty,
                         };
 
-                        // Gom nhóm chi tiết phạt từ bảng TRAFFIC_LAW_DETAILS
+                        // Gom nh�m chi ti?t ph?t t? b?ng TRAFFIC_LAW_DETAILS
                         if (law.Details != null && law.Details.Any())
                         {
                             foreach (var detail in law.Details)
                             {
-                                // Lấy căn cứ pháp lý và điểm trừ (ưu tiên lấy cái đầu tiên tìm thấy)
+                                // L?y c�n c? ph�p l? v� �i?m tr? (�u ti�n l?y c�i �?u ti�n t?m th?y)
                                 if (string.IsNullOrEmpty(item.CanCu)) item.CanCu = detail.Decree ?? string.Empty;
                                 if (string.IsNullOrEmpty(item.TruDiem) && detail.DemeritPoints > 0)
-                                    item.TruDiem = $"Trừ {detail.DemeritPoints} điểm";
+                                    item.TruDiem = $"Tr? {detail.DemeritPoints} �i?m";
 
-                                // Phân loại mức phạt theo loại xe (Kiểm tra chuỗi)
+                                // Ph�n lo?i m?c ph?t theo lo?i xe (Ki?m tra chu?i)
                                 string vehicleType = detail.Category?.CategoryName?.ToLower() ?? "";
                                 string fineAmount = detail.FineAmount ?? "";
 
-                                if (vehicleType.Contains("ô tô") || vehicleType.Contains("oto"))
+                                if (vehicleType.Contains("� t�") || vehicleType.Contains("oto"))
                                 {
                                     item.PhatTienOto = fineAmount;
                                 }
-                                else if (vehicleType.Contains("xe máy") || vehicleType.Contains("mô tô"))
+                                else if (vehicleType.Contains("xe m�y") || vehicleType.Contains("m� t�"))
                                 {
                                     item.PhatTienXeMay = fineAmount;
                                 }
@@ -104,11 +104,11 @@ namespace PBL3
             }
             catch (Exception ex)
             {
-                new CustomMessageBox("Lỗi kết nối CSDL: " + ex.Message).ShowDialog();
+                new CustomMessageBox("L?i k?t n?i CSDL: " + ex.Message).ShowDialog();
             }
         }
 
-        // --- CÁC HÀM TÌM KIẾM & LỌC ---
+        // --- C�C H�M T?M KI?M & L?C ---
         private void btnSearch_Click(object sender, RoutedEventArgs e) => FilterLaws();
         private void txtIdentifier_TextChanged(object sender, TextChangedEventArgs e) => FilterLaws();
 
@@ -126,7 +126,7 @@ namespace PBL3
                     stringBuilder.Append(c);
                 }
             }
-            return stringBuilder.ToString().Normalize(System.Text.NormalizationForm.FormC).Replace('đ', 'd').Replace('Đ', 'D').ToLower();
+            return stringBuilder.ToString().Normalize(System.Text.NormalizationForm.FormC).Replace('�', 'd').Replace('�', 'D').ToLower();
         }
 
         private void FilterLaws()
@@ -157,10 +157,10 @@ namespace PBL3
             }
         }
 
-        // --- CÁC NÚT CHỨC NĂNG TRÊN LƯỚI ---
+        // --- C�C N�T CH?C N�NG TR�N L�?I ---
         private void btnThemLuat_Click(object sender, RoutedEventArgs e)
         {
-            // Truyền sang trang Thêm Luật
+            // Truy?n sang trang Th�m Lu?t
         }
 
         private void btnXemChiTiet_Click(object sender, RoutedEventArgs e)
@@ -168,7 +168,7 @@ namespace PBL3
             var btn = sender as Button;
             if (btn != null && btn.DataContext is LuatItem selectedLuat)
             {
-                // Truyền LuatItem và _currentUser sang trang Chi tiết 
+                // Truy?n LuatItem v� _currentUser sang trang Chi ti?t 
             }
         }
 
@@ -182,7 +182,7 @@ namespace PBL3
             }
         }
 
-        private void MenuInfo_Click(object sender, RoutedEventArgs e) { }
+        private void MenuInfo_Click(object sender, RoutedEventArgs e) { if (_currentUser is Admin admin) { new AdminProfileWindow(admin).ShowDialog(); } }
 
         private void MenuLogout_Click(object sender, RoutedEventArgs e)
         {
@@ -220,6 +220,7 @@ namespace PBL3
         }
     }
 }
+
 
 
 

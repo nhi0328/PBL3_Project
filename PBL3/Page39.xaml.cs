@@ -1,4 +1,4 @@
-﻿using Microsoft.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 using PBL3.Models;
 using System;
 using System.Threading.Tasks;
@@ -18,17 +18,17 @@ namespace PBL3
         public int Points { get; set; }
         public string IssueDateStr { get; set; }
         public string ExpiryDateStr { get; set; }
-        public string IssuePlace { get; set; } = "Đà Nẵng";
+        public string IssuePlace { get; set; } = "�� N?ng";
 
         public string StatusText
         {
             get
             {
-                if (string.IsNullOrWhiteSpace(Status)) return "Bị thu hồi";
+                if (string.IsNullOrWhiteSpace(Status)) return "B? thu h?i";
                 var s = Status.Trim().ToLower();
-                if (s.Contains("đang hoạt động") || s.Contains("hoạt động") || s == "active") return "Đang hoạt động";
-                if (s.Contains("hết hạn") || s == "expired") return "Hết hạn";
-                return "Bị thu hồi";
+                if (s.Contains("�ang ho?t �?ng") || s.Contains("ho?t �?ng") || s == "active") return "�ang ho?t �?ng";
+                if (s.Contains("h?t h?n") || s == "expired") return "H?t h?n";
+                return "B? thu h?i";
             }
         }
 
@@ -37,8 +37,8 @@ namespace PBL3
             get
             {
                 string text = StatusText;
-                if (text == "Đang hoạt động") return new SolidColorBrush(Color.FromRgb(46, 125, 50));
-                if (text == "Hết hạn") return new SolidColorBrush(Color.FromRgb(255, 152, 0));
+                if (text == "�ang ho?t �?ng") return new SolidColorBrush(Color.FromRgb(46, 125, 50));
+                if (text == "H?t h?n") return new SolidColorBrush(Color.FromRgb(255, 152, 0));
                 return new SolidColorBrush(Color.FromRgb(198, 40, 40));
             }
         }
@@ -48,9 +48,9 @@ namespace PBL3
             get
             {
                 string text = StatusText;
-                if (text == "Đang hoạt động")
+                if (text == "�ang ho?t �?ng")
                     return "M12 2C6.5 2 2 6.5 2 12S6.5 22 12 22 22 17.5 22 12 17.5 2 12 2M10 17L5 12L6.41 10.59L10 14.17L17.59 6.58L19 8L10 17Z";
-                if (text == "Hết hạn")
+                if (text == "H?t h?n")
                     return "M12 2C6.5 2 2 6.5 2 12S6.5 22 12 22 22 17.5 22 12 17.5 2 12 2M11 7H13V13H11V7M11 15H13V17H11V15Z";
                 return "M12 2C6.47 2 2 6.47 2 12S6.47 22 12 22 22 17.5 22 12 17.5 2 12 2M17 15.59L15.59 17L12 13.41L8.41 17L7 15.59L10.59 12L7 8.41L8.41 7L12 10.59L15.59 7L17 8.41L13.41 12L17 15.59Z";
             }
@@ -62,7 +62,7 @@ namespace PBL3
         private readonly Officer _currentUser;
         private readonly string _targetCccd;
 
-        // Constructor mặc định
+        // Constructor m?c �?nh
         public Page39()
         {
             InitializeComponent();
@@ -75,7 +75,7 @@ namespace PBL3
             this.Loaded += Page39_Loaded;
         }
 
-        // Constructor chính
+        // Constructor ch�nh
         public Page39(Officer user, string cccd)
         {
             InitializeComponent();
@@ -84,7 +84,7 @@ namespace PBL3
 
             if (_currentUser != null)
             {
-                txtUserName.Text = $"Cán bộ: {_currentUser.OfficerId}";
+                txtUserName.Text = $"C�n b?: {_currentUser.OfficerId}";
 
                 myBell.LoadData(_currentUser as Officer);
             }
@@ -105,21 +105,21 @@ namespace PBL3
             {
                 using var db = new TrafficSafetyDBContext();
 
-                // Truy vấn danh sách bằng lái xe của người này
+                // Truy v?n danh s�ch b?ng l�i xe c?a ng�?i n�y
                 var dbLicenses = await Task.Run(() => db.DrivingLicenses.Where(l => l.Cccd == _targetCccd).ToList());
 
-                // Map sang danh sách hiển thị
+                // Map sang danh s�ch hi?n th?
                 var licensesList = dbLicenses.Select(l => new LicenseItem39
                 {
                     LicenseClass = l.LicenseNumber ?? "",
                     LicenseNo = l.LicenseId ?? "",
                     Points = l.Points,
-                    Status = l.StatusText ?? "Chưa rõ",
-                    IssueDateStr = l.IssueDate != DateTime.MinValue ? l.IssueDate.ToString("dd/MM/yyyy") : "Chưa cập nhật",
-                    ExpiryDateStr = l.ExpiryDate.HasValue ? l.ExpiryDate.Value.ToString("dd/MM/yyyy") : "Không thời hạn"
+                    Status = l.StatusText ?? "Ch�a r?",
+                    IssueDateStr = l.IssueDate != DateTime.MinValue ? l.IssueDate.ToString("dd/MM/yyyy") : "Ch�a c?p nh?t",
+                    ExpiryDateStr = l.ExpiryDate.HasValue ? l.ExpiryDate.Value.ToString("dd/MM/yyyy") : "Kh�ng th?i h?n"
                 }).ToList();
 
-                // Đổ vào giao diện
+                // �? v�o giao di?n
                 if (this.FindName("icLicenses") is ItemsControl icLicenses)
                 {
                     icLicenses.ItemsSource = new ObservableCollection<LicenseItem39>(licensesList);
@@ -127,13 +127,13 @@ namespace PBL3
             }
             catch (Exception ex)
             {
-                new CustomMessageBox("Lỗi tải chi tiết GPLX: " + ex.Message, "Lỗi kết nối").ShowDialog();
+                new CustomMessageBox("L?i t?i chi ti?t GPLX: " + ex.Message, "L?i k?t n?i").ShowDialog();
             }
         }
 
         private void btnThemGplx_Click(object sender, RoutedEventArgs e)
         {
-            new CustomMessageBox("Chức năng thêm GPLX đang được cập nhật.").ShowDialog();
+            new CustomMessageBox("Ch?c n�ng th�m GPLX �ang ��?c c?p nh?t.").ShowDialog();
         }
 
         private void btnXoaGplx_Click(object sender, RoutedEventArgs e)
@@ -143,7 +143,7 @@ namespace PBL3
 
         private void btnLuu_Click(object sender, RoutedEventArgs e)
         {
-            new CustomMessageBox("Đã lưu thông tin GPLX thành công!", "Thông báo").ShowDialog();
+            new CustomMessageBox("�? l�u th�ng tin GPLX th�nh c�ng!", "Th�ng b�o").ShowDialog();
         }
 
         private void btnHuy_Click(object sender, RoutedEventArgs e)
@@ -176,7 +176,12 @@ namespace PBL3
             }
         }
 
-        private void MenuInfo_Click(object sender, RoutedEventArgs e) { }
+        private void MenuInfo_Click(object sender, RoutedEventArgs e) {
+            if (_currentUser is Officer officer)
+            {
+                new OfficerProfileWindow(officer).ShowDialog();
+            }
+        }
 
         private void MenuLogout_Click(object sender, RoutedEventArgs e)
         {
@@ -210,5 +215,6 @@ namespace PBL3
 
     }
 }
+
 
 

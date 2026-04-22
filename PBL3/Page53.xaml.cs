@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -22,26 +22,26 @@ namespace PBL3
         private readonly Officer _currentUser;
         private readonly string _targetCccd;
 
-        // Constructor mặc định
+        // Constructor m?c �?nh
         public Page53()
         {
             InitializeComponent();
             this.Loaded += Page53_Loaded;
         }
 
-        // Constructor chính
+        // Constructor ch�nh
         public Page53(Officer user, string targetCccd = null) : this()
         {
             _currentUser = user;
             _targetCccd = targetCccd;
             if (_currentUser != null)
             {
-                txtUserName.Text = $"Cán bộ: {_currentUser.OfficerId}";
+                txtUserName.Text = $"C�n b?: {_currentUser.OfficerId}";
                 myBell.LoadData(_currentUser as Officer);
             }
         }
 
-        // Tạm thời thêm lại Constructor phụ cho Page47/Page48 để code không lỗi
+        // T?m th?i th�m l?i Constructor ph? cho Page47/Page48 �? code kh�ng l?i
         public Page53(Admin admin, int complaintId) : this()
         {
             // Do nothing, Admin pages should navigate to the correct Admin complaint detail page instead.
@@ -52,7 +52,7 @@ namespace PBL3
             if (!string.IsNullOrEmpty(_targetCccd))
             {
                 var btn = this.FindName("btnTaoTaiKhoan") as Button;
-                if (btn != null) btn.Content = "Cập nhật";
+                if (btn != null) btn.Content = "C?p nh?t";
                 LoadCustomerData(_targetCccd);
             }
         }
@@ -75,15 +75,15 @@ namespace PBL3
                     if (txtNgaySinh.Text != "dd/mm/yyyy") txtNgaySinh.Foreground = Brushes.Black;
 
                     if (customer.Gender == "Nam") cmbGioiTinh.SelectedIndex = 1;
-                    else if (customer.Gender == "Nữ") cmbGioiTinh.SelectedIndex = 2;
+                    else if (customer.Gender == "N?") cmbGioiTinh.SelectedIndex = 2;
 
                     txtPhone.Text = customer.Phone;
                     if (!string.IsNullOrEmpty(txtPhone.Text)) txtPhone.Foreground = Brushes.Black;
-                    else { txtPhone.Text = "Nhập SĐT"; txtPhone.Foreground = Brushes.Gray; }
+                    else { txtPhone.Text = "Nh?p S�T"; txtPhone.Foreground = Brushes.Gray; }
 
                     txtEmail.Text = customer.Email;
                     if (!string.IsNullOrEmpty(txtEmail.Text)) txtEmail.Foreground = Brushes.Black;
-                    else { txtEmail.Text = "Nhập Email"; txtEmail.Foreground = Brushes.Gray; }
+                    else { txtEmail.Text = "Nh?p Email"; txtEmail.Foreground = Brushes.Gray; }
                 }
             }
         }
@@ -95,9 +95,9 @@ namespace PBL3
                 using (var db = new TrafficSafetyDBContext())
                 {
                     var cccd = txtCccd.Text.Trim();
-                    if (string.IsNullOrEmpty(cccd) || cccd == "Nhập CCCD")
+                    if (string.IsNullOrEmpty(cccd) || cccd == "Nh?p CCCD")
                     {
-                        MessageBox.Show("Vui lòng nhập CCCD hợp lệ.", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Warning);
+                        MessageBox.Show("Vui l?ng nh?p CCCD h?p l?.", "L?i", MessageBoxButton.OK, MessageBoxImage.Warning);
                         return;
                     }
 
@@ -110,7 +110,7 @@ namespace PBL3
                         isNew = true;
                     }
 
-                    customer.FullName = txtHoTen.Text.Trim() == "Nhập họ tên" ? string.Empty : txtHoTen.Text.Trim();
+                    customer.FullName = txtHoTen.Text.Trim() == "Nh?p h? t�n" ? string.Empty : txtHoTen.Text.Trim();
 
                     if (DateTime.TryParseExact(txtNgaySinh.Text.Trim(), "dd/MM/yyyy", null, System.Globalization.DateTimeStyles.None, out DateTime dob))
                     {
@@ -118,24 +118,24 @@ namespace PBL3
                     }
 
                     if (cmbGioiTinh.SelectedIndex == 1) customer.Gender = "Nam";
-                    else if (cmbGioiTinh.SelectedIndex == 2) customer.Gender = "Nữ";
+                    else if (cmbGioiTinh.SelectedIndex == 2) customer.Gender = "N?";
 
-                    customer.Phone = txtPhone.Text.Trim() == "Nhập SĐT" ? null : txtPhone.Text.Trim();
-                    customer.Email = txtEmail.Text.Trim() == "Nhập Email" ? null : txtEmail.Text.Trim();
+                    customer.Phone = txtPhone.Text.Trim() == "Nh?p S�T" ? null : txtPhone.Text.Trim();
+                    customer.Email = txtEmail.Text.Trim() == "Nh?p Email" ? null : txtEmail.Text.Trim();
 
                     if (isNew) db.Customers.Add(customer);
 
                     db.SaveChanges();
 
-                    // --- BẮT ĐẦU: GHI LOG & TẠO THÔNG BÁO ---
-                    int actionType = isNew ? 1 : 2; // 1: Tạo mới, 2: Cập nhật
+                    // --- B?T �?U: GHI LOG & T?O TH�NG B�O ---
+                    int actionType = isNew ? 1 : 2; // 1: T?o m?i, 2: C?p nh?t
 
-                    // Lấy ra ID người thực hiện. Ở màn này thường là Cán bộ (Officer) hoặc Quản trị viên (Admin)
-                    // (Theo Constructor khai báo thì _currentUser ở đây là Officer)
+                    // L?y ra ID ng�?i th?c hi?n. ? m�n n�y th�?ng l� C�n b? (Officer) ho?c Qu?n tr? vi�n (Admin)
+                    // (Theo Constructor khai b�o th? _currentUser ? ��y l� Officer)
                     string actorId = _currentUser != null ? _currentUser.OfficerId : "UNKNOWN";
-                    int roleType = 2; // 2 = Cán bộ
+                    int roleType = 2; // 2 = C�n b?
 
-                    // 1. Ghi vào SYSTEMLOGS
+                    // 1. Ghi v�o SYSTEMLOGS
                     var log = new SystemLog
                     {
                         Action = actionType,
@@ -147,31 +147,31 @@ namespace PBL3
                     };
                     db.SystemLogs.Add(log);
 
-                    // 2. Ghi vào NOTIFICATION cho Công dân
+                    // 2. Ghi v�o NOTIFICATION cho C�ng d�n
                     var noti = new Notification
                     {
-                        TargetRole = 3, // 3 = Công dân
+                        TargetRole = 3, // 3 = C�ng d�n
                         TargetId = cccd,
                         Content = isNew 
-                            ? "Tài khoản của bạn đã được tạo thành công trên không gian số." 
-                            : "Thông tin của bạn đã được cập nhật bởi cơ quan chức năng.",
+                            ? "T�i kho?n c?a b?n �? ��?c t?o th�nh c�ng tr�n kh�ng gian s?." 
+                            : "Th�ng tin c?a b?n �? ��?c c?p nh?t b?i c� quan ch?c n�ng.",
                         CreatedAt = DateTime.Now,
                         IsRead = false
                     };
                     db.Notifications.Add(noti);
 
-                    db.SaveChanges(); // Lưu lại thay đổi (Log & Notification)
-                    // --- KẾT THÚC: GHI LOG & TẠO THÔNG BÁO ---
+                    db.SaveChanges(); // L�u l?i thay �?i (Log & Notification)
+                    // --- K?T TH�C: GHI LOG & T?O TH�NG B�O ---
 
-                    // Tải lại thông báo cho Header/UserControl
+                    // T?i l?i th�ng b�o cho Header/UserControl
                     myBell.LoadData(_currentUser as Officer);
 
-                    MessageBox.Show(isNew ? "Tạo tài khoản thành công!" : "Cập nhật dữ liệu từ bảng CUSTOMERS thành công!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
+                    MessageBox.Show(isNew ? "T?o t�i kho?n th�nh c�ng!" : "C?p nh?t d? li?u t? b?ng CUSTOMERS th�nh c�ng!", "Th�ng b�o", MessageBoxButton.OK, MessageBoxImage.Information);
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Lỗi: " + ex.Message, "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("L?i: " + ex.Message, "L?i", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -182,7 +182,7 @@ namespace PBL3
 
         private void TextBox_GotFocus(object sender, RoutedEventArgs e)
         {
-            if (sender is TextBox tb && (tb.Text == "Nhập họ tên" || tb.Text == "Nhập CCCD" || tb.Text == "dd/mm/yyyy" || tb.Text == "Nhập SĐT" || tb.Text == "Nhập Email"))
+            if (sender is TextBox tb && (tb.Text == "Nh?p h? t�n" || tb.Text == "Nh?p CCCD" || tb.Text == "dd/mm/yyyy" || tb.Text == "Nh?p S�T" || tb.Text == "Nh?p Email"))
             {
                 tb.Text = "";
                 tb.Foreground = Brushes.Black;
@@ -194,27 +194,27 @@ namespace PBL3
             if (sender is TextBox tb && string.IsNullOrWhiteSpace(tb.Text))
             {
                 tb.Foreground = Brushes.Gray;
-                if (tb.Name == "txtHoTen") tb.Text = "Nhập họ tên";
-                else if (tb.Name == "txtCccd") tb.Text = "Nhập CCCD";
+                if (tb.Name == "txtHoTen") tb.Text = "Nh?p h? t�n";
+                else if (tb.Name == "txtCccd") tb.Text = "Nh?p CCCD";
                 else if (tb.Name == "txtNgaySinh") tb.Text = "dd/mm/yyyy";
-                else if (tb.Name == "txtPhone") tb.Text = "Nhập SĐT";
-                else if (tb.Name == "txtEmail") tb.Text = "Nhập Email";
+                else if (tb.Name == "txtPhone") tb.Text = "Nh?p S�T";
+                else if (tb.Name == "txtEmail") tb.Text = "Nh?p Email";
             }
         }
 
-        // Xử lý sự kiện nút Chi tiết
+        // X? l? s? ki?n n�t Chi ti?t
         private void BtnDetail_Click(object sender, RoutedEventArgs e)
         {
             if (sender is Button btn && btn.DataContext is ViolationGroupDisplay data)
             {
                 try
                 {
-                    // BẮT BUỘC PHẢI NHÉT `data.RecordId` VÀO TRONG NGOẶC NHƯ VẦY:
+                    // B?T BU?C PH?I NH�T `data.RecordId` V�O TRONG NGO?C NH� V?Y:
                     NavigationService.Navigate(new Page17(data.RecordId));
                 }
                 catch (Exception ex)
                 {
-                    new CustomMessageBox("Lỗi khi chuyển trang: " + ex.Message, "Lỗi").ShowDialog();
+                    new CustomMessageBox("L?i khi chuy?n trang: " + ex.Message, "L?i").ShowDialog();
                 }
             }
         }
@@ -229,7 +229,12 @@ namespace PBL3
             }
         }
 
-        private void MenuInfo_Click(object sender, RoutedEventArgs e) { }
+        private void MenuInfo_Click(object sender, RoutedEventArgs e) {
+            if (_currentUser is Officer officer)
+            {
+                new OfficerProfileWindow(officer).ShowDialog();
+            }
+        }
 
         private void MenuLogout_Click(object sender, RoutedEventArgs e)
         {
@@ -262,5 +267,6 @@ namespace PBL3
         }
     }
 }
+
 
 

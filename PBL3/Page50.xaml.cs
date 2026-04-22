@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -22,21 +22,21 @@ namespace PBL3
         private readonly Admin _currentUser;
         private readonly int? _recordId;
 
-        // Constructor mặc định
+        // Constructor m?c �?nh
         public Page50()
         {
             InitializeComponent();
             this.Loaded += Page50_Loaded;
         }
 
-        // Constructor chính
+        // Constructor ch�nh
         public Page50(Admin user, int? recordId = null) : this()
         {
             _currentUser = user;
             _recordId = recordId;
             if (_currentUser != null)
             {
-                txtUserName.Text = _currentUser.FullName; // Hoặc _currentUser.HoTen nếu có
+                txtUserName.Text = _currentUser.FullName; // Ho?c _currentUser.HoTen n?u c�
                 myBell.LoadData(_currentUser as Admin);
             }
         }
@@ -51,16 +51,16 @@ namespace PBL3
         {
             if (_recordId is null) return;
 
-            // Lấy thông tin từ Service (giống Page19)
+            // L?y th�ng tin t? Service (gi?ng Page19)
             var detail = ViolationLookupService.GetViolationDetail(_recordId.Value);
 
             if (detail == null)
             {
-                new CustomMessageBox("Không tìm thấy thông tin chi tiết vi phạm này trên hệ thống.").ShowDialog();
+                new CustomMessageBox("Kh�ng t?m th?y th�ng tin chi ti?t vi ph?m n�y tr�n h? th?ng.").ShowDialog();
                 return;
             }
 
-            // Gán dữ liệu lên các thành phần giao diện
+            // G�n d? li?u l�n c�c th�nh ph?n giao di?n
             txtHeaderTitle.Text = detail.HeaderTitle;
             txtHeaderSubtitle.Text = detail.HeaderSubtitle;
             txtVehicleTypeValue.Text = detail.VehicleType;
@@ -72,14 +72,14 @@ namespace PBL3
             txtPaymentLocationValue.Text = detail.PaymentLocation;
             txtStatusValue.Text = detail.StatusText;
 
-            // Đổi màu text Trạng thái
+            // �?i m�u text Tr?ng th�i
             txtStatusValue.Foreground = detail.IsProcessed ? Brushes.ForestGreen : Brushes.Firebrick;
 
-            // Kiểm tra an toàn trước khi gán để tránh lỗi XAML chưa khởi tạo
+            // Ki?m tra an to�n tr�?c khi g�n �? tr�nh l?i XAML ch�a kh?i t?o
             if (txtEvidenceCaption != null) txtEvidenceCaption.Text = detail.EvidenceCaption;
             if (txtLastUpdatedValue != null) txtLastUpdatedValue.Text = detail.LastUpdated;
 
-            // Xử lý hiển thị Hình ảnh bằng chứng
+            // X? l? hi?n th? H?nh ?nh b?ng ch?ng
             if (!string.IsNullOrWhiteSpace(detail.EvidenceImagePath) && imgEvidence != null)
             {
                 Uri evidenceUri = BuildEvidenceUri(detail.EvidenceImagePath);
@@ -93,7 +93,7 @@ namespace PBL3
                         if (txtEvidencePlaceholder != null)
                             txtEvidencePlaceholder.Visibility = Visibility.Collapsed;
                     }
-                    catch { /* Im lặng bỏ qua nếu ảnh bị lỗi file */ }
+                    catch { /* Im l?ng b? qua n?u ?nh b? l?i file */ }
                 }
             }
         }
@@ -146,7 +146,7 @@ namespace PBL3
             }
         }
 
-        private void MenuInfo_Click(object sender, RoutedEventArgs e) { }
+        private void MenuInfo_Click(object sender, RoutedEventArgs e) { if (_currentUser is Admin admin) { new AdminProfileWindow(admin).ShowDialog(); } }
 
         private void MenuLogout_Click(object sender, RoutedEventArgs e)
         {
@@ -184,6 +184,7 @@ namespace PBL3
         }
     }
 }
+
 
 
 

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
@@ -32,9 +32,9 @@ namespace PBL3
         private List<Category> _categories;
         private List<SolidColorBrush> _colors = new List<SolidColorBrush>
         {
-            new SolidColorBrush((Color)ColorConverter.ConvertFromString("#4472C4")), // Xe máy
-            new SolidColorBrush((Color)ColorConverter.ConvertFromString("#ED7D31")), // Xe máy điện
-            new SolidColorBrush((Color)ColorConverter.ConvertFromString("#A5A5A5")), // Ô tô
+            new SolidColorBrush((Color)ColorConverter.ConvertFromString("#4472C4")), // Xe m�y
+            new SolidColorBrush((Color)ColorConverter.ConvertFromString("#ED7D31")), // Xe m�y �i?n
+            new SolidColorBrush((Color)ColorConverter.ConvertFromString("#A5A5A5")), // � t�
             new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFC000")), 
             new SolidColorBrush((Color)ColorConverter.ConvertFromString("#5B9BD5")),
             new SolidColorBrush((Color)ColorConverter.ConvertFromString("#70AD47")),
@@ -83,22 +83,22 @@ namespace PBL3
             var index = cboType.SelectedIndex;
             int currentYear = DateTime.Now.Year;
 
-            if (index == 0) // Theo năm
+            if (index == 0) // Theo n�m
             {
                 int startYear = 2015;
                 while (startYear <= currentYear)
                 {
                     int endYear = startYear + 4;
                     if (startYear == 2024 && currentYear >= 2024)
-                        cboValue.Items.Add($"{startYear}-năm hiện tại"); // or similar
+                        cboValue.Items.Add($"{startYear}-n�m hi?n t?i"); // or similar
                     else if (endYear >= currentYear)
                         cboValue.Items.Add($"{startYear}-{currentYear}");
                     else
                         cboValue.Items.Add($"{startYear}-{endYear}");
                     
-                    if (startYear == 2024) break; // Because prompt specific "2024-năm hiện tại"
+                    if (startYear == 2024) break; // Because prompt specific "2024-n�m hi?n t?i"
                     startYear += 5;
-                    // Fix exact prompt wording: "2015-2019, 2020-2024, 2024-năm hiện tại"
+                    // Fix exact prompt wording: "2015-2019, 2020-2024, 2024-n�m hi?n t?i"
                 }
                 // Overriding loop to match exact prompt wording:
                 cboValue.Items.Clear();
@@ -106,36 +106,36 @@ namespace PBL3
                 cboValue.Items.Add("2020-2024");
                 if (currentYear >= 2024) cboValue.Items.Add($"2024-{currentYear}");
             }
-            else if (index == 1) // Theo quý
+            else if (index == 1) // Theo qu?
             {
                 for (int y = 2015; y <= currentYear; y++)
                 {
                     cboValue.Items.Add(y.ToString());
                 }
             }
-            else if (index == 2) // Theo tháng
+            else if (index == 2) // Theo th�ng
             {
-                // "khung chọn thứ 2 sẽ hiển thị các quý của năm hiện tại cho đến hiện tại"
+                // "khung ch?n th? 2 s? hi?n th? c�c qu? c?a n�m hi?n t?i cho �?n hi?n t?i"
                 int maxQ = (DateTime.Now.Month - 1) / 3 + 1;
                 for (int q = 1; q <= maxQ; q++)
                 {
-                    cboValue.Items.Add($"Quý {q} - {currentYear}");
+                    cboValue.Items.Add($"Qu? {q} - {currentYear}");
                 }
             }
-            else if (index == 3) // Theo tuần
+            else if (index == 3) // Theo tu?n
             {
-                // "các tháng của quý hiện tại"
+                // "c�c th�ng c?a qu? hi?n t?i"
                 int currentQ = (DateTime.Now.Month - 1) / 3 + 1;
                 int mStart = (currentQ - 1) * 3 + 1;
                 int mEnd = Math.Min(mStart + 2, DateTime.Now.Month);
                 for (int m = mStart; m <= mEnd; m++)
                 {
-                     cboValue.Items.Add($"Tháng {m} - {currentYear}");
+                     cboValue.Items.Add($"Th�ng {m} - {currentYear}");
                 }
             }
-            else if (index == 4) // Theo ngày
+            else if (index == 4) // Theo ng�y
             {
-                // "các tuần của tháng hiện tại"
+                // "c�c tu?n c?a th�ng hi?n t?i"
                 int m = DateTime.Now.Month;
                 int y = DateTime.Now.Year;
                 DateTime firstDay = new DateTime(y, m, 1);
@@ -149,7 +149,7 @@ namespace PBL3
                     DateTime monday = current.AddDays(-1 * diff).Date;
                     DateTime sunday = monday.AddDays(6).Date;
 
-                    string weekStr = $"Tuần {weekCount} ({monday:dd/MM/yyyy}-{sunday:dd/MM/yyyy})";
+                    string weekStr = $"Tu?n {weekCount} ({monday:dd/MM/yyyy}-{sunday:dd/MM/yyyy})";
                     cboValue.Items.Add(weekStr);
 
                     current = sunday.AddDays(1);
@@ -188,19 +188,19 @@ namespace PBL3
 
             DateTime now = DateTime.Now;
 
-            // Xây dựng List chứa thông tin filter để lấy List<List<ViolationRecord>> tương ứng vs các nhãn X
+            // X�y d?ng List ch?a th�ng tin filter �? l?y List<List<ViolationRecord>> t��ng ?ng vs c�c nh?n X
             List<List<ViolationRecord>> columnsData = new List<List<ViolationRecord>>();
             string timeUnitName = "";
 
-            if (index == 0) // Theo năm
+            if (index == 0) // Theo n�m
             {
                 string[] parts = val.Split('-');
                 int startY = int.Parse(parts[0]);
-                int endY = parts[1].Contains("hiện tại") ? now.Year : (int.TryParse(parts[1], out int pY) ? pY : now.Year);
+                int endY = parts[1].Contains("hi?n t?i") ? now.Year : (int.TryParse(parts[1], out int pY) ? pY : now.Year);
                 if (endY - startY > 4) endY = startY + 4; // limit 5
                 
-                txtChartTitle.Text = $"Biểu đồ thống kê lỗi vi phạm khoảng từ {startY} đến {endY}";
-                timeUnitName = "cụm năm";
+                txtChartTitle.Text = $"Bi?u �? th?ng k� l?i vi ph?m kho?ng t? {startY} �?n {endY}";
+                timeUnitName = "c?m n�m";
 
                 for (int y = startY; y <= endY; y++)
                 {
@@ -214,56 +214,56 @@ namespace PBL3
                 int prevEndY = startY - 1;
                 previousData = allRecords.Where(r => r.ViolationDate.Value.Year >= prevStartY && r.ViolationDate.Value.Year <= prevEndY).ToList();
             }
-            else if (index == 1) // Theo quý
+            else if (index == 1) // Theo qu?
             {
                 int year = int.Parse(val);
-                txtChartTitle.Text = $"Biểu đồ thống kê lỗi vi phạm theo quý năm {year}";
-                timeUnitName = "năm";
+                txtChartTitle.Text = $"Bi?u �? th?ng k� l?i vi ph?m theo qu? n�m {year}";
+                timeUnitName = "n�m";
 
                 for (int q = 1; q <= 4; q++)
                 {
-                    xAxisLabels.Add($"Quý {q}");
+                    xAxisLabels.Add($"Qu? {q}");
                     var colRecs = allRecords.Where(r => r.ViolationDate.Value.Year == year && (r.ViolationDate.Value.Month - 1) / 3 + 1 == q).ToList();
                     columnsData.Add(colRecs);
                     currentData.AddRange(colRecs);
                 }
                 previousData = allRecords.Where(r => r.ViolationDate.Value.Year == year - 1).ToList();
             }
-            else if (index == 2) // Theo tháng
+            else if (index == 2) // Theo th�ng
             {
-                // val = "Quý X - YYYY"
+                // val = "Qu? X - YYYY"
                 string[] p = val.Split(' ');
                 int q = int.Parse(p[1]);
                 int year = int.Parse(p[3]);
 
-                txtChartTitle.Text = $"Biểu đồ thống kê lỗi vi phạm theo tháng (Quý {q}/{year})";
-                timeUnitName = "quý";
+                txtChartTitle.Text = $"Bi?u �? th?ng k� l?i vi ph?m theo th�ng (Qu? {q}/{year})";
+                timeUnitName = "qu?";
 
                 int startM = (q - 1) * 3 + 1;
                 for (int m = startM; m <= startM + 2; m++)
                 {
-                    xAxisLabels.Add($"Tháng {m}");
+                    xAxisLabels.Add($"Th�ng {m}");
                     var colRecs = allRecords.Where(r => r.ViolationDate.Value.Year == year && r.ViolationDate.Value.Month == m).ToList();
                     columnsData.Add(colRecs);
                     currentData.AddRange(colRecs);
                 }
 
-                // Prev Quý
+                // Prev Qu?
                 int prevQ = q == 1 ? 4 : q - 1;
                 int prevY = q == 1 ? year - 1 : year;
                 int pStartM = (prevQ - 1) * 3 + 1;
                 int pEndM = pStartM + 2;
                 previousData = allRecords.Where(r => r.ViolationDate.Value.Year == prevY && r.ViolationDate.Value.Month >= pStartM && r.ViolationDate.Value.Month <= pEndM).ToList();
             }
-            else if (index == 3) // Theo tuần
+            else if (index == 3) // Theo tu?n
             {
-                // val = "Tháng X - YYYY"
+                // val = "Th�ng X - YYYY"
                 string[] p = val.Split(' ');
                 int month = int.Parse(p[1]);
                 int year = int.Parse(p[3]);
 
-                txtChartTitle.Text = $"Biểu đồ thống kê lỗi vi phạm các tuần trong tháng {month}/{year}";
-                timeUnitName = "tháng";
+                txtChartTitle.Text = $"Bi?u �? th?ng k� l?i vi ph?m c�c tu?n trong th�ng {month}/{year}";
+                timeUnitName = "th�ng";
 
                 DateTime start = new DateTime(year, month, 1);
                 
@@ -275,7 +275,7 @@ namespace PBL3
                     DateTime mon = it.AddDays(-1 * diff).Date;
                     DateTime sun = mon.AddDays(6).Date;
 
-                    xAxisLabels.Add($"Tuần {w}");
+                    xAxisLabels.Add($"Tu?n {w}");
                     var colRecs = allRecords.Where(r => r.ViolationDate.Value.Date >= mon && r.ViolationDate.Value.Date <= sun).ToList();
                     columnsData.Add(colRecs);
                     currentData.AddRange(colRecs);
@@ -289,29 +289,29 @@ namespace PBL3
                 int py = month == 1 ? year - 1 : year;
                 previousData = allRecords.Where(r => r.ViolationDate.Value.Year == py && r.ViolationDate.Value.Month == pm).ToList();
             }
-            else if (index == 4) // Theo ngày
+            else if (index == 4) // Theo ng�y
             {
-                // val = "Tuần 1 (12/12/2024-18/12/2024)"
+                // val = "Tu?n 1 (12/12/2024-18/12/2024)"
                 int splitIdx = val.IndexOf('(');
                 string dates = val.Substring(splitIdx + 1).TrimEnd(')');
                 string[] dp = dates.Split('-');
                 DateTime dMon = DateTime.ParseExact(dp[0], "dd/MM/yyyy", null);
                 DateTime dSun = DateTime.ParseExact(dp[1], "dd/MM/yyyy", null);
 
-                txtChartTitle.Text = $"Biểu đồ thống kê lỗi vi phạm theo ngày ({dMon:dd/MM} - {dSun:dd/MM})";
-                timeUnitName = "tuần";
+                txtChartTitle.Text = $"Bi?u �? th?ng k� l?i vi ph?m theo ng�y ({dMon:dd/MM} - {dSun:dd/MM})";
+                timeUnitName = "tu?n";
 
                 for (DateTime d = dMon; d <= dSun; d = d.AddDays(1))
                 {
                     string name = "";
                     switch (d.DayOfWeek)
                     {
-                        case DayOfWeek.Monday: name = "Thứ 2"; break;
-                        case DayOfWeek.Tuesday: name = "Thứ 3"; break;
-                        case DayOfWeek.Wednesday: name = "Thứ 4"; break;
-                        case DayOfWeek.Thursday: name = "Thứ 5"; break;
-                        case DayOfWeek.Friday: name = "Thứ 6"; break;
-                        case DayOfWeek.Saturday: name = "Thứ 7"; break;
+                        case DayOfWeek.Monday: name = "Th? 2"; break;
+                        case DayOfWeek.Tuesday: name = "Th? 3"; break;
+                        case DayOfWeek.Wednesday: name = "Th? 4"; break;
+                        case DayOfWeek.Thursday: name = "Th? 5"; break;
+                        case DayOfWeek.Friday: name = "Th? 6"; break;
+                        case DayOfWeek.Saturday: name = "Th? 7"; break;
                         case DayOfWeek.Sunday: name = "CN"; break;
                     }
                     xAxisLabels.Add($"{name}\n{d:dd/MM}");
@@ -328,7 +328,7 @@ namespace PBL3
 
             // Calc Summary
             int curTotal = currentData.Count;
-            int curUnprocessed = currentData.Count(r => r.Status == 0); // assuming Status 0=chưa xử lý
+            int curUnprocessed = currentData.Count(r => r.Status == 0); // assuming Status 0=ch�a x? l?
             int curProcessed = curTotal - curUnprocessed;
 
             int prevTotal = previousData.Count;
@@ -351,14 +351,14 @@ namespace PBL3
         {
             if (prev == 0)
             {
-                if (cur == 0) block.Text = $"Không đổi so với {timeUnit} trước";
-                else block.Text = $"Tăng 100% so với {timeUnit} trước";
+                if (cur == 0) block.Text = $"Kh�ng �?i so v?i {timeUnit} tr�?c";
+                else block.Text = $"T�ng 100% so v?i {timeUnit} tr�?c";
             }
             else
             {
                 double percent = (double)(cur - prev) / prev * 100.0;
-                string dir = percent > 0 ? "Tăng" : (percent < 0 ? "Giảm" : "Không đổi");
-                block.Text = $"{dir} {Math.Abs(percent):F2}% so với {timeUnit} trước";
+                string dir = percent > 0 ? "T�ng" : (percent < 0 ? "Gi?m" : "Kh�ng �?i");
+                block.Text = $"{dir} {Math.Abs(percent):F2}% so v?i {timeUnit} tr�?c";
             }
         }
 
@@ -449,7 +449,7 @@ namespace PBL3
             }
             else
             {
-                legends.Add(new LegendItem { Name = "Tổng vi phạm", Color = _colors[0] });
+                legends.Add(new LegendItem { Name = "T?ng vi ph?m", Color = _colors[0] });
             }
             icLegend.ItemsSource = legends;
         }
@@ -465,7 +465,7 @@ namespace PBL3
             }
         }
 
-        private void MenuInfo_Click(object sender, RoutedEventArgs e) { }
+        private void MenuInfo_Click(object sender, RoutedEventArgs e) { if (_currentUser is Admin admin) { new AdminProfileWindow(admin).ShowDialog(); } }
 
         private void MenuLogout_Click(object sender, RoutedEventArgs e)
         {
@@ -503,6 +503,7 @@ namespace PBL3
         }
     }
 }
+
 
 
 

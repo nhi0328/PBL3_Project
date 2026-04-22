@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,20 +23,20 @@ namespace PBL3
         private readonly Admin _currentUser;
         private List<LogDisplay> _allLogs = new List<LogDisplay>();
 
-        // Constructor mặc định
+        // Constructor m?c �?nh
         public Page48()
         {
             InitializeComponent();
             this.Loaded += Page48_Loaded;
         }
 
-        // Constructor chính
+        // Constructor ch�nh
         public Page48(Admin user) : this()
         {
             _currentUser = user;
             if (_currentUser != null)
             {
-                txtUserName.Text = _currentUser.FullName; // Hoặc _currentUser.HoTen nếu có
+                txtUserName.Text = _currentUser.FullName; // Ho?c _currentUser.HoTen n?u c�
 
                 myBell.LoadData(_currentUser as Admin);
             }
@@ -76,13 +76,13 @@ namespace PBL3
             }
             catch (Exception ex)
             {
-                new CustomMessageBox("Lỗi tải lịch sử: " + ex.Message, "Lỗi").ShowDialog();
+                new CustomMessageBox("L?i t?i l?ch s?: " + ex.Message, "L?i").ShowDialog();
             }
         }
 
         private void txtSearch_GotFocus(object sender, RoutedEventArgs e)
         {
-            if (txtSearch.Text == "Tìm kiếm lịch sử...")
+            if (txtSearch.Text == "T?m ki?m l?ch s?...")
             {
                 txtSearch.Text = "";
                 txtSearch.Foreground = Brushes.Black;
@@ -93,14 +93,14 @@ namespace PBL3
         {
             if (string.IsNullOrWhiteSpace(txtSearch.Text))
             {
-                txtSearch.Text = "Tìm kiếm lịch sử...";
+                txtSearch.Text = "T?m ki?m l?ch s?...";
                 txtSearch.Foreground = Brushes.Gray;
             }
         }
 
         private void txtSearch_TextChanged(object sender, TextChangedEventArgs e)
         {
-            if (IsLoaded && txtSearch.Text != "Tìm kiếm lịch sử...")
+            if (IsLoaded && txtSearch.Text != "T?m ki?m l?ch s?...")
             {
                 FilterLogs();
             }
@@ -124,18 +124,18 @@ namespace PBL3
             if (dgHistory == null || cbFilterRole == null || txtSearch == null) return;
 
             string keyword = txtSearch.Text.Trim();
-            if (keyword == "Tìm kiếm lịch sử...") keyword = "";
+            if (keyword == "T?m ki?m l?ch s?...") keyword = "";
 
             var filtered = _allLogs.AsEnumerable();
 
-            // Lọc theo vai trò
-            string roleFilter = (cbFilterRole.SelectedItem as ComboBoxItem)?.Content.ToString() ?? "Tất cả";
-            if (roleFilter != "Tất cả")
+            // L?c theo vai tr?
+            string roleFilter = (cbFilterRole.SelectedItem as ComboBoxItem)?.Content.ToString() ?? "T?t c?";
+            if (roleFilter != "T?t c?")
             {
                 filtered = filtered.Where(l => l.RoleName == roleFilter);
             }
 
-            // Lọc theo keyword dùng SearchEngine (nếu keyword không rỗng)
+            // L?c theo keyword d�ng SearchEngine (n?u keyword kh�ng r?ng)
             if (!string.IsNullOrEmpty(keyword))
             {
                 filtered = filtered.Where(l => 
@@ -149,7 +149,7 @@ namespace PBL3
                 ));
             }
 
-            // Gán lại STT cho danh sách lọc
+            // G�n l?i STT cho danh s�ch l?c
             var displayList = filtered.ToList();
             for (int i = 0; i < displayList.Count; i++)
             {
@@ -176,7 +176,7 @@ namespace PBL3
                         }
                         else
                         {
-                            new CustomMessageBox("Lỗi dữ liệu: Mã phản ánh không hợp lệ!", "Lỗi").ShowDialog();
+                            new CustomMessageBox("L?i d? li?u: M? ph?n �nh kh�ng h?p l?!", "L?i").ShowDialog();
                         }
                     }
                     else if (prefix == "L")
@@ -190,7 +190,7 @@ namespace PBL3
                 }
                 catch (Exception ex)
                 {
-                    new CustomMessageBox("Chuyển trang thất bại: " + ex.Message).ShowDialog();
+                    new CustomMessageBox("Chuy?n trang th?t b?i: " + ex.Message).ShowDialog();
                 }
             }
         }
@@ -205,7 +205,7 @@ namespace PBL3
             }
         }
 
-        private void MenuInfo_Click(object sender, RoutedEventArgs e) { }
+        private void MenuInfo_Click(object sender, RoutedEventArgs e) { if (_currentUser is Admin admin) { new AdminProfileWindow(admin).ShowDialog(); } }
 
         private void MenuLogout_Click(object sender, RoutedEventArgs e)
         {
@@ -254,6 +254,7 @@ namespace PBL3
         public string TargetValue { get; set; }
     }
 }
+
 
 
 

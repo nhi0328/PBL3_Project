@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -21,20 +21,20 @@ namespace PBL3
     {
         private readonly Admin _currentUser;
 
-        // Constructor mặc định
+        // Constructor m?c �?nh
         public Page46()
         {
             InitializeComponent();
             this.Loaded += Page46_Loaded;
         }
 
-        // Constructor chính
+        // Constructor ch�nh
         public Page46(Admin user) : this()
         {
             _currentUser = user;
             if (_currentUser != null)
             {
-                txtUserName.Text = _currentUser.FullName; // Hoặc _currentUser.HoTen nếu có
+                txtUserName.Text = _currentUser.FullName; // Ho?c _currentUser.HoTen n?u c�
 
                 myBell.LoadData(_currentUser as Admin);
             }
@@ -77,21 +77,21 @@ namespace PBL3
             }
             catch (Exception ex)
             {
-                new CustomMessageBox("Lỗi tải danh sách: " + ex.Message, "Lỗi").ShowDialog();
+                new CustomMessageBox("L?i t?i danh s�ch: " + ex.Message, "L?i").ShowDialog();
             }
         }
 
         private void dgOfficers_PreviewMouseWheel(object sender, System.Windows.Input.MouseWheelEventArgs e)
         {
-            // Bước 1: Chặn DataGrid không cho nó "nuốt" sự kiện lăn chuột
+            // B�?c 1: Ch?n DataGrid kh�ng cho n� "nu?t" s? ki?n l�n chu?t
             e.Handled = true;
 
-            // Bước 2: Tạo một sự kiện lăn chuột mới y hệt
+            // B�?c 2: T?o m?t s? ki?n l�n chu?t m?i y h?t
             var eventArg = new System.Windows.Input.MouseWheelEventArgs(e.MouseDevice, e.Timestamp, e.Delta);
             eventArg.RoutedEvent = UIElement.MouseWheelEvent;
             eventArg.Source = sender;
 
-            // Bước 3: Đẩy sự kiện đó lên cho thằng cha của nó (chính là cái ScrollViewer)
+            // B�?c 3: �?y s? ki?n �� l�n cho th?ng cha c?a n� (ch�nh l� c�i ScrollViewer)
             var parent = ((Control)sender).Parent as UIElement;
             if (parent != null)
             {
@@ -147,7 +147,7 @@ namespace PBL3
         {
             if (string.IsNullOrWhiteSpace(vm.OfficerId) || string.IsNullOrWhiteSpace(vm.Cccd) || string.IsNullOrWhiteSpace(vm.Password))
             {
-                new CustomMessageBox("Vui lòng điền đầy đủ thông tin (Số hiệu, CCCD, Password).", "Thông báo").ShowDialog();
+                new CustomMessageBox("Vui l?ng �i?n �?y �? th�ng tin (S? hi?u, CCCD, Password).", "Th�ng b�o").ShowDialog();
                 return;
             }
 
@@ -158,7 +158,7 @@ namespace PBL3
                 {
                     if (db.Officers.Any(x => x.OfficerId == vm.OfficerId))
                     {
-                        new CustomMessageBox("Số hiệu này đã tồn tại!", "Lỗi").ShowDialog();
+                        new CustomMessageBox("S? hi?u n�y �? t?n t?i!", "L?i").ShowDialog();
                         return;
                     }
                     var newOfficer = new Officer { OfficerId = vm.OfficerId, Cccd = vm.Cccd, Password = vm.Password };
@@ -172,7 +172,7 @@ namespace PBL3
                     {
                         if (db.Officers.Any(x => x.OfficerId == vm.OfficerId))
                         {
-                            new CustomMessageBox("Số hiệu (mới) này đã tồn tại!", "Lỗi").ShowDialog();
+                            new CustomMessageBox("S? hi?u (m?i) n�y �? t?n t?i!", "L?i").ShowDialog();
                             return;
                         }
                         var oldOfficer = db.Officers.Find(vm.OriginalOfficerId);
@@ -198,7 +198,7 @@ namespace PBL3
             }
             catch (Exception ex)
             {
-                new CustomMessageBox("Lỗi khi lưu dữ liệu: " + (ex.InnerException?.Message ?? ex.Message), "Lỗi").ShowDialog();
+                new CustomMessageBox("L?i khi l�u d? li?u: " + (ex.InnerException?.Message ?? ex.Message), "L?i").ShowDialog();
             }
         }
 
@@ -222,7 +222,7 @@ namespace PBL3
                             }
                         }
                         _officersData.Remove(vm);
-                        // Cập nhật lại STT
+                        // C?p nh?t l?i STT
                         for (int i = 0; i < _officersData.Count; i++)
                         {
                             _officersData[i].STT = i + 1;
@@ -230,7 +230,7 @@ namespace PBL3
                     }
                     catch (Exception ex)
                     {
-                        new CustomMessageBox("Lỗi khi xóa: " + ex.Message, "Lỗi").ShowDialog();
+                        new CustomMessageBox("L?i khi x�a: " + ex.Message, "L?i").ShowDialog();
                     }
                 }
             }
@@ -246,7 +246,7 @@ namespace PBL3
             }
         }
 
-        private void MenuInfo_Click(object sender, RoutedEventArgs e) { }
+        private void MenuInfo_Click(object sender, RoutedEventArgs e) { if (_currentUser is Admin admin) { new AdminProfileWindow(admin).ShowDialog(); } }
 
         private void MenuLogout_Click(object sender, RoutedEventArgs e)
         {
@@ -306,6 +306,7 @@ namespace PBL3
         protected void OnPropertyChanged(string prop) => PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(prop));
     }
 }
+
 
 
 

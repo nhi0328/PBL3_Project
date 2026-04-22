@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -27,14 +27,14 @@ namespace PBL3
         public System.Collections.ObjectModel.ObservableCollection<VehicleFineItem> Fines { get; set; } = new System.Collections.ObjectModel.ObservableCollection<VehicleFineItem>();
         public System.Collections.ObjectModel.ObservableCollection<string> AvailableCategories { get; set; } = new System.Collections.ObjectModel.ObservableCollection<string>();
 
-        // Constructor mặc định
+        // Constructor m?c �?nh
         public Page52()
         {
             InitializeComponent();
             LoadCategories();
         }
 
-        // Constructor chính
+        // Constructor ch�nh
         public Page52(LuatItem luat, Admin user = null)
         {
             InitializeComponent();
@@ -45,11 +45,11 @@ namespace PBL3
 
             if (_currentUser != null)
             {
-                txtUserName.Text = _currentUser.FullName; // Hoặc _currentUser.HoTen nếu có
+                txtUserName.Text = _currentUser.FullName; // Ho?c _currentUser.HoTen n?u c�
                 myBell.LoadData(_currentUser as Admin);
             }
 
-            // NẾU CÓ TRUYỀN LUẬT SANG -> CHẾ ĐỘ CHỈNH SỬA
+            // N?U C� TRUY?N LU?T SANG -> CH? �? CH?NH S?A
             if (_currentLuat != null)
             {
                 _isEditMode = true;
@@ -63,12 +63,12 @@ namespace PBL3
                     txtNgayHieuLuc.Text = pEffective.ToString("dd/MM/yyyy");
 
                 if (!string.IsNullOrWhiteSpace(_currentLuat.PhatTienXeMay))
-                    Fines.Add(new VehicleFineItem { LoaiXe = "Xe máy", MucPhat = _currentLuat.PhatTienXeMay, TruDiem = _currentLuat.TruDiem });
+                    Fines.Add(new VehicleFineItem { LoaiXe = "Xe m�y", MucPhat = _currentLuat.PhatTienXeMay, TruDiem = _currentLuat.TruDiem });
                 
                 if (!string.IsNullOrWhiteSpace(_currentLuat.PhatTienOto))
-                    Fines.Add(new VehicleFineItem { LoaiXe = "Ô tô", MucPhat = _currentLuat.PhatTienOto, TruDiem = _currentLuat.TruDiem, CanRemove = true });
+                    Fines.Add(new VehicleFineItem { LoaiXe = "� t�", MucPhat = _currentLuat.PhatTienOto, TruDiem = _currentLuat.TruDiem, CanRemove = true });
             }
-            // NẾU KHÔNG CÓ -> CHẾ ĐỘ THÊM MỚI
+            // N?U KH�NG C� -> CH? �? TH�M M?I
             else
             {
                 _isEditMode = false;
@@ -102,11 +102,11 @@ namespace PBL3
             }
             catch (Exception ex)
             {
-                new CustomMessageBox("Lỗi khi tải danh sách phương tiện: " + ex.Message, "Lỗi").ShowDialog();
+                new CustomMessageBox("L?i khi t?i danh s�ch ph��ng ti?n: " + ex.Message, "L?i").ShowDialog();
             }
         }
 
-        // --- CÁC HÀM XỬ LÝ SỰ KIỆN GIAO DIỆN MỚI TỪ PAGE52.XAML ---
+        // --- C�C H�M X? L? S? KI?N GIAO DI?N M?I T? PAGE52.XAML ---
 
         private void DateOverlayBanHanh_Click(object sender, MouseButtonEventArgs e)
         {
@@ -123,7 +123,7 @@ namespace PBL3
 
         private void RealDatePickerBanHanh_CalendarClosed(object sender, RoutedEventArgs e)
         {
-            // Focus lại Overlay để đảm bảo dropdown mượt mà lần sau
+            // Focus l?i Overlay �? �?m b?o dropdown m�?t m� l?n sau
             Keyboard.Focus(DateOverlayBanHanh);
         }
 
@@ -156,8 +156,8 @@ namespace PBL3
                 if (!exists)
                 {
                     var confirmResult = System.Windows.MessageBox.Show(
-                        $"Loại xe '{typedVehicle}' chưa có trong hệ thống.\nBạn có muốn thêm loại xe này vào danh sách không?",
-                        "Xác nhận thêm mới",
+                        $"Lo?i xe '{typedVehicle}' ch�a c� trong h? th?ng.\nB?n c� mu?n th�m lo?i xe n�y v�o danh s�ch kh�ng?",
+                        "X�c nh?n th�m m?i",
                         System.Windows.MessageBoxButton.YesNo,
                         System.Windows.MessageBoxImage.Question);
 
@@ -176,7 +176,7 @@ namespace PBL3
                         }
                         catch (Exception ex)
                         {
-                            new CustomMessageBox("Lỗi khi thêm mới loại xe: " + ex.Message, "Lỗi").ShowDialog();
+                            new CustomMessageBox("L?i khi th�m m?i lo?i xe: " + ex.Message, "L?i").ShowDialog();
                         }
                     }
                     else
@@ -201,12 +201,12 @@ namespace PBL3
             }
         }
 
-        // --- NÚT LƯU LUẬT (DÙNG ENTITY FRAMEWORK) ---
+        // --- N�T L�U LU?T (D�NG ENTITY FRAMEWORK) ---
         private void btnLuu_Click(object sender, RoutedEventArgs e)
         {
             if (string.IsNullOrWhiteSpace(txtTieuDe.Text))
             {
-                new CustomMessageBox("Vui lòng nhập Tiêu đề luật.", "Thông báo").ShowDialog();
+                new CustomMessageBox("Vui l?ng nh?p Ti�u �? lu?t.", "Th�ng b�o").ShowDialog();
                 return;
             }
 
@@ -216,13 +216,13 @@ namespace PBL3
                 {
                     TrafficLaw lawToSave;
 
-                    // 1. NẾU LÀ CHỈNH SỬA
+                    // 1. N?U L� CH?NH S?A
                     if (_isEditMode && _currentLuat != null)
                     {
                         lawToSave = db.TrafficLaws.FirstOrDefault(l => l.LawId == _currentLuat.LawId);
                         if (lawToSave == null)
                         {
-                            new CustomMessageBox("Không tìm thấy luật để cập nhật.", "Lỗi").ShowDialog();
+                            new CustomMessageBox("Kh�ng t?m th?y lu?t �? c?p nh?t.", "L?i").ShowDialog();
                             return;
                         }
 
@@ -231,7 +231,7 @@ namespace PBL3
                         var oldDetails = db.TrafficLawDetails.Where(d => d.LawId == lawToSave.LawId);
                         db.TrafficLawDetails.RemoveRange(oldDetails);
                     }
-                    // 2. NẾU LÀ THÊM MỚI
+                    // 2. N?U L� TH�M M?I
                     else
                     {
                         lawToSave = new TrafficLaw
@@ -241,10 +241,10 @@ namespace PBL3
                         db.TrafficLaws.Add(lawToSave);
                     }
 
-                    // Lưu law để lấy LawId (nếu thêm mới)
+                    // L�u law �? l?y LawId (n?u th�m m?i)
                     db.SaveChanges(); 
 
-                    // 3. Thêm chi tiết các xe
+                    // 3. Th�m chi ti?t c�c xe
                     foreach (var m in Fines)
                     {
                         if (string.IsNullOrWhiteSpace(m.LoaiXe)) continue;
@@ -256,10 +256,10 @@ namespace PBL3
                         {
                             cat = new Category { CategoryName = loaiXeTrim };
                             db.Categories.Add(cat);
-                            db.SaveChanges(); // Lấy CategoryId
+                            db.SaveChanges(); // L?y CategoryId
                         }
 
-                        // Lấy điểm trừ, nếu null ghi 0
+                        // L?y �i?m tr?, n?u null ghi 0
                         int t_diem = 0;
                         if (!string.IsNullOrWhiteSpace(m.TruDiem))
                         {
@@ -267,7 +267,7 @@ namespace PBL3
                             if (!string.IsNullOrEmpty(nums)) int.TryParse(nums, out t_diem);
                         }
 
-                        // Tạo Detail mới
+                        // T?o Detail m?i
                         var newDetail = new TrafficLawDetail
                         {
                             LawId = lawToSave.LawId,
@@ -281,15 +281,15 @@ namespace PBL3
                     }
 
                     db.SaveChanges();
-                    new CustomMessageBox("Cập nhật thông tin thành công!", "Thông báo").ShowDialog();
+                    new CustomMessageBox("C?p nh?t th�ng tin th�nh c�ng!", "Th�ng b�o").ShowDialog();
 
-                    // Về lại trang danh sách
+                    // V? l?i trang danh s�ch
                     NavigationService?.Navigate(new Page45(_currentUser));
                 }
             }
             catch (Exception ex)
             {
-                new CustomMessageBox("Lỗi khi lưu dữ liệu: " + ex.Message, "Lỗi").ShowDialog();
+                new CustomMessageBox("L?i khi l�u d? li?u: " + ex.Message, "L?i").ShowDialog();
             }
         }
 
@@ -315,7 +315,7 @@ namespace PBL3
             }
         }
 
-        private void MenuInfo_Click(object sender, RoutedEventArgs e) { }
+        private void MenuInfo_Click(object sender, RoutedEventArgs e) { if (_currentUser is Admin admin) { new AdminProfileWindow(admin).ShowDialog(); } }
 
         private void MenuLogout_Click(object sender, RoutedEventArgs e)
         {
@@ -353,6 +353,7 @@ namespace PBL3
         }
     }
 }
+
 
 
 

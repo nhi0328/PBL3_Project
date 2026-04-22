@@ -17,6 +17,9 @@
     <Compile Update="NotificationBellControl.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="OfficerProfileWindow.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="Page10.xaml.cs">
       <SubType>Code</SubType>
     </Compile>

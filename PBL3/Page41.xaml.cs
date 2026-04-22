@@ -1,4 +1,4 @@
-﻿using Microsoft.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using PBL3.Models;
 using System;
@@ -19,17 +19,17 @@ namespace PBL3
         public int Points { get; set; }
         public string IssueDateStr { get; set; }
         public string ExpiryDateStr { get; set; }
-        public string IssuePlace { get; set; } = "Đà Nẵng";
+        public string IssuePlace { get; set; } = "�� N?ng";
 
         public string StatusText
         {
             get
             {
-                if (string.IsNullOrWhiteSpace(Status)) return "Bị thu hồi";
+                if (string.IsNullOrWhiteSpace(Status)) return "B? thu h?i";
                 var s = Status.Trim().ToLower();
-                if (s.Contains("đang hoạt động") || s.Contains("hoạt động") || s == "active") return "Đang hoạt động";
-                if (s.Contains("hết hạn") || s == "expired") return "Hết hạn";
-                return "Bị thu hồi";
+                if (s.Contains("�ang ho?t �?ng") || s.Contains("ho?t �?ng") || s == "active") return "�ang ho?t �?ng";
+                if (s.Contains("h?t h?n") || s == "expired") return "H?t h?n";
+                return "B? thu h?i";
             }
         }
 
@@ -38,8 +38,8 @@ namespace PBL3
             get
             {
                 string text = StatusText;
-                if (text == "Đang hoạt động") return new SolidColorBrush(Color.FromRgb(46, 125, 50));
-                if (text == "Hết hạn") return new SolidColorBrush(Color.FromRgb(255, 152, 0));
+                if (text == "�ang ho?t �?ng") return new SolidColorBrush(Color.FromRgb(46, 125, 50));
+                if (text == "H?t h?n") return new SolidColorBrush(Color.FromRgb(255, 152, 0));
                 return new SolidColorBrush(Color.FromRgb(198, 40, 40));
             }
         }
@@ -49,9 +49,9 @@ namespace PBL3
             get
             {
                 string text = StatusText;
-                if (text == "Đang hoạt động")
+                if (text == "�ang ho?t �?ng")
                     return "M12 2C6.5 2 2 6.5 2 12S6.5 22 12 22 22 17.5 22 12 17.5 2 12 2M10 17L5 12L6.41 10.59L10 14.17L17.59 6.58L19 8L10 17Z";
-                if (text == "Hết hạn")
+                if (text == "H?t h?n")
                     return "M12 2C6.5 2 2 6.5 2 12S6.5 22 12 22 22 17.5 22 12 17.5 2 12 2M11 7H13V13H11V7M11 15H13V17H11V15Z";
                 return "M12 2C6.47 2 2 6.47 2 12S6.47 22 12 22 22 17.5 22 12 17.5 2 12 2M17 15.59L15.59 17L12 13.41L8.41 17L7 15.59L10.59 12L7 8.41L8.41 7L12 10.59L15.59 7L17 8.41L13.41 12L17 15.59Z";
             }
@@ -63,13 +63,13 @@ namespace PBL3
         private readonly Officer _currentUser;
         private readonly string _targetCccd;
 
-        // Constructor mặc định
+        // Constructor m?c �?nh
         public Page41()
         {
             InitializeComponent();
         }
 
-        // Constructor test không có Officer
+        // Constructor test kh�ng c� Officer
         public Page41(string cccd)
         {
             InitializeComponent();
@@ -77,7 +77,7 @@ namespace PBL3
             this.Loaded += Page41_Loaded;
         }
 
-        // Constructor chính
+        // Constructor ch�nh
         public Page41(Officer user, string cccd)
         {
             InitializeComponent();
@@ -86,7 +86,7 @@ namespace PBL3
 
             if (_currentUser != null)
             {
-                txtUserName.Text = $"Cán bộ: {_currentUser.OfficerId}";
+                txtUserName.Text = $"C�n b?: {_currentUser.OfficerId}";
 
                 myBell.LoadData(_currentUser as Officer);
             }
@@ -108,7 +108,7 @@ namespace PBL3
             {
                 using var db = new TrafficSafetyDBContext();
 
-                // Lấy thông tin phương tiện
+                // L?y th�ng tin ph��ng ti?n
                 var vehicle = await Task.Run(() => db.Vehicles
                     .Include(v => v.VehicleType)
                     .ThenInclude(vt => vt.Category)
@@ -120,15 +120,15 @@ namespace PBL3
                 if (vehicle != null)
                 {
                     txtBienSo.Text = vehicle.LicensePlate;
-                    txtLoaiXe.Text = vehicle.VehicleType?.Category?.CategoryName ?? "Chưa xác định";
-                    txtNhanHieu.Text = vehicle.VehicleType?.VehicleTypeName ?? "Chưa xác định";
-                    txtNamSanXuat.Text = vehicle.VehicleType?.ManufactureYear?.ToString() ?? "Chưa xác định";
-                    txtMauSac.Text = vehicle.VehicleType?.Color?.ColorName ?? "Chưa xác định";
+                    txtLoaiXe.Text = vehicle.VehicleType?.Category?.CategoryName ?? "Ch�a x�c �?nh";
+                    txtNhanHieu.Text = vehicle.VehicleType?.VehicleTypeName ?? "Ch�a x�c �?nh";
+                    txtNamSanXuat.Text = vehicle.VehicleType?.ManufactureYear?.ToString() ?? "Ch�a x�c �?nh";
+                    txtMauSac.Text = vehicle.VehicleType?.Color?.ColorName ?? "Ch�a x�c �?nh";
 
-                    txtChuSoHuu.Text = vehicle.Owner?.FullName ?? "Chưa xác định";
-                    txtSoKhung.Text = vehicle.ShassisNumber ?? "Chưa xác định";
-                    txtSoMay.Text = vehicle.EngineNumber ?? "Chưa xác định";
-                    txtNgayDangKy.Text = vehicle.RegistrationDate?.ToString("dd/MM/yyyy") ?? "Chưa xác định";
+                    txtChuSoHuu.Text = vehicle.Owner?.FullName ?? "Ch�a x�c �?nh";
+                    txtSoKhung.Text = vehicle.ShassisNumber ?? "Ch�a x�c �?nh";
+                    txtSoMay.Text = vehicle.EngineNumber ?? "Ch�a x�c �?nh";
+                    txtNgayDangKy.Text = vehicle.RegistrationDate?.ToString("dd/MM/yyyy") ?? "Ch�a x�c �?nh";
 
                     if (vehicle.VehicleType != null && !string.IsNullOrEmpty(vehicle.VehicleType.ImagePath))
                     {
@@ -144,7 +144,7 @@ namespace PBL3
                     }
                 }
 
-                // Tải dữ liệu vi phạm
+                // T?i d? li?u vi ph?m
                 var violations = await Task.Run(() => db.ViolationRecords
                     .Where(v => v.LicensePlate == _targetCccd)
                     .OrderByDescending(v => v.ViolationDate)
@@ -163,9 +163,9 @@ namespace PBL3
                         ViolationId = v.ViolationRecordId,
                         STT = stt++,
                         Date = fullDate,
-                        Rule = v.ViolationDescription ?? "Chưa có thông tin",
-                        Location = v.Address ?? "Chưa rõ",
-                        Status = v.Status == 0 ? "Chưa xử lý" : "Đã xử lý"
+                        Rule = v.ViolationDescription ?? "Ch�a c� th�ng tin",
+                        Location = v.Address ?? "Ch�a r?",
+                        Status = v.Status == 0 ? "Ch�a x? l?" : "�? x? l?"
                     });
                 }
 
@@ -177,7 +177,7 @@ namespace PBL3
             }
             catch (Exception ex)
             {
-                new CustomMessageBox("Lỗi tải chi tiết Phương tiện: " + ex.Message, "Lỗi kết nối").ShowDialog();
+                new CustomMessageBox("L?i t?i chi ti?t Ph��ng ti?n: " + ex.Message, "L?i k?t n?i").ShowDialog();
             }
         }
 
@@ -224,7 +224,12 @@ namespace PBL3
             }
         }
 
-        private void MenuInfo_Click(object sender, RoutedEventArgs e) { }
+        private void MenuInfo_Click(object sender, RoutedEventArgs e) {
+            if (_currentUser is Officer officer)
+            {
+                new OfficerProfileWindow(officer).ShowDialog();
+            }
+        }
 
         private void MenuLogout_Click(object sender, RoutedEventArgs e)
         {
@@ -271,7 +276,7 @@ namespace PBL3
         {
             get
             {
-                if (Status == "Đã xử lý") return new SolidColorBrush(Color.FromRgb(76, 175, 80)); // Green
+                if (Status == "�? x? l?") return new SolidColorBrush(Color.FromRgb(76, 175, 80)); // Green
                 return new SolidColorBrush(Color.FromRgb(198, 40, 40)); // Red
             }
         }
@@ -280,12 +285,13 @@ namespace PBL3
         {
             get
             {
-                if (Status == "Đã xử lý") 
+                if (Status == "�? x? l?") 
                     return "M12 2C6.5 2 2 6.5 2 12S6.5 22 12 22 22 17.5 22 12 17.5 2 12 2M10 17L5 12L6.41 10.59L10 14.17L17.59 6.58L19 8L10 17Z"; // Check
                 return "M13 14H11V9H13M13 18H11V16H13M1 21H23L12 2L1 21Z"; // Alert
             }
         }
     }
 }
+
 
 
