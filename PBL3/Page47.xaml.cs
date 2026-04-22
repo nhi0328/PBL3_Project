@@ -34,7 +34,7 @@ namespace PBL3
             _currentUser = user;
             if (_currentUser != null)
             {
-                txtUserName.Text = $"Quản trị viên"; // Hoặc _currentUser.HoTen nếu có
+                txtUserName.Text = _currentUser.FullName; // Hoặc _currentUser.HoTen nếu có
 
                 myBell.LoadData(_currentUser as Admin);
             }
@@ -67,14 +67,14 @@ namespace PBL3
                         );
                     }
 
-                    // Lọc theo loại (Dựa trên nội dung hoặc Tiêu đề)
-                    if (filter == "Tai nạn")
+                    // Lọc theo loại
+                    if (filter == "Đã xử lý")
                     {
-                        query = query.Where(c => c.Content.Contains("Tai nạn") || c.Title.Contains("Tai nạn"));
+                        query = query.Where(c => c.Status != 0);
                     }
-                    else if (filter == "Vi phạm")
+                    else if (filter == "Chưa xử lý")
                     {
-                        query = query.Where(c => c.Content.Contains("Vi phạm") || c.Content.Contains("Lỗi") || c.Title.Contains("Vi phạm"));
+                        query = query.Where(c => c.Status == 0);
                     }
 
                     var complaintsList = query.OrderByDescending(c => c.SubmitDate).ToList();
@@ -145,49 +145,39 @@ namespace PBL3
             }
         }
 
-        private void btnChuaXuLy_Click(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                using (var db = new TrafficSafetyDBContext())
-                {
-                    var list = db.Complaints.Include(c => c.Vehicle).ThenInclude(v => v.VehicleType).Where(c => c.Status == 0)
-                                            .OrderByDescending(c => c.SubmitDate)
-                                            .ToList();
-                    int stt = 1;
-                    var displayList = list.Select(c => new
-                    {
-                        STT = stt++,
-                        ComplaintId = c.ComplaintId,
-                        LoaiXe = c.Vehicle != null && c.Vehicle.VehicleType != null ? c.Vehicle.VehicleType.VehicleTypeName : "Không xác định",
-                        TieuDe = c.Title ?? "Không có tiêu đề",
-                        BienSoXe = c.LicensePlate ?? "Không xác định",
-                        SubmittedDate = c.SubmitDate != DateTime.MinValue ? c.SubmitDate.ToString("dd/MM/yyyy HH:mm") : "Chưa cập nhật",
-                        Status = "Chưa xử lý",
-                        StatusColor = "#C62828"
-                    }).ToList();
-
-                    if (dgComplaints != null)
-                    {
-                        dgComplaints.ItemsSource = displayList;
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                new CustomMessageBox("Lỗi: " + ex.Message).ShowDialog();
-            }
-        }
-
         private void BtnDetails_Click(object sender, RoutedEventArgs e)
         {
             if (sender is Button btn && btn.Tag != null)
             {
                 if (int.TryParse(btn.Tag.ToString(), out int complaintId))
                 {
-                    NavigationService.Navigate(new Page53(_currentUser, complaintId));
+                    NavigationService.Navigate(new Page54(_currentUser, complaintId));
                 }
             }
+        }
+
+        private void DataGridRow_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            if (sender is DataGridRow row && row.Item != null)
+            {
+                var item = row.Item;
+                var propertyInfo = item.GetType().GetProperty("ComplaintId");
+
+                if (propertyInfo != null)
+                {
+                    var complaintIdValue = propertyInfo.GetValue(item, null);
+
+                    if (complaintIdValue != null && int.TryParse(complaintIdValue.ToString(), out int complaintId))
+                    {
+                        NavigationService.Navigate(new Page54(_currentUser, complaintId));
+                    }
+                }
+            }
+        }
+
+        private void btnChuaXuLy_Click(object sender, RoutedEventArgs e)
+        {
+            // Removed functionality, used to prevent build error during Hot Reload
         }
 
         private void UserButton_Click(object sender, RoutedEventArgs e)
@@ -238,5 +228,6 @@ namespace PBL3
         }
     }
 }
+
 
 

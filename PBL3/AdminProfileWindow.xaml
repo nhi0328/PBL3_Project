@@ -1,0 +1,83 @@
+<Window x:Class="PBL3.AdminProfileWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Thông tin tài khoản" Height="450" Width="800"
+        WindowStyle="None" AllowsTransparency="True" Background="Transparent"
+        WindowStartupLocation="CenterScreen">
+    <Border Background="White" BorderBrush="#ccc" BorderThickness="1">
+        <Border.Effect>
+            <DropShadowEffect BlurRadius="15" Opacity="0.2" ShadowDepth="0"/>
+        </Border.Effect>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <!-- Close Button -->
+            <Button Grid.Row="0" HorizontalAlignment="Right" VerticalAlignment="Top" 
+                    Content="&#10006;" Foreground="#C62828" FontSize="24" FontWeight="Bold"
+                    Background="Transparent" BorderThickness="0" Margin="10" Cursor="Hand"
+                    Click="btnClose_Click"/>
+
+            <!-- Title -->
+            <TextBlock Grid.Row="0" Text="THÔNG TIN TÀI KHOẢN" FontSize="32" FontFamily="Calibri" 
+                       HorizontalAlignment="Center" Margin="0,30,0,30" Foreground="#111"/>
+
+            <!-- Content -->
+            <Grid Grid.Row="1" Margin="50,0,50,50">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="220"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Avatar -->
+                <Border BorderBrush="Black" BorderThickness="1" Width="200" Height="250" HorizontalAlignment="Left" VerticalAlignment="Top">
+                    <Grid>
+                        <Image x:Name="imgAvatar" Stretch="UniformToFill"/>
+                        <TextBlock x:Name="txtNoImage" Text="Không có ảnh" Foreground="Gray" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="Collapsed"/>
+                    </Grid>
+                </Border>
+
+                <!-- Details -->
+                <Grid Grid.Column="1" Margin="20,0,0,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="180"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="50"/>
+                        <RowDefinition Height="50"/>
+                        <RowDefinition Height="50"/>
+                        <RowDefinition Height="50"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <!-- Row 0 -->
+                    <TextBlock Grid.Row="0" Grid.Column="0" Text="Tên tài khoản:" FontSize="22" FontFamily="Calibri" VerticalAlignment="Center"/>
+                    <Border Grid.Row="0" Grid.Column="1" BorderBrush="Black" BorderThickness="1,1,1,0" Padding="15,0">
+                        <TextBlock x:Name="txtFullName" Text="..." FontSize="22" FontFamily="Calibri" VerticalAlignment="Center" Foreground="#333"/>
+                    </Border>
+
+                    <!-- Row 1 -->
+                    <TextBlock Grid.Row="1" Grid.Column="0" Text="ID tài khoản:" FontSize="22" FontFamily="Calibri" VerticalAlignment="Center"/>
+                    <Border Grid.Row="1" Grid.Column="1" BorderBrush="Black" BorderThickness="1,1,1,0" Padding="15,0">
+                        <TextBlock x:Name="txtAdminId" Text="..." FontSize="22" FontFamily="Calibri" VerticalAlignment="Center" Foreground="#333"/>
+                    </Border>
+
+                    <!-- Row 2 -->
+                    <TextBlock Grid.Row="2" Grid.Column="0" Text="Tên đăng nhập:" FontSize="22" FontFamily="Calibri" VerticalAlignment="Center"/>
+                    <Border Grid.Row="2" Grid.Column="1" BorderBrush="Black" BorderThickness="1,1,1,0" Padding="15,0">
+                        <TextBlock x:Name="txtUsername" Text="..." FontSize="22" FontFamily="Calibri" VerticalAlignment="Center" Foreground="#333"/>
+                    </Border>
+
+                    <!-- Row 3 -->
+                    <TextBlock Grid.Row="3" Grid.Column="0" Text="Mật khẩu:" FontSize="22" FontFamily="Calibri" VerticalAlignment="Center"/>
+                    <Border Grid.Row="3" Grid.Column="1" BorderBrush="Black" BorderThickness="1" Padding="15,0">
+                        <TextBlock x:Name="txtPassword" Text="********" FontSize="22" FontFamily="Calibri" VerticalAlignment="Center" Foreground="#333"/>
+                    </Border>
+                </Grid>
+            </Grid>
+        </Grid>
+    </Border>
+</Window>

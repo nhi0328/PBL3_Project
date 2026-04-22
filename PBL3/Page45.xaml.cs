@@ -36,7 +36,7 @@ namespace PBL3
             _currentUser = user;
             if (_currentUser != null)
             {
-                txtUserName.Text = $"Quản trị viên"; // Hoặc _currentUser.HoTen nếu có
+                txtUserName.Text = _currentUser.FullName; // Hoặc _currentUser.HoTen nếu có
 
                 myBell.LoadData(_currentUser as Admin);
             }
@@ -220,5 +220,6 @@ namespace PBL3
         }
     }
 }
+
 
 
