@@ -1,4 +1,4 @@
-using System;
+Ôªøusing System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -21,20 +21,20 @@ namespace PBL3
     {
         private readonly Admin _currentUser;
 
-        // Constructor m?c ?nh
+        // Constructor m?c ƒë?nh
         public Page47()
         {
             InitializeComponent();
             this.Loaded += Page47_Loaded;
         }
 
-        // Constructor chÌnh
+        // Constructor ch√≠nh
         public Page47(Admin user) : this()
         {
             _currentUser = user;
             if (_currentUser != null)
             {
-                txtUserName.Text = _currentUser.FullName; // Ho?c _currentUser.HoTen n?u cÛ
+                txtUserName.Text = _currentUser.FullName; // Ho?c _currentUser.HoTen n?u c√≥
 
                 myBell.LoadData(_currentUser as Admin);
             }
@@ -52,11 +52,11 @@ namespace PBL3
             {
                 using (var db = new TrafficSafetyDBContext())
                 {
-                    // L?y t?t c? ph?n ·nh
+                    // L?y t?t c? ph?n √°nh
                     var query = db.Complaints.Include(c => c.Vehicle).ThenInclude(v => v.VehicleType).AsQueryable();
 
-                    // T?m ki?m theo t? khÛa (Bi?n s? xe, ID ng˝?i g?i, TiÍu ? ho?c N?i dung)
-                    if (!string.IsNullOrEmpty(searchText) && searchText != "T?m ki?m ph?n ·nh...")
+                    // T?m ki?m theo t? kh√≥a (Bi?n s? xe, ID ng∆∞?i g?i, Ti√™u ƒë? ho?c N?i dung)
+                    if (!string.IsNullOrEmpty(searchText) && searchText != "T?m ki?m ph?n √°nh...")
                     {
                         var searchLower = searchText.ToLower();
                         query = query.Where(c =>
@@ -68,35 +68,35 @@ namespace PBL3
                     }
 
                     // L?c theo lo?i
-                    if (filter == "–? x? l?")
+                    if (filter == "ƒê√£ x·ª≠ l√Ω")
                     {
                         query = query.Where(c => c.Status != 0);
                     }
-                    else if (filter == "Ch˝a x? l?")
+                    else if (filter == "Ch∆∞a x·ª≠ l√Ω")
                     {
                         query = query.Where(c => c.Status == 0);
                     }
 
                     var complaintsList = query.OrderByDescending(c => c.SubmitDate).ToList();
 
-                    // –?m s? l˝?ng ın ch˝a x? l? (Gi? ?nh Status = 0 l‡ ch˝a x? l?)
+                    // ƒê?m s? l∆∞?ng ƒë∆°n ch∆∞a x? l? (Gi? ƒë?nh Status = 0 l√† ch∆∞a x? l?)
                     int chuaXuLyCount = db.Complaints.Count(c => c.Status == 0);
                     if (txtChuaXuLy != null)
                     {
-                        txtChuaXuLy.Text = $"Ch˝a x? l? ({chuaXuLyCount})";
+                        txtChuaXuLy.Text = $"Ch∆∞a x·ª≠ l√Ω ({chuaXuLyCount})";
                     }
 
-                    // Map d? li?u hi?n th? lÍn DataGrid
+                    // Map d? li?u hi?n th? l√™n DataGrid
                     int stt = 1;
                     var displayList = complaintsList.Select(c => new
                     {
                         STT = stt++,
                         ComplaintId = c.ComplaintId,
-                        LoaiXe = c.Vehicle != null && c.Vehicle.VehicleType != null ? c.Vehicle.VehicleType.VehicleTypeName : "KhÙng x·c ?nh",
-                        TieuDe = c.Title ?? "KhÙng cÛ tiÍu ?",
-                        BienSoXe = c.LicensePlate ?? "KhÙng x·c ?nh",
-                        SubmittedDate = c.SubmitDate != DateTime.MinValue ? c.SubmitDate.ToString("dd/MM/yyyy HH:mm") : "Ch˝a c?p nh?t",
-                        Status = (c.Status == 0) ? "Ch˝a x? l?" : "–? x? l?",
+                        LoaiXe = c.Vehicle != null && c.Vehicle.VehicleType != null ? c.Vehicle.VehicleType.VehicleTypeName : "Kh√¥ng x√°c ƒë?nh",
+                        TieuDe = c.Title ?? "Kh√¥ng c√≥ ti√™u ƒë?",
+                        BienSoXe = c.LicensePlate ?? "Kh√¥ng x√°c ƒë·ªãnh",
+                        SubmittedDate = c.SubmitDate != DateTime.MinValue ? c.SubmitDate.ToString("dd/MM/yyyy HH:mm") : "Ch∆∞a c·∫≠p nh·∫≠t",
+                        Status = (c.Status == 0) ? "Ch∆∞a x·ª≠ l√Ω" : "ƒê√£ x·ª≠ l√Ω",
                         StatusColor = (c.Status == 0) ? "#C62828" : "#2E7D32"
                     }).ToList();
 
@@ -108,13 +108,13 @@ namespace PBL3
             }
             catch (Exception ex)
             {
-                new CustomMessageBox("L?i t?i d? li?u ph?n ·nh: " + ex.Message).ShowDialog();
+                new CustomMessageBox("L·ªói t·∫£i d·ªØ li·ªáu ph·∫£n √°nh: " + ex.Message).ShowDialog();
             }
         }
 
         private void txtSearch_GotFocus(object sender, RoutedEventArgs e)
         {
-            if (txtSearch.Text == "T?m ki?m ph?n ·nh...")
+            if (txtSearch.Text == "T√¨m ki·∫øm ph·∫£n √°nh...")
             {
                 txtSearch.Text = "";
                 txtSearch.Foreground = Brushes.Black;
@@ -125,14 +125,14 @@ namespace PBL3
         {
             if (string.IsNullOrWhiteSpace(txtSearch.Text))
             {
-                txtSearch.Text = "T?m ki?m ph?n ·nh...";
+                txtSearch.Text = "T√¨m ki·∫øm ph·∫£n √°nh...";
                 txtSearch.Foreground = Brushes.Gray;
             }
         }
 
         private void btnSearch_Click(object sender, RoutedEventArgs e)
         {
-            string filter = (cbFilter.SelectedItem as ComboBoxItem)?.Content.ToString() ?? "T?t c?";
+            string filter = (cbFilter.SelectedItem as ComboBoxItem)?.Content.ToString() ?? "T·∫•t c·∫£";
             LoadData(txtSearch.Text, filter);
         }
 
@@ -140,7 +140,7 @@ namespace PBL3
         {
             if (IsLoaded)
             {
-                string filter = (cbFilter.SelectedItem as ComboBoxItem)?.Content.ToString() ?? "T?t c?";
+                string filter = (cbFilter.SelectedItem as ComboBoxItem)?.Content.ToString() ?? "T·∫•t c·∫£";
                 LoadData(txtSearch.Text, filter);
             }
         }

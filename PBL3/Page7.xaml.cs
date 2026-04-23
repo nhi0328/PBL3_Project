@@ -40,7 +40,7 @@ namespace PBL3
 
         private void MenuInfo_Click(object sender, RoutedEventArgs e)
         {
-            NavigationService.Navigate(new Page6()); // Trang thông tin cá nhân
+            NavigationService.Navigate(new Page7(_currentUser as Customer));
         }
 
         private void UserButton_Click(object sender, RoutedEventArgs e)
@@ -176,6 +176,27 @@ namespace PBL3
                 {
                     NavigationService.Navigate(new Page30(_currentUser));
                 }
+            }
+        }
+
+        // Sự kiện chặn click để xác nhận đổi giới tính
+        private void Gender_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            var radioButton = sender as RadioButton;
+
+            // Nếu nút này đã được chọn sẵn rồi thì không cần hỏi gì cả
+            if (radioButton.IsChecked == true) return;
+
+            // Hiển thị hộp thoại hỏi người dùng
+            var result = MessageBox.Show("Bạn có chắc chắn muốn thay đổi giới tính không?",
+                                         "Xác nhận thay đổi",
+                                         MessageBoxButton.YesNo,
+                                         MessageBoxImage.Question);
+
+            // Nếu người dùng chọn No (Không), ta sẽ HỦY bỏ sự kiện click chuột này
+            if (result == MessageBoxResult.No)
+            {
+                e.Handled = true; // Dòng này cực mạnh, chặn không cho UI đổi trạng thái
             }
         }
 

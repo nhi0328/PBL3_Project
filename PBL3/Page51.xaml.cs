@@ -1,4 +1,4 @@
-using System;
+Ôªøusing System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -23,21 +23,21 @@ namespace PBL3
         private readonly Admin _currentUser;
         private readonly LuatItem _currentLuat;
 
-        // Constructor m?c ?nh
+        // Constructor m?c ƒë?nh
         public Page51()
         {
             InitializeComponent();
             this.Loaded += Page51_Loaded;
         }
 
-        // Constructor chÌnh
+        // Constructor ch√≠nh
         public Page51(LuatItem luat, Admin user) : this()
         {
             _currentLuat = luat;
             _currentUser = user;
             if (_currentUser != null)
             {
-                txtUserName.Text = _currentUser.FullName; // Ho?c _currentUser.HoTen n?u cÛ
+                txtUserName.Text = _currentUser.FullName; // Ho?c _currentUser.HoTen n?u c√≥
 
                 myBell.LoadData(_currentUser as Admin);
             }
@@ -61,7 +61,7 @@ namespace PBL3
             if (_currentLuat.HasPhatTienXeMay)
             {
                 spPhatXeMay.Visibility = Visibility.Visible;
-                txtPhatXeMay.Text = $"Ph?t ti?n t? {_currentLuat.PhatTienXeMay} ?i v?i ng˝?i i?u khi?n xe mÙ tÙ, xe m·y";
+                txtPhatXeMay.Text = $"Ph·∫°t ti·ªÅn t·ª´ {_currentLuat.PhatTienXeMay} ƒë·ªëi v·ªõi ng∆∞·ªùi ƒëi·ªÅu khi·ªÉn xe m√¥ t√¥, xe m√°y";
             }
             else
             {
@@ -71,7 +71,7 @@ namespace PBL3
             if (_currentLuat.HasPhatTienOto)
             {
                 spPhatOto.Visibility = Visibility.Visible;
-                txtPhatOto.Text = $"Ph?t ti?n t? {_currentLuat.PhatTienOto} ?i v?i ng˝?i i?u khi?n xe ‘ tÙ";
+                txtPhatOto.Text = $"Ph·∫°t ti·ªÅn t·ª´ {_currentLuat.PhatTienOto} ƒë·ªëi v·ªõi ng∆∞·ªùi ƒëi·ªÅu khi·ªÉn xe √î t√¥";
             }
             else
             {
@@ -89,7 +89,7 @@ namespace PBL3
             }
         }
 
-        // --- C¡C H¿M T?M KI?M & L?C ---
+        // --- C√ÅC H√ÄM T?M KI?M & L?C ---
         private void btnSearch_Click(object sender, RoutedEventArgs e) { }
         private void txtIdentifier_TextChanged(object sender, TextChangedEventArgs e) { }
 
@@ -107,7 +107,7 @@ namespace PBL3
                     stringBuilder.Append(c);
                 }
             }
-            return stringBuilder.ToString().Normalize(System.Text.NormalizationForm.FormC).Replace('', 'd').Replace('–', 'D').ToLower();
+            return stringBuilder.ToString().Normalize(System.Text.NormalizationForm.FormC).Replace('ƒë', 'd').Replace('ƒê', 'D').ToLower();
         }
 
         private void FilterLaws()
@@ -187,7 +187,7 @@ namespace PBL3
                     NgayBanHanh = _currentLuat.NgayBanHanh,
                     NgayHieuLuc = _currentLuat.NgayHieuLuc
                 };
-                //NavigationService.Navigate(new Page52(l, _currentUser));
+                NavigationService.Navigate(new Page52(l, _currentUser));
             }
         }
 
@@ -195,7 +195,7 @@ namespace PBL3
         {
             if (_currentLuat == null) return;
 
-            MessageBoxResult result = MessageBox.Show($"B?n cÛ ch?c ch?n mu?n xo· lu?t '{_currentLuat.TenLoi}' khÙng?", "X·c nh?n Xo·", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+            MessageBoxResult result = MessageBox.Show($"B·∫°n c√≥ ch·∫Øc ch·∫Øn mu·ªën xo√° lu·∫≠t '{_currentLuat.TenLoi}' kh√¥ng?", "X√°c nh·∫≠n Xo√°", MessageBoxButton.YesNo, MessageBoxImage.Warning);
 
             if (result == MessageBoxResult.Yes)
             {
@@ -210,19 +210,19 @@ namespace PBL3
                             db.TrafficLaws.Remove(lawToDelete);
                             db.SaveChanges();
 
-                            new CustomMessageBox("–? xo· lu?t th‡nh cÙng.", "ThÙng b·o").ShowDialog();
+                            new CustomMessageBox("ƒê√£ xo√° lu·∫≠t th√†nh c√¥ng.", "Th√¥ng b√°o").ShowDialog();
 
                             NavigationService.Navigate(new Page45(_currentUser));
                         }
                         else
                         {
-                            new CustomMessageBox("KhÙng t?m th?y lu?t trÍn h? th?ng. CÛ th? nÛ ? b? xÛa tr˝?c Û.", "L?i").ShowDialog();
+                            new CustomMessageBox("Kh√¥ng t√¨m th·∫•y lu·∫≠t tr√™n h·ªá th·ªëng. C√≥ th·ªÉ n√≥ ƒë√£ b·ªã x√≥a tr∆∞·ªõc ƒë√≥.", "L·ªói").ShowDialog();
                         }
                     }
                 }
                 catch (Exception ex)
                 {
-                    new CustomMessageBox("L?i khi Xo· CSDL: " + ex.Message, "L?i").ShowDialog();
+                    new CustomMessageBox("L·ªói khi Xo√° CSDL: " + ex.Message, "L·ªói").ShowDialog();
                 }
             }
         }

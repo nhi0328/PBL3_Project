@@ -197,7 +197,7 @@
                                 <RowDefinition Height="55"/>
                                 <RowDefinition Height="55"/>
                             </Grid.RowDefinitions>
-                            <TextBlock Grid.Row="0" Text="Quản lý" Foreground="#C62828" FontFamily="Calibri" FontSize="35" VerticalAlignment="Center" Margin="40,15,0,0"/>
+                            <TextBlock Grid.Row="0" Text="Thông tin" Foreground="#C62828" FontFamily="Calibri" FontSize="35" VerticalAlignment="Center" Margin="40,15,0,0"/>
                             <TextBlock Grid.Row="1" Text="phương tiện" Foreground="#C62828" FontFamily="Calibri" FontSize="35" VerticalAlignment="Center" Margin="40,0,0,15"/>
                         </Grid>
                     </StackPanel>

@@ -442,54 +442,64 @@
                             </Grid.RowDefinitions>
 
                             <TextBlock Grid.Row="0" Text="Tiêu đề" FontSize="18" FontFamily="Calibri" Foreground="#333" Margin="0,0,0,5"/>
-                            <Border Grid.Row="1" Margin="0,0,0,15" BorderBrush="#CCC" BorderThickness="1" CornerRadius="5">
-                                <TextBox x:Name="txtTieuDe" Text="Tên luật" Foreground="Gray" FontSize="18" FontFamily="Calibri" Padding="10,5" BorderThickness="0" Background="Transparent">
-                                    <TextBox.Style>
-                                        <Style TargetType="TextBox">
-                                            <Style.Resources>
-                                                <VisualBrush x:Key="CueBannerBrush" AlignmentX="Left" AlignmentY="Center" Stretch="None">
-                                                    <VisualBrush.Visual>
-                                                        <Label Content="Tên luật" Foreground="Gray" FontSize="18" FontFamily="Calibri" Padding="5,0,0,0"/>
-                                                    </VisualBrush.Visual>
-                                                </VisualBrush>
-                                            </Style.Resources>
-                                            <Style.Triggers>
-                                                <Trigger Property="Text" Value="">
-                                                    <Setter Property="Background" Value="{StaticResource CueBannerBrush}"/>
-                                                </Trigger>
-                                                <Trigger Property="IsKeyboardFocused" Value="True">
-                                                    <Setter Property="Background" Value="Transparent"/>
-                                                </Trigger>
-                                            </Style.Triggers>
-                                        </Style>
-                                    </TextBox.Style>
-                                </TextBox>
+                            <Border Grid.Row="1" BorderBrush="#CCC" BorderThickness="1" CornerRadius="5" Background="White">
+                                <Grid>
+                                    <TextBlock Text="Nhập tiêu đề luật..." Foreground="Gray" FontSize="18" FontFamily="Calibri" Margin="10,0,0,0" VerticalAlignment="Center" IsHitTestVisible="False">
+                                        <TextBlock.Style>
+                                            <Style TargetType="TextBlock">
+                                                <Setter Property="Visibility" Value="Collapsed"/>
+                                                <Style.Triggers>
+                                                    <MultiDataTrigger>
+                                                        <MultiDataTrigger.Conditions>
+                                                            <Condition Binding="{Binding Text, ElementName=txtTieuDe}" Value=""/>
+                                                            <Condition Binding="{Binding IsKeyboardFocused, ElementName=txtTieuDe}" Value="False"/>
+                                                        </MultiDataTrigger.Conditions>
+                                                        <Setter Property="Visibility" Value="Visible"/>
+                                                    </MultiDataTrigger>
+                                                    <MultiDataTrigger>
+                                                        <MultiDataTrigger.Conditions>
+                                                            <Condition Binding="{Binding Text, ElementName=txtTieuDe}" Value="{x:Null}"/>
+                                                            <Condition Binding="{Binding IsKeyboardFocused, ElementName=txtTieuDe}" Value="False"/>
+                                                        </MultiDataTrigger.Conditions>
+                                                        <Setter Property="Visibility" Value="Visible"/>
+                                                    </MultiDataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </TextBlock.Style>
+                                    </TextBlock>
+                                    <TextBox x:Name="txtTieuDe" Text="{Binding TieuDe, UpdateSourceTrigger=PropertyChanged}" Foreground="#333" FontSize="18" FontFamily="Calibri" Padding="10,5" BorderThickness="0" Background="Transparent"/>
+                                </Grid>
                             </Border>
-
-                            <!-- Nghị định -->
+                            
+                            
                             <TextBlock Grid.Row="2" Text="Nghị định" FontSize="18" FontFamily="Calibri" Foreground="#333" Margin="0,0,0,5"/>
-                            <Border Grid.Row="3" Margin="0,0,0,15" BorderBrush="#CCC" BorderThickness="1" CornerRadius="5">
-                                <TextBox x:Name="txtNghiDinh" Text="Nghị định" Foreground="Gray" FontSize="18" FontFamily="Calibri" Padding="10,5" BorderThickness="0" Background="Transparent">
-                                    <TextBox.Style>
-                                        <Style TargetType="TextBox">
-                                            <Style.Resources>
-                                                <VisualBrush x:Key="CueBannerBrush" AlignmentX="Left" AlignmentY="Center" Stretch="None">
-                                                    <VisualBrush.Visual>
-                                                        <Label Content="Nghị định" Foreground="Gray" FontSize="18" FontFamily="Calibri" Padding="5,0,0,0"/>
-                                                    </VisualBrush.Visual>
-                                                </VisualBrush>
-                                            </Style.Resources>
-                                            <Style.Triggers>
-                                                <Trigger Property="Text" Value="">
-                                                    <Setter Property="Background" Value="{StaticResource CueBannerBrush}"/>
-                                                </Trigger>
-                                                <Trigger Property="IsKeyboardFocused" Value="True">
-                                                    <Setter Property="Background" Value="Transparent"/>
-                                                </Trigger>
-                                            </Style.Triggers>
-                                        </Style>
-                                    </TextBox.Style>
-                                </TextBox>
+                            <Border Grid.Row="3" BorderBrush="#CCC" BorderThickness="1" CornerRadius="5" Background="White">
+                                <Grid>
+                                    <TextBlock Text="Nhập nghị định..." Foreground="Gray" FontSize="18" FontFamily="Calibri" Margin="10,0,0,0" VerticalAlignment="Center" IsHitTestVisible="False">
+                                        <TextBlock.Style>
+                                            <Style TargetType="TextBlock">
+                                                <Setter Property="Visibility" Value="Collapsed"/>
+                                                <Style.Triggers>
+                                                    <MultiDataTrigger>
+                                                        <MultiDataTrigger.Conditions>
+                                                            <Condition Binding="{Binding Text, ElementName=txtNghiDinh}" Value=""/>
+                                                            <Condition Binding="{Binding IsKeyboardFocused, ElementName=txtNghiDinh}" Value="False"/>
+                                                        </MultiDataTrigger.Conditions>
+                                                        <Setter Property="Visibility" Value="Visible"/>
+                                                    </MultiDataTrigger>
+                                                    <MultiDataTrigger>
+                                                        <MultiDataTrigger.Conditions>
+                                                            <Condition Binding="{Binding Text, ElementName=txtNghiDinh}" Value="{x:Null}"/>
+                                                            <Condition Binding="{Binding IsKeyboardFocused, ElementName=txtNghiDinh}" Value="False"/>
+                                                        </MultiDataTrigger.Conditions>
+                                                        <Setter Property="Visibility" Value="Visible"/>
+                                                    </MultiDataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </TextBlock.Style>
+                                    </TextBlock>
+                                    <TextBox x:Name="txtNghiDinh" Text="{Binding NghiDinh, UpdateSourceTrigger=PropertyChanged}" Foreground="#333" FontSize="18" FontFamily="Calibri" Padding="10,5" BorderThickness="0" Background="Transparent"/>
+                                </Grid>
                             </Border>
 
                             <!-- Ngày ban hành & Ngày có hiệu lực -->
@@ -555,94 +565,106 @@
                                                 <ColumnDefinition Width="30"/>
                                             </Grid.ColumnDefinitions>
 
-                                            <Border Grid.Column="0" BorderBrush="#CCC" BorderThickness="1" CornerRadius="5">
-                                                <ComboBox Text="{Binding LoaiXe, UpdateSourceTrigger=PropertyChanged}" 
-                                      ItemsSource="{Binding RelativeSource={RelativeSource AncestorType=Page}, Path=AvailableCategories}"
-                                      IsEditable="True"
-                                      Foreground="Gray" FontSize="18" FontFamily="Calibri" Padding="10,5" BorderThickness="0" Background="Transparent"
-                                      LostFocus="LoaiXeComboBox_LostFocus">
-                                                    <ComboBox.Style>
-                                                        <Style TargetType="ComboBox">
-                                                            <Style.Resources>
-                                                                <VisualBrush x:Key="CueBannerBrush" AlignmentX="Left" AlignmentY="Center" Stretch="None">
-                                                                    <VisualBrush.Visual>
-                                                                        <Label Content="Loại xe" Foreground="Gray" FontSize="18" FontFamily="Calibri" Padding="5,0,0,0"/>
-                                                                    </VisualBrush.Visual>
-                                                                </VisualBrush>
-                                                            </Style.Resources>
-                                                            <Style.Triggers>
-                                                                <Trigger Property="Text" Value="">
-                                                                    <Setter Property="Background" Value="{StaticResource CueBannerBrush}"/>
-                                                                </Trigger>
-                                                                <Trigger Property="IsKeyboardFocusWithin" Value="True">
-                                                                    <Setter Property="Background" Value="Transparent"/>
-                                                                </Trigger>
-                                                            </Style.Triggers>
-                                                        </Style>
-                                                    </ComboBox.Style>
-                                                </ComboBox>
+                                            <Border Grid.Column="0" BorderBrush="#CCC" BorderThickness="1" CornerRadius="10" Background="White">
+                                                <Grid>
+                                                    <ComboBox x:Name="cbPhuongTien" Text="{Binding LoaiXe, UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding RelativeSource={RelativeSource AncestorType=Page}, Path=AvailableCategories}" IsEditable="True" Foreground="#333" FontSize="18" FontFamily="Calibri" Margin="10" BorderThickness="0" Background="Transparent" LostFocus="LoaiXeComboBox_LostFocus"/>
+                                                    <TextBlock Text="Phương tiện" Foreground="Gray" FontSize="18" FontFamily="Calibri" Margin="10,0,0,0" VerticalAlignment="Center" IsHitTestVisible="False">
+                                                        <TextBlock.Style>
+                                                            <Style TargetType="TextBlock">
+                                                                <Setter Property="Visibility" Value="Collapsed"/>
+                                                                <Style.Triggers>
+                                                                    <MultiDataTrigger>
+                                                                        <MultiDataTrigger.Conditions>
+                                                                            <Condition Binding="{Binding Text, ElementName=cbPhuongTien}" Value=""/>
+                                                                            <Condition Binding="{Binding IsKeyboardFocusWithin, ElementName=cbPhuongTien}" Value="False"/>
+                                                                        </MultiDataTrigger.Conditions>
+                                                                        <Setter Property="Visibility" Value="Visible"/>
+                                                                    </MultiDataTrigger>
+                                                                    <MultiDataTrigger>
+                                                                        <MultiDataTrigger.Conditions>
+                                                                            <Condition Binding="{Binding Text, ElementName=cbPhuongTien}" Value="{x:Null}"/>
+                                                                            <Condition Binding="{Binding IsKeyboardFocusWithin, ElementName=cbPhuongTien}" Value="False"/>
+                                                                        </MultiDataTrigger.Conditions>
+                                                                        <Setter Property="Visibility" Value="Visible"/>
+                                                                    </MultiDataTrigger>
+                                                                </Style.Triggers>
+                                                            </Style>
+                                                        </TextBlock.Style>
+                                                    </TextBlock>
+                                                    
+                                                </Grid>
                                             </Border>
 
-                                            <Border Grid.Column="2" BorderBrush="#CCC" BorderThickness="1" CornerRadius="5">
-                                                <TextBox Text="{Binding MucPhat, UpdateSourceTrigger=PropertyChanged}" Foreground="Gray" FontSize="18" FontFamily="Calibri" Padding="10,5" BorderThickness="0" Background="Transparent">
-                                                    <TextBox.Style>
-                                                        <Style TargetType="TextBox">
-                                                            <Style.Resources>
-                                                                <VisualBrush x:Key="CueBannerBrush" AlignmentX="Left" AlignmentY="Center" Stretch="None">
-                                                                    <VisualBrush.Visual>
-                                                                        <Label Content="Mức phạt" Foreground="Gray" FontSize="18" FontFamily="Calibri" Padding="5,0,0,0"/>
-                                                                    </VisualBrush.Visual>
-                                                                </VisualBrush>
-                                                            </Style.Resources>
-                                                            <Style.Triggers>
-                                                                <Trigger Property="Text" Value="">
-                                                                    <Setter Property="Background" Value="{StaticResource CueBannerBrush}"/>
-                                                                </Trigger>
-                                                                <Trigger Property="IsKeyboardFocused" Value="True">
-                                                                    <Setter Property="Background" Value="Transparent"/>
-                                                                </Trigger>
-                                                            </Style.Triggers>
-                                                        </Style>
-                                                    </TextBox.Style>
-                                                </TextBox>
+                                            <Border Grid.Column="2" BorderBrush="#CCC" BorderThickness="1" CornerRadius="10" Background="White">
+                                                <Grid>
+                                                    <TextBlock Text="Mức phạt" Foreground="Gray" FontSize="18" FontFamily="Calibri" Margin="10,0,0,0" VerticalAlignment="Center" IsHitTestVisible="False">
+                                                        <TextBlock.Style>
+                                                            <Style TargetType="TextBlock">
+                                                                <Setter Property="Visibility" Value="Collapsed"/>
+                                                                <Style.Triggers>
+                                                                    <MultiDataTrigger>
+                                                                        <MultiDataTrigger.Conditions>
+                                                                            <Condition Binding="{Binding Text, ElementName=txtMucPhat}" Value=""/>
+                                                                            <Condition Binding="{Binding IsKeyboardFocused, ElementName=txtMucPhat}" Value="False"/>
+                                                                        </MultiDataTrigger.Conditions>
+                                                                        <Setter Property="Visibility" Value="Visible"/>
+                                                                    </MultiDataTrigger>
+                                                                    <MultiDataTrigger>
+                                                                        <MultiDataTrigger.Conditions>
+                                                                            <Condition Binding="{Binding Text, ElementName=txtMucPhat}" Value="{x:Null}"/>
+                                                                            <Condition Binding="{Binding IsKeyboardFocused, ElementName=txtMucPhat}" Value="False"/>
+                                                                        </MultiDataTrigger.Conditions>
+                                                                        <Setter Property="Visibility" Value="Visible"/>
+                                                                    </MultiDataTrigger>
+                                                                </Style.Triggers>
+                                                            </Style>
+                                                        </TextBlock.Style>
+                                                    </TextBlock>
+                                                    <TextBox x:Name="txtMucPhat" Text="{Binding MucPhat, UpdateSourceTrigger=PropertyChanged}" Foreground="#333" FontSize="18" FontFamily="Calibri" Padding="10,5" BorderThickness="0" Background="Transparent"/>
+                                                </Grid>
                                             </Border>
 
-                                            <Border Grid.Column="4" BorderBrush="#CCC" BorderThickness="1" CornerRadius="5">
-                                                <TextBox Text="{Binding TruDiem, UpdateSourceTrigger=PropertyChanged}" Foreground="Gray" FontSize="18" FontFamily="Calibri" Padding="10,5" BorderThickness="0" Background="Transparent">
-                                                    <TextBox.Style>
-                                                        <Style TargetType="TextBox">
-                                                            <Style.Resources>
-                                                                <VisualBrush x:Key="CueBannerBrush" AlignmentX="Left" AlignmentY="Center" Stretch="None">
-                                                                    <VisualBrush.Visual>
-                                                                        <Label Content="Điểm trừ" Foreground="Gray" FontSize="18" FontFamily="Calibri" Padding="5,0,0,0"/>
-                                                                    </VisualBrush.Visual>
-                                                                </VisualBrush>
-                                                            </Style.Resources>
-                                                            <Style.Triggers>
-                                                                <Trigger Property="Text" Value="">
-                                                                    <Setter Property="Background" Value="{StaticResource CueBannerBrush}"/>
-                                                                </Trigger>
-                                                                <Trigger Property="IsKeyboardFocused" Value="True">
-                                                                    <Setter Property="Background" Value="Transparent"/>
-                                                                </Trigger>
-                                                            </Style.Triggers>
-                                                        </Style>
-                                                    </TextBox.Style>
-                                                </TextBox>
+                                            <Border Grid.Column="4" BorderBrush="#CCC" BorderThickness="1" CornerRadius="10" Background="White">
+                                                <Grid>
+                                                    <TextBlock Text="Điểm trừ" Foreground="Gray" FontSize="18" FontFamily="Calibri" Margin="10,0,0,0" VerticalAlignment="Center" IsHitTestVisible="False">
+                                                        <TextBlock.Style>
+                                                            <Style TargetType="TextBlock">
+                                                                <Setter Property="Visibility" Value="Collapsed"/>
+                                                                <Style.Triggers>
+                                                                    <MultiDataTrigger>
+                                                                        <MultiDataTrigger.Conditions>
+                                                                            <Condition Binding="{Binding Text, ElementName=txtDiemTru}" Value=""/>
+                                                                            <Condition Binding="{Binding IsKeyboardFocused, ElementName=txtDiemTru}" Value="False"/>
+                                                                        </MultiDataTrigger.Conditions>
+                                                                        <Setter Property="Visibility" Value="Visible"/>
+                                                                    </MultiDataTrigger>
+                                                                    <MultiDataTrigger>
+                                                                        <MultiDataTrigger.Conditions>
+                                                                            <Condition Binding="{Binding Text, ElementName=txtDiemTru}" Value="{x:Null}"/>
+                                                                            <Condition Binding="{Binding IsKeyboardFocused, ElementName=txtDiemTru}" Value="False"/>
+                                                                        </MultiDataTrigger.Conditions>
+                                                                        <Setter Property="Visibility" Value="Visible"/>
+                                                                    </MultiDataTrigger>
+                                                                </Style.Triggers>
+                                                            </Style>
+                                                        </TextBlock.Style>
+                                                    </TextBlock>
+                                                    <TextBox x:Name="txtDiemTru" Text="{Binding TruDiem, UpdateSourceTrigger=PropertyChanged}" 
+                                 Foreground="#333" FontSize="18" FontFamily="Calibri" Padding="10,5" BorderThickness="0" Background="Transparent"/>
+                                                </Grid>
                                             </Border>
 
                                             <Button Grid.Column="5" Content="✕"
-                                Visibility="{Binding RemoveBtnVisibility}" 
-                                Click="btnXoaPhuongTien_Click" 
-                                Background="Transparent" BorderThickness="0" 
-                                Foreground="Gray" FontSize="18" 
-                                Cursor="Hand" HorizontalAlignment="Center" VerticalAlignment="Center"
-                                Margin="5,0,0,0"/>
+                        Visibility="{Binding RemoveBtnVisibility}" 
+                        Click="btnXoaPhuongTien_Click" 
+                        Background="Transparent" BorderThickness="0" 
+                        Foreground="Gray" FontSize="18" 
+                        Cursor="Hand" HorizontalAlignment="Center" VerticalAlignment="Center"
+                        Margin="5,0,0,0"/>
                                         </Grid>
                                     </DataTemplate>
                                 </ItemsControl.ItemTemplate>
                             </ItemsControl>
-
                             <Button Grid.Row="6" Content="+Thêm phương tiện" HorizontalAlignment="Left" Width="140" Height="40" Background="#C62828" Foreground="White" BorderThickness="0" FontSize="16" FontFamily="Calibri" Cursor="Hand" Margin="0,0,15,15" Click="btnThemPhuongTien_Click">
                                 <Button.Template>
                                     <ControlTemplate TargetType="Button">
@@ -660,7 +682,7 @@
 
                             <!-- Buttons -->
                             <StackPanel Grid.Row="7" Orientation="Horizontal" Margin="0,0,0,0">
-                                <Button x:Name="btnLuu" Content="Lưu thông tin" Width="140" Height="40" Background="#C62828" Foreground="White" BorderThickness="0" FontSize="16" FontFamily="Calibri" Cursor="Hand" Margin="0,10,15,0" Click="btnLuu_Click">
+                                <Button x:Name="btnLuu" Content="Lưu thông tin" Width="140" Height="40" Background="#C62828" Foreground="White" BorderThickness="0" FontSize="16" FontFamily="Calibri" Cursor="Hand" Margin="0,0,20,0" Click="btnLuu_Click">
                                     <Button.Template>
                                         <ControlTemplate TargetType="Button">
                                             <Border x:Name="brdLuu" Background="{TemplateBinding Background}" CornerRadius="5">

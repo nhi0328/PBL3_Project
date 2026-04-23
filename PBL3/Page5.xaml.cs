@@ -48,7 +48,7 @@ namespace PBL3
 
         private void MenuInfo_Click(object sender, RoutedEventArgs e)
         {
-            NavigationService.Navigate(new Page6()); // Trang thông tin cá nhân
+            NavigationService.Navigate(new Page7(_currentUser as Customer));
         }
 
         private void UserButton_Click(object sender, RoutedEventArgs e)

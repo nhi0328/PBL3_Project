@@ -1,4 +1,4 @@
-using System;
+Ôªøusing System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -23,20 +23,20 @@ namespace PBL3
         private ObservableCollection<LuatItem> lstLuat = new ObservableCollection<LuatItem>();
         private readonly Admin _currentUser;
 
-        // Constructor m?c ?nh
+        // Constructor m?c ƒë?nh
         public Page45()
         {
             InitializeComponent();
             this.Loaded += Page45_Loaded;
         }
 
-        // Constructor chÌnh
+        // Constructor ch√≠nh
         public Page45(Admin user) : this()
         {
             _currentUser = user;
             if (_currentUser != null)
             {
-                txtUserName.Text = _currentUser.FullName; // Ho?c _currentUser.HoTen n?u cÛ
+                txtUserName.Text = _currentUser.FullName; // Ho?c _currentUser.HoTen n?u c√≥
 
                 myBell.LoadData(_currentUser as Admin);
             }
@@ -56,7 +56,7 @@ namespace PBL3
 
                 using (var db = new TrafficSafetyDBContext())
                 {
-                    // L?y Lu?t kËm theo Chi ti?t m?c ph?t c?a nÛ (Quan h? 1-N)
+                    // L?y Lu?t k√®m theo Chi ti?t m?c ph?t c?a n√≥ (Quan h? 1-N)
                     var trafficLaws = db.TrafficLaws
                                         .Include(l => l.Details)
                                             .ThenInclude(d => d.Category)
@@ -70,25 +70,25 @@ namespace PBL3
                             TenLoi = law.LawName ?? string.Empty,
                         };
 
-                        // Gom nhÛm chi ti?t ph?t t? b?ng TRAFFIC_LAW_DETAILS
+                        // Gom nh√≥m chi ti?t ph?t t? b?ng TRAFFIC_LAW_DETAILS
                         if (law.Details != null && law.Details.Any())
                         {
                             foreach (var detail in law.Details)
                             {
-                                // L?y c„n c? ph·p l? v‡ i?m tr? (˝u tiÍn l?y c·i ?u tiÍn t?m th?y)
+                                // L?y cƒÉn c? ph√°p l? v√† ƒëi?m tr? (∆∞u ti√™n l?y c√°i ƒë?u ti√™n t?m th?y)
                                 if (string.IsNullOrEmpty(item.CanCu)) item.CanCu = detail.Decree ?? string.Empty;
                                 if (string.IsNullOrEmpty(item.TruDiem) && detail.DemeritPoints > 0)
-                                    item.TruDiem = $"Tr? {detail.DemeritPoints} i?m";
+                                    item.TruDiem = $"Tr·ª´ {detail.DemeritPoints} ƒëi·ªÉm";
 
-                                // Ph‚n lo?i m?c ph?t theo lo?i xe (Ki?m tra chu?i)
+                                // Ph√¢n lo?i m?c ph?t theo lo?i xe (Ki?m tra chu?i)
                                 string vehicleType = detail.Category?.CategoryName?.ToLower() ?? "";
                                 string fineAmount = detail.FineAmount ?? "";
 
-                                if (vehicleType.Contains("Ù tÙ") || vehicleType.Contains("oto"))
+                                if (vehicleType.Contains("√¥ t√¥") || vehicleType.Contains("oto"))
                                 {
                                     item.PhatTienOto = fineAmount;
                                 }
-                                else if (vehicleType.Contains("xe m·y") || vehicleType.Contains("mÙ tÙ"))
+                                else if (vehicleType.Contains("xe m√°y") || vehicleType.Contains("m√¥ t√¥"))
                                 {
                                     item.PhatTienXeMay = fineAmount;
                                 }
@@ -104,11 +104,11 @@ namespace PBL3
             }
             catch (Exception ex)
             {
-                new CustomMessageBox("L?i k?t n?i CSDL: " + ex.Message).ShowDialog();
+                new CustomMessageBox("L·ªói k·∫øt n·ªëi CSDL: " + ex.Message).ShowDialog();
             }
         }
 
-        // --- C¡C H¿M T?M KI?M & L?C ---
+        // --- C√ÅC H√ÄM T?M KI?M & L?C ---
         private void btnSearch_Click(object sender, RoutedEventArgs e) => FilterLaws();
         private void txtIdentifier_TextChanged(object sender, TextChangedEventArgs e) => FilterLaws();
 
@@ -126,7 +126,7 @@ namespace PBL3
                     stringBuilder.Append(c);
                 }
             }
-            return stringBuilder.ToString().Normalize(System.Text.NormalizationForm.FormC).Replace('', 'd').Replace('–', 'D').ToLower();
+            return stringBuilder.ToString().Normalize(System.Text.NormalizationForm.FormC).Replace('ƒë', 'd').Replace('ƒê', 'D').ToLower();
         }
 
         private void FilterLaws()
@@ -157,10 +157,10 @@ namespace PBL3
             }
         }
 
-        // --- C¡C N⁄T CH?C N√NG TR N L›?I ---
+        // --- C√ÅC N√öT CH?C NƒÇNG TR√äN L∆Ø?I ---
         private void btnThemLuat_Click(object sender, RoutedEventArgs e)
         {
-            // Truy?n sang trang ThÍm Lu?t
+            NavigationService.Navigate(new Page52(null, _currentUser));
         }
 
         private void btnXemChiTiet_Click(object sender, RoutedEventArgs e)
@@ -168,7 +168,7 @@ namespace PBL3
             var btn = sender as Button;
             if (btn != null && btn.DataContext is LuatItem selectedLuat)
             {
-                // Truy?n LuatItem v‡ _currentUser sang trang Chi ti?t 
+                NavigationService.Navigate(new Page51(selectedLuat, _currentUser));
             }
         }
 

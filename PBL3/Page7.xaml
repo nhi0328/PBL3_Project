@@ -331,8 +331,8 @@
                     <!-- User info form -->
                     <StackPanel>
                         <!-- Họ tên -->
-                        <TextBlock Text="Họ tên" FontFamily="Calibri" FontSize="18" Foreground="#333" Margin="0,0,0,10"/>
-                        <Grid Margin="0,0,0,20">
+                        <TextBlock Text="Họ tên" FontFamily="Calibri" FontSize="18" Foreground="#333" Margin="0,0,0,5"/>
+                        <Grid Margin="0,0,0,10">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="10"/>
@@ -347,8 +347,8 @@
                         </Grid>
 
                         <!-- Ngày sinh -->
-                        <TextBlock Text="Ngày sinh" FontFamily="Calibri" FontSize="18" Foreground="#333" Margin="0,0,0,10"/>
-                        <Grid Margin="0,0,0,20">
+                        <TextBlock Text="Ngày sinh" FontFamily="Calibri" FontSize="18" Foreground="#333" Margin="0,0,0,5"/>
+                        <Grid Margin="0,0,0,10">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="10"/>
@@ -367,9 +367,8 @@
                             </Border>
                         </Grid>
 
-                        <!-- Giới tính -->
-                        <TextBlock Text="Giới tính" FontFamily="Calibri" FontSize="18" Foreground="#333" Margin="0,0,0,10"/>
-                        <Grid Margin="0,0,0,20">
+                        <TextBlock Text="Giới tính" FontFamily="Calibri" FontSize="18" Foreground="#333" Margin="0,0,0,5"/>
+                        <Grid Margin="0,0,0,10">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="10"/>
@@ -377,66 +376,58 @@
                                 <ColumnDefinition Width="10"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
-                            <ToggleButton Grid.Column="0" Content="Nam" FontFamily="Calibri" FontSize="18" Background="Transparent" BorderBrush="#CCC" BorderThickness="1" IsChecked="{Binding IsMale}">
-                                <ToggleButton.Style>
-                                    <Style TargetType="ToggleButton">
-                                        <Setter Property="Foreground" Value="LightGray"/>
-                                        <Style.Triggers>
-                                            <Trigger Property="IsChecked" Value="True">
-                                                <Setter Property="Foreground" Value="Black"/>
-                                            </Trigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </ToggleButton.Style>
-                                <ToggleButton.Resources>
-                                    <Style TargetType="Border">
-                                        <Setter Property="CornerRadius" Value="8"/>
-                                    </Style>
-                                </ToggleButton.Resources>
-                            </ToggleButton>
-                            <ToggleButton Grid.Column="2" Content="Nữ" FontFamily="Calibri" FontSize="18" Background="Transparent" BorderBrush="#CCC" BorderThickness="1" IsChecked="{Binding IsFemale}">
-                                <ToggleButton.Style>
-                                    <Style TargetType="ToggleButton">
-                                        <Setter Property="Foreground" Value="LightGray"/>
-                                        <Style.Triggers>
-                                            <Trigger Property="IsChecked" Value="True">
-                                                <Setter Property="Foreground" Value="Black"/>
-                                            </Trigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </ToggleButton.Style>
-                                <ToggleButton.Resources>
-                                    <Style TargetType="Border">
-                                        <Setter Property="CornerRadius" Value="8"/>
-                                    </Style>
-                                </ToggleButton.Resources>
-                            </ToggleButton>
-                            <ToggleButton Grid.Column="4" Content="Khác" FontFamily="Calibri" FontSize="18" Background="Transparent" BorderBrush="#CCC" BorderThickness="1" IsChecked="{Binding IsOther}">
-                                <ToggleButton.Style>
-                                    <Style TargetType="ToggleButton">
-                                        <Setter Property="Foreground" Value="LightGray"/>
-                                        <Style.Triggers>
-                                            <Trigger Property="IsChecked" Value="True">
-                                                <Setter Property="Foreground" Value="Black"/>
-                                            </Trigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </ToggleButton.Style>
-                                <ToggleButton.Resources>
-                                    <Style TargetType="Border">
-                                        <Setter Property="CornerRadius" Value="8"/>
-                                    </Style>
-                                </ToggleButton.Resources>
-                            </ToggleButton>
-                        </Grid>
 
+                            <Grid.Resources>
+                                <Style TargetType="RadioButton" x:Key="DarkGrayToggleStyle">
+                                    <Setter Property="FontFamily" Value="Calibri"/>
+                                    <Setter Property="FontSize" Value="18"/>
+                                    <Setter Property="Height" Value="40"/>
+                                    <Setter Property="Background" Value="Transparent"/>
+                                    <Setter Property="Foreground" Value="#666666"/>
+                                    <Setter Property="BorderBrush" Value="#CCCCCC"/>
+                                    <Setter Property="BorderThickness" Value="1"/>
+                                    <Setter Property="Cursor" Value="Hand"/>
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="RadioButton">
+                                                <Border x:Name="border" 
+                                Background="{TemplateBinding Background}" 
+                                BorderBrush="{TemplateBinding BorderBrush}" 
+                                BorderThickness="{TemplateBinding BorderThickness}" 
+                                CornerRadius="8">
+                                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                </Border>
+                                                <ControlTemplate.Triggers>
+                                                    <Trigger Property="IsMouseOver" Value="True">
+                                                        <Setter TargetName="border" Property="Background" Value="#F0F0F0"/>
+                                                        <Setter Property="Foreground" Value="#333333"/>
+                                                    </Trigger>
+                                                    <Trigger Property="IsChecked" Value="True">
+                                                        <Setter TargetName="border" Property="Background" Value="#F0F0F0"/>
+                                                        <Setter TargetName="border" Property="BorderBrush" Value="#333333"/>
+                                                        <Setter Property="Foreground" Value="#333333"/>
+                                                    </Trigger>
+                                                </ControlTemplate.Triggers>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Style>
+                            </Grid.Resources>
+
+                            <RadioButton Grid.Column="0" Content="Nam" GroupName="Gender" Style="{StaticResource DarkGrayToggleStyle}" IsChecked="{Binding IsMale}" PreviewMouseLeftButtonDown="Gender_PreviewMouseLeftButtonDown"/>
+                            <RadioButton Grid.Column="2" Content="Nữ" GroupName="Gender" Style="{StaticResource DarkGrayToggleStyle}" IsChecked="{Binding IsFemale}" PreviewMouseLeftButtonDown="Gender_PreviewMouseLeftButtonDown"/>
+                            <RadioButton Grid.Column="4" Content="Khác" GroupName="Gender" Style="{StaticResource DarkGrayToggleStyle}" IsChecked="{Binding IsOther}" PreviewMouseLeftButtonDown="Gender_PreviewMouseLeftButtonDown"/>
+                        </Grid>
+                        
                         <!-- CCCD -->
-                        <Border BorderBrush="#CCC" BorderThickness="1" CornerRadius="8" Margin="0,0,0,20">
+                        <TextBlock Text="CCCD" FontFamily="Calibri" FontSize="18" Foreground="#333" Margin="0,0,0,5"/>
+                        <Border BorderBrush="#CCC" BorderThickness="1" CornerRadius="8" Margin="0,0,0,10">
                             <TextBox Text="{Binding CCCD}" FontFamily="Calibri" FontSize="18" Padding="10,8" BorderThickness="0" Background="Transparent"/>
                         </Border>
 
                         <!-- Số điện thoại -->
-                        <Border BorderBrush="#CCC" BorderThickness="1" CornerRadius="8" Margin="0,0,0,20">
+                        <TextBlock Text="Số điện thoại" FontFamily="Calibri" FontSize="18" Foreground="#333" Margin="0,0,0,5"/>
+                        <Border BorderBrush="#CCC" BorderThickness="1" CornerRadius="8" Margin="0,0,0,10">
                             <Grid>
                                 <TextBlock Text="Nhập số điện thoại" Foreground="#999" FontFamily="Calibri" FontSize="18" Margin="12,10,10,10" IsHitTestVisible="False">
                                     <TextBlock.Style>
@@ -455,7 +446,8 @@
                         </Border>
 
                         <!-- Email -->
-                        <Border BorderBrush="#CCC" BorderThickness="1" CornerRadius="8" Margin="0,0,0,30">
+                        <TextBlock Text="Email" FontFamily="Calibri" FontSize="18" Foreground="#333" Margin="0,0,0,5"/>
+                        <Border BorderBrush="#CCC" BorderThickness="1" CornerRadius="8" Margin="0,0,0,10">
                             <Grid>
                                 <TextBlock Text="Nhập Email" Foreground="#999" FontFamily="Calibri" FontSize="18" Margin="12,10,10,10" IsHitTestVisible="False">
                                     <TextBlock.Style>
@@ -591,12 +583,26 @@
                                                 </Grid>
 
                                                 <!-- View History Button -->
-                                                <Button Click="btnLichSuTruDiem_Click" Content="Lịch sử trừ điểm" FontFamily="Calibri" FontSize="16" Background="White" Foreground="#333" Width="140" Padding="0,5" HorizontalAlignment="Center" BorderBrush="#CCC" BorderThickness="1" Cursor="Hand">
-                                                    <Button.Resources>
-                                                        <Style TargetType="Border">
-                                                            <Setter Property="CornerRadius" Value="8"/>
+                                                <Button Click="btnLichSuTruDiem_Click" Content="Lịch sử trừ điểm" Foreground="#333" FontFamily="Calibri" FontSize="18" Padding="25,12" BorderThickness="1" BorderBrush="#CCC" Cursor="Hand" Height="30" Width="130">
+                                                    <Button.Style>
+                                                        <Style TargetType="Button">
+                                                            <Setter Property="Background" Value="White"/>
+                                                            <Setter Property="Template">
+                                                                <Setter.Value>
+                                                                    <ControlTemplate TargetType="Button">
+                                                                        <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="8">
+                                                                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                                        </Border>
+                                                                        <ControlTemplate.Triggers>
+                                                                            <Trigger Property="IsMouseOver" Value="True">
+                                                                                <Setter Property="Background" Value="#F5F5F5"/>
+                                                                            </Trigger>
+                                                                        </ControlTemplate.Triggers>
+                                                                    </ControlTemplate>
+                                                                </Setter.Value>
+                                                            </Setter>
                                                         </Style>
-                                                    </Button.Resources>
+                                                    </Button.Style>
                                                 </Button>
                                             </StackPanel>
                                         </Border>

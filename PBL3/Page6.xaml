@@ -368,7 +368,7 @@
                 </Grid.RowDefinitions>
 
                 <Grid Grid.Row="0" Margin="0,20,0,15">
-                    <TextBlock Text="QUẢN LÝ PHƯƠNG TIỆN" FontSize="40" FontFamily="Calibri" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    <TextBlock Text="THÔNG TIN PHƯƠNG TIỆN" FontSize="40" FontFamily="Calibri" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                 </Grid>
 
                 <Border Grid.Row="1" Background="White" CornerRadius="15" Padding="0" Margin="50,0,30,20">

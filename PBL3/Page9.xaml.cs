@@ -40,7 +40,7 @@ namespace PBL3
         }
         private void MenuInfo_Click(object sender, RoutedEventArgs e)
         {
-            NavigationService.Navigate(new Page7(_currentUser));
+            NavigationService.Navigate(new Page7(_currentUser as Customer));
         }
        
         private void MenuLogout_Click(object sender, RoutedEventArgs e)
