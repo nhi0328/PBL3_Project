@@ -67,7 +67,14 @@ namespace PBL3
 
         private void MenuInfo_Click(object sender, RoutedEventArgs e)
         {
-            NavigationService.Navigate(new Page15(_currentUser));
+            try
+            {
+                new OfficerProfileWindow(_currentUser).ShowDialog();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Lỗi hiện cửa sổ: " + ex.Message);
+            }
         }
 
         private void MenuLogout_Click(object sender, RoutedEventArgs e)

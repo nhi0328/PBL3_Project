@@ -276,10 +276,16 @@ namespace PBL3
             NavigationService?.Navigate(_currentUser != null ? new Page23(_currentUser) : new Page23());
         }
 
-
         private void MenuInfo_Click(object sender, RoutedEventArgs e)
         {
-            NavigationService.Navigate(new Page24());
+            try
+            {
+                new OfficerProfileWindow(_currentUser).ShowDialog();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Lỗi hiện cửa sổ: " + ex.Message);
+            }
         }
         private void MenuLogout_Click(object sender, RoutedEventArgs e)
         {

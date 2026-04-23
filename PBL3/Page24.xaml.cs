@@ -170,7 +170,17 @@ namespace PBL3
             }
         }
 
-        private void MenuInfo_Click(object sender, RoutedEventArgs e) { }
+        private void MenuInfo_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                new OfficerProfileWindow(_currentUser).ShowDialog();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Lỗi hiện cửa sổ: " + ex.Message);
+            }
+        }
         private void MenuLogout_Click(object sender, RoutedEventArgs e) => NavigationService.Navigate(new Page1());
 
         // --- SIDEBAR MENU ---

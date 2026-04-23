@@ -17,9 +17,32 @@
 
             <!-- Close Button -->
             <Button Grid.Row="0" HorizontalAlignment="Right" VerticalAlignment="Top" 
-                    Content="&#10006;" Foreground="Black" FontSize="15"
-                    Background="Transparent" BorderThickness="0" Margin="10" Cursor="Hand"
-                    Click="btnClose_Click"/>
+                    Content="&#10006;" FontSize="14" Width="20" Height="20" Margin="5" Cursor="Hand" 
+                    Click="btnClose_Click" Background="Transparent" BorderThickness="0">
+                <Button.Style>
+                    <Style TargetType="Button">
+                        <Setter Property="Foreground" Value="#888"/> <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="Button">
+                                    <Border x:Name="border" Background="{TemplateBinding Background}" CornerRadius="10">
+                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,1"/>
+                                    </Border>
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter TargetName="border" Property="Background" Value="#FDEAEA"/>
+                                            <Setter Property="Foreground" Value="#C62828"/>
+                                        </Trigger>
+                                        <Trigger Property="IsPressed" Value="True">
+                                            <Setter TargetName="border" Property="Background" Value="#F8C4C4"/>
+                                            <Setter Property="Foreground" Value="#A02020"/>
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </Button.Style>
+            </Button>
 
             <!-- Title -->
             <TextBlock Grid.Row="0" Text="THÔNG TIN TÀI KHOẢN" FontSize="25" FontFamily="Calibri" 
@@ -76,13 +99,13 @@
                     <!-- Row 3 -->
                     <TextBlock Grid.Row="3" Grid.Column="0" Text="Đổi mật khẩu" FontSize="15" FontFamily="Calibri" VerticalAlignment="Bottom"/>
 					<TextBlock Grid.Row="4" Grid.Column="0" Text="Mật khẩu mới:" FontSize="15" FontFamily="Calibri" VerticalAlignment="Center"/>
-					<Border Grid.Row="4" Grid.Column="1" BorderBrush="Black" BorderThickness="1" Padding="15,0" Margin="0,5,0,5" CornerRadius="5">
-                        <TextBlock x:Name="txtPassword" FontSize="15" FontFamily="Calibri" VerticalAlignment="Center" Foreground="#333"/>
+					<Border Grid.Row="4" Grid.Column="1" BorderBrush="Black" BorderThickness="1" Padding="10,0" Margin="0,5,0,5" CornerRadius="5">
+                        <TextBox x:Name="txtPassword" Background="Transparent" BorderThickness="0" FontSize="15" FontFamily="Calibri" VerticalAlignment="Center" Foreground="#333"/>
                     </Border>
-					<TextBlock Grid.Row="5" Grid.Column="0" Text="Nhập lại mật khẩu:" FontSize="15" FontFamily="Calibri" VerticalAlignment="Center"/>
-					    
-                    <Border Grid.Row="5" Grid.Column="1" BorderBrush="Black" BorderThickness="1" Padding="15,0" Margin="0,5,0,5" CornerRadius="5">
-                        <TextBlock x:Name="txtConfirmPassword" FontSize="15" FontFamily="Calibri" VerticalAlignment="Center" Foreground="#333"/>
+
+                    <TextBlock Grid.Row="5" Grid.Column="0" Text="Nhập lại mật khẩu:" FontSize="15" FontFamily="Calibri" VerticalAlignment="Center"/>
+                    <Border Grid.Row="5" Grid.Column="1" BorderBrush="Black" BorderThickness="1" Padding="10,0" Margin="0,5,0,5" CornerRadius="5">
+                        <TextBox x:Name="txtConfirmPassword" Background="Transparent" BorderThickness="0" FontSize="15" FontFamily="Calibri" VerticalAlignment="Center" Foreground="#333"/>
                     </Border>
                 </Grid>
 			

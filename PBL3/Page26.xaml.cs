@@ -191,7 +191,17 @@ namespace PBL3
                 btn.ContextMenu.IsOpen = true;
             }
         }
-        private void MenuInfo_Click(object sender, RoutedEventArgs e) { }
+        private void MenuInfo_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                new OfficerProfileWindow(_currentUser).ShowDialog();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Lỗi hiện cửa sổ: " + ex.Message);
+            }
+        }
         private void MenuLogout_Click(object sender, RoutedEventArgs e) => NavigationService.Navigate(new Page1());
         private void btnTraCuuNhanh_Click(object sender, RoutedEventArgs e) => NavigationService.Navigate(new Page12(_currentUser));
         private void btnTraCuuLuat_Click(object sender, RoutedEventArgs e) => NavigationService.Navigate(new Page13(_currentUser));

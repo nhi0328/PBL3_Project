@@ -110,12 +110,12 @@ namespace PBL3
                     if (loggedInUser is Admin ad)
                     {
                         new CustomMessageBox($"Chào mừng Quản trị viên: {ad.FullName}").ShowDialog();
-                        this.NavigationService.Navigate(new Page44());
+                        this.NavigationService.Navigate(new Page44(ad));
                     }
                     else if (loggedInUser is Officer off)
                     {
                         new CustomMessageBox($"Chào mừng Cán bộ: {off.OfficerId}").ShowDialog();
-                        this.NavigationService.Navigate(new Page12());
+                        this.NavigationService.Navigate(new Page12(off));
                     }
                     else if (loggedInUser is Customer cust)
                     {

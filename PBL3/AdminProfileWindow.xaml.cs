@@ -14,6 +14,9 @@ namespace PBL3
         public AdminProfileWindow(Admin admin)
         {
             InitializeComponent();
+
+            this.MouseLeftButtonDown += (s, e) => this.DragMove();
+
             _currentAdmin = admin;
 
             // Load thông tin khi mở cửa sổ

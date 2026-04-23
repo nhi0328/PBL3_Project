@@ -1,4 +1,4 @@
-using Microsoft.Data.SqlClient;
+Ôªøusing Microsoft.Data.SqlClient;
 using PBL3.Models;
 using System;
 using System.Threading.Tasks;
@@ -18,7 +18,7 @@ namespace PBL3
         public int Points { get; set; }
         public string IssueDateStr { get; set; }
         public string ExpiryDateStr { get; set; }
-        public string IssuePlace { get; set; } = "–‡ N?ng";
+        public string IssuePlace { get; set; } = "ƒê√† N?ng";
 
         public string StatusText
         {
@@ -26,7 +26,7 @@ namespace PBL3
             {
                 if (string.IsNullOrWhiteSpace(Status)) return "B? thu h?i";
                 var s = Status.Trim().ToLower();
-                if (s.Contains("ang ho?t ?ng") || s.Contains("ho?t ?ng") || s == "active") return "–ang ho?t ?ng";
+                if (s.Contains("ƒëang ho?t ƒë?ng") || s.Contains("ho?t ƒë?ng") || s == "active") return "ƒêang ho?t ƒë?ng";
                 if (s.Contains("h?t h?n") || s == "expired") return "H?t h?n";
                 return "B? thu h?i";
             }
@@ -37,7 +37,7 @@ namespace PBL3
             get
             {
                 string text = StatusText;
-                if (text == "–ang ho?t ?ng") return new SolidColorBrush(Color.FromRgb(46, 125, 50));
+                if (text == "ƒêang ho?t ƒë?ng") return new SolidColorBrush(Color.FromRgb(46, 125, 50));
                 if (text == "H?t h?n") return new SolidColorBrush(Color.FromRgb(255, 152, 0));
                 return new SolidColorBrush(Color.FromRgb(198, 40, 40));
             }
@@ -48,7 +48,7 @@ namespace PBL3
             get
             {
                 string text = StatusText;
-                if (text == "–ang ho?t ?ng")
+                if (text == "ƒêang ho?t ƒë?ng")
                     return "M12 2C6.5 2 2 6.5 2 12S6.5 22 12 22 22 17.5 22 12 17.5 2 12 2M10 17L5 12L6.41 10.59L10 14.17L17.59 6.58L19 8L10 17Z";
                 if (text == "H?t h?n")
                     return "M12 2C6.5 2 2 6.5 2 12S6.5 22 12 22 22 17.5 22 12 17.5 2 12 2M11 7H13V13H11V7M11 15H13V17H11V15Z";
@@ -62,7 +62,7 @@ namespace PBL3
         private readonly Officer _currentUser;
         private readonly string _targetCccd;
 
-        // Constructor m?c ?nh
+        // Constructor m?c ƒë?nh
         public Page39()
         {
             InitializeComponent();
@@ -75,7 +75,7 @@ namespace PBL3
             this.Loaded += Page39_Loaded;
         }
 
-        // Constructor chÌnh
+        // Constructor ch√≠nh
         public Page39(Officer user, string cccd)
         {
             InitializeComponent();
@@ -84,7 +84,7 @@ namespace PBL3
 
             if (_currentUser != null)
             {
-                txtUserName.Text = $"C·n b?: {_currentUser.OfficerId}";
+                txtUserName.Text = $"C√°n b?: {_currentUser.OfficerId}";
 
                 myBell.LoadData(_currentUser as Officer);
             }
@@ -105,21 +105,21 @@ namespace PBL3
             {
                 using var db = new TrafficSafetyDBContext();
 
-                // Truy v?n danh s·ch b?ng l·i xe c?a ng˝?i n‡y
+                // Truy v?n danh s√°ch b?ng l√°i xe c?a ng∆∞?i n√†y
                 var dbLicenses = await Task.Run(() => db.DrivingLicenses.Where(l => l.Cccd == _targetCccd).ToList());
 
-                // Map sang danh s·ch hi?n th?
+                // Map sang danh s√°ch hi?n th?
                 var licensesList = dbLicenses.Select(l => new LicenseItem39
                 {
                     LicenseClass = l.LicenseNumber ?? "",
                     LicenseNo = l.LicenseId ?? "",
                     Points = l.Points,
-                    Status = l.StatusText ?? "Ch˝a r?",
-                    IssueDateStr = l.IssueDate != DateTime.MinValue ? l.IssueDate.ToString("dd/MM/yyyy") : "Ch˝a c?p nh?t",
-                    ExpiryDateStr = l.ExpiryDate.HasValue ? l.ExpiryDate.Value.ToString("dd/MM/yyyy") : "KhÙng th?i h?n"
+                    Status = l.StatusText ?? "Ch∆∞a r?",
+                    IssueDateStr = l.IssueDate != DateTime.MinValue ? l.IssueDate.ToString("dd/MM/yyyy") : "Ch∆∞a c?p nh?t",
+                    ExpiryDateStr = l.ExpiryDate.HasValue ? l.ExpiryDate.Value.ToString("dd/MM/yyyy") : "Kh√¥ng th?i h?n"
                 }).ToList();
 
-                // –? v‡o giao di?n
+                // ƒê? v√†o giao di?n
                 if (this.FindName("icLicenses") is ItemsControl icLicenses)
                 {
                     icLicenses.ItemsSource = new ObservableCollection<LicenseItem39>(licensesList);
@@ -133,7 +133,7 @@ namespace PBL3
 
         private void btnThemGplx_Click(object sender, RoutedEventArgs e)
         {
-            new CustomMessageBox("Ch?c n„ng thÍm GPLX ang ˝?c c?p nh?t.").ShowDialog();
+            new CustomMessageBox("Ch?c nƒÉng th√™m GPLX ƒëang ƒë∆∞?c c?p nh?t.").ShowDialog();
         }
 
         private void btnXoaGplx_Click(object sender, RoutedEventArgs e)
@@ -143,7 +143,7 @@ namespace PBL3
 
         private void btnLuu_Click(object sender, RoutedEventArgs e)
         {
-            new CustomMessageBox("–? l˝u thÙng tin GPLX th‡nh cÙng!", "ThÙng b·o").ShowDialog();
+            new CustomMessageBox("ƒê? l∆∞u th√¥ng tin GPLX th√†nh c√¥ng!", "Th√¥ng b√°o").ShowDialog();
         }
 
         private void btnHuy_Click(object sender, RoutedEventArgs e)
@@ -176,10 +176,15 @@ namespace PBL3
             }
         }
 
-        private void MenuInfo_Click(object sender, RoutedEventArgs e) {
-            if (_currentUser is Officer officer)
+        private void MenuInfo_Click(object sender, RoutedEventArgs e)
+        {
+            try
             {
-                new OfficerProfileWindow(officer).ShowDialog();
+                new OfficerProfileWindow(_currentUser).ShowDialog();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("L·ªói hi·ªán c·ª≠a s·ªï: " + ex.Message);
             }
         }
 

@@ -1,4 +1,4 @@
-using Microsoft.Data.SqlClient;
+Ôªøusing Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using PBL3.Models;
 using System;
@@ -19,7 +19,7 @@ namespace PBL3
         public int Points { get; set; }
         public string IssueDateStr { get; set; }
         public string ExpiryDateStr { get; set; }
-        public string IssuePlace { get; set; } = "–‡ N?ng";
+        public string IssuePlace { get; set; } = "ƒê√† N?ng";
 
         public string StatusText
         {
@@ -27,7 +27,7 @@ namespace PBL3
             {
                 if (string.IsNullOrWhiteSpace(Status)) return "B? thu h?i";
                 var s = Status.Trim().ToLower();
-                if (s.Contains("ang ho?t ?ng") || s.Contains("ho?t ?ng") || s == "active") return "–ang ho?t ?ng";
+                if (s.Contains("ƒëang ho?t ƒë?ng") || s.Contains("ho?t ƒë?ng") || s == "active") return "ƒêang ho?t ƒë?ng";
                 if (s.Contains("h?t h?n") || s == "expired") return "H?t h?n";
                 return "B? thu h?i";
             }
@@ -38,7 +38,7 @@ namespace PBL3
             get
             {
                 string text = StatusText;
-                if (text == "–ang ho?t ?ng") return new SolidColorBrush(Color.FromRgb(46, 125, 50));
+                if (text == "ƒêang ho?t ƒë?ng") return new SolidColorBrush(Color.FromRgb(46, 125, 50));
                 if (text == "H?t h?n") return new SolidColorBrush(Color.FromRgb(255, 152, 0));
                 return new SolidColorBrush(Color.FromRgb(198, 40, 40));
             }
@@ -49,7 +49,7 @@ namespace PBL3
             get
             {
                 string text = StatusText;
-                if (text == "–ang ho?t ?ng")
+                if (text == "ƒêang ho?t ƒë?ng")
                     return "M12 2C6.5 2 2 6.5 2 12S6.5 22 12 22 22 17.5 22 12 17.5 2 12 2M10 17L5 12L6.41 10.59L10 14.17L17.59 6.58L19 8L10 17Z";
                 if (text == "H?t h?n")
                     return "M12 2C6.5 2 2 6.5 2 12S6.5 22 12 22 22 17.5 22 12 17.5 2 12 2M11 7H13V13H11V7M11 15H13V17H11V15Z";
@@ -63,13 +63,13 @@ namespace PBL3
         private readonly Officer _currentUser;
         private readonly string _targetCccd;
 
-        // Constructor m?c ?nh
+        // Constructor m?c ƒë?nh
         public Page41()
         {
             InitializeComponent();
         }
 
-        // Constructor test khÙng cÛ Officer
+        // Constructor test kh√¥ng c√≥ Officer
         public Page41(string cccd)
         {
             InitializeComponent();
@@ -77,7 +77,7 @@ namespace PBL3
             this.Loaded += Page41_Loaded;
         }
 
-        // Constructor chÌnh
+        // Constructor ch√≠nh
         public Page41(Officer user, string cccd)
         {
             InitializeComponent();
@@ -86,7 +86,7 @@ namespace PBL3
 
             if (_currentUser != null)
             {
-                txtUserName.Text = $"C·n b?: {_currentUser.OfficerId}";
+                txtUserName.Text = $"C√°n b?: {_currentUser.OfficerId}";
 
                 myBell.LoadData(_currentUser as Officer);
             }
@@ -108,7 +108,7 @@ namespace PBL3
             {
                 using var db = new TrafficSafetyDBContext();
 
-                // L?y thÙng tin ph˝ıng ti?n
+                // L?y th√¥ng tin ph∆∞∆°ng ti?n
                 var vehicle = await Task.Run(() => db.Vehicles
                     .Include(v => v.VehicleType)
                     .ThenInclude(vt => vt.Category)
@@ -120,15 +120,15 @@ namespace PBL3
                 if (vehicle != null)
                 {
                     txtBienSo.Text = vehicle.LicensePlate;
-                    txtLoaiXe.Text = vehicle.VehicleType?.Category?.CategoryName ?? "Ch˝a x·c ?nh";
-                    txtNhanHieu.Text = vehicle.VehicleType?.VehicleTypeName ?? "Ch˝a x·c ?nh";
-                    txtNamSanXuat.Text = vehicle.VehicleType?.ManufactureYear?.ToString() ?? "Ch˝a x·c ?nh";
-                    txtMauSac.Text = vehicle.VehicleType?.Color?.ColorName ?? "Ch˝a x·c ?nh";
+                    txtLoaiXe.Text = vehicle.VehicleType?.Category?.CategoryName ?? "Ch∆∞a x√°c ƒë?nh";
+                    txtNhanHieu.Text = vehicle.VehicleType?.VehicleTypeName ?? "Ch∆∞a x√°c ƒë?nh";
+                    txtNamSanXuat.Text = vehicle.VehicleType?.ManufactureYear?.ToString() ?? "Ch∆∞a x√°c ƒë?nh";
+                    txtMauSac.Text = vehicle.VehicleType?.Color?.ColorName ?? "Ch∆∞a x√°c ƒë?nh";
 
-                    txtChuSoHuu.Text = vehicle.Owner?.FullName ?? "Ch˝a x·c ?nh";
-                    txtSoKhung.Text = vehicle.ShassisNumber ?? "Ch˝a x·c ?nh";
-                    txtSoMay.Text = vehicle.EngineNumber ?? "Ch˝a x·c ?nh";
-                    txtNgayDangKy.Text = vehicle.RegistrationDate?.ToString("dd/MM/yyyy") ?? "Ch˝a x·c ?nh";
+                    txtChuSoHuu.Text = vehicle.Owner?.FullName ?? "Ch∆∞a x√°c ƒë?nh";
+                    txtSoKhung.Text = vehicle.ShassisNumber ?? "Ch∆∞a x√°c ƒë?nh";
+                    txtSoMay.Text = vehicle.EngineNumber ?? "Ch∆∞a x√°c ƒë?nh";
+                    txtNgayDangKy.Text = vehicle.RegistrationDate?.ToString("dd/MM/yyyy") ?? "Ch∆∞a x√°c ƒë?nh";
 
                     if (vehicle.VehicleType != null && !string.IsNullOrEmpty(vehicle.VehicleType.ImagePath))
                     {
@@ -163,9 +163,9 @@ namespace PBL3
                         ViolationId = v.ViolationRecordId,
                         STT = stt++,
                         Date = fullDate,
-                        Rule = v.ViolationDescription ?? "Ch˝a cÛ thÙng tin",
-                        Location = v.Address ?? "Ch˝a r?",
-                        Status = v.Status == 0 ? "Ch˝a x? l?" : "–? x? l?"
+                        Rule = v.ViolationDescription ?? "Ch∆∞a c√≥ th√¥ng tin",
+                        Location = v.Address ?? "Ch∆∞a r?",
+                        Status = v.Status == 0 ? "Ch∆∞a x? l?" : "ƒê? x? l?"
                     });
                 }
 
@@ -177,7 +177,7 @@ namespace PBL3
             }
             catch (Exception ex)
             {
-                new CustomMessageBox("L?i t?i chi ti?t Ph˝ıng ti?n: " + ex.Message, "L?i k?t n?i").ShowDialog();
+                new CustomMessageBox("L?i t?i chi ti?t Ph∆∞∆°ng ti?n: " + ex.Message, "L?i k?t n?i").ShowDialog();
             }
         }
 
@@ -227,7 +227,14 @@ namespace PBL3
         private void MenuInfo_Click(object sender, RoutedEventArgs e) {
             if (_currentUser is Officer officer)
             {
-                new OfficerProfileWindow(officer).ShowDialog();
+                try
+                {
+                    new OfficerProfileWindow(officer).ShowDialog();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("L·ªói hi·ªán c·ª≠a s·ªï: " + ex.Message);
+                }
             }
         }
 
@@ -276,7 +283,7 @@ namespace PBL3
         {
             get
             {
-                if (Status == "–? x? l?") return new SolidColorBrush(Color.FromRgb(76, 175, 80)); // Green
+                if (Status == "ƒê? x? l?") return new SolidColorBrush(Color.FromRgb(76, 175, 80)); // Green
                 return new SolidColorBrush(Color.FromRgb(198, 40, 40)); // Red
             }
         }
@@ -285,7 +292,7 @@ namespace PBL3
         {
             get
             {
-                if (Status == "–? x? l?") 
+                if (Status == "ƒê? x? l?") 
                     return "M12 2C6.5 2 2 6.5 2 12S6.5 22 12 22 22 17.5 22 12 17.5 2 12 2M10 17L5 12L6.41 10.59L10 14.17L17.59 6.58L19 8L10 17Z"; // Check
                 return "M13 14H11V9H13M13 18H11V16H13M1 21H23L12 2L1 21Z"; // Alert
             }

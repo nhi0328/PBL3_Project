@@ -87,9 +87,17 @@ namespace PBL3
             else NavigationService?.Navigate(new Page14(_currentUser));
         }
         private void BtnCancel_Click(object sender, RoutedEventArgs e) => BtnBack_Click(sender, e);
-        private void MenuInfo_Click(object sender, RoutedEventArgs e) { }
-        private void MenuAdminUI_Click(object sender, RoutedEventArgs e) { }
-        private void MenuOfficerUI_Click(object sender, RoutedEventArgs e) { }
+        private void MenuInfo_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                new OfficerProfileWindow(_currentUser).ShowDialog();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Lỗi hiện cửa sổ: " + ex.Message);
+            }
+        }
         private void MenuLogout_Click(object sender, RoutedEventArgs e) => NavigationService?.Navigate(new Page1());
         private void UserButton_Click(object sender, RoutedEventArgs e)
         {

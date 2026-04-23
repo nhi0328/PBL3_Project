@@ -378,6 +378,7 @@
 
                             <!-- DataGrid -->
                             <DataGrid Grid.Row="1" x:Name="dgComplaints" VerticalScrollBarVisibility="Auto" AutoGenerateColumns="False" CanUserAddRows="False" Background="White" RowHeight="40" ColumnHeaderHeight="40" HeadersVisibility="Column" HorizontalGridLinesBrush="#eee" VerticalGridLinesBrush="#ccc" BorderBrush="#ccc" BorderThickness="1" IsReadOnly="True" FontSize="14" FontFamily="Calibri">
+
                                 <DataGrid.Resources>
                                     <Style TargetType="DataGridColumnHeader">
                                         <Setter Property="Background" Value="#f5f5f5"/>
@@ -389,17 +390,16 @@
                                     </Style>
                                     <Style TargetType="DataGridCell">
                                         <Setter Property="TextBlock.TextAlignment" Value="Center"/>
-                                        <Setter Property="Template">
-                                            <Setter.Value>
-                                                <ControlTemplate TargetType="DataGridCell">
-                                                    <Border BorderThickness="0,0,1,1" BorderBrush="#ccc" Background="Transparent" Padding="10,0">
-                                                        <ContentPresenter VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                                                    </Border>
-                                                </ControlTemplate>
-                                            </Setter.Value>
-                                        </Setter>
+                                        <Setter Property="Foreground" Value="#333"/>
+                                        <Style.Triggers>
+                                            <Trigger Property="IsSelected" Value="True">
+                                                <Setter Property="Background" Value="Transparent"/>
+                                                <Setter Property="Foreground" Value="Black"/>
+                                            </Trigger>
+                                        </Style.Triggers>
                                     </Style>
                                 </DataGrid.Resources>
+
                                 <DataGrid.RowStyle>
                                     <Style TargetType="DataGridRow">
                                         <EventSetter Event="MouseDoubleClick" Handler="dgComplaints_MouseDoubleClick" />
@@ -409,9 +409,13 @@
                                             <Trigger Property="IsMouseOver" Value="True">
                                                 <Setter Property="Background" Value="#F5F5F5"/>
                                             </Trigger>
+                                            <Trigger Property="IsSelected" Value="True">
+                                                <Setter Property="Background" Value="#EAEAEA"/>
+                                            </Trigger>
                                         </Style.Triggers>
                                     </Style>
                                 </DataGrid.RowStyle>
+
                                 <DataGrid.Columns>
                                     <DataGridTextColumn Header="STT" Binding="{Binding STT}" Width="60"/>
                                     <DataGridTextColumn Header="Tiêu đề" Binding="{Binding TieuDe}" Width="*"/>

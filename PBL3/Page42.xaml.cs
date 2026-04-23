@@ -1,4 +1,4 @@
-using Microsoft.Data.SqlClient;
+Ôªøusing Microsoft.Data.SqlClient;
 using PBL3.Models;
 using System;
 using System.Threading.Tasks;
@@ -20,13 +20,13 @@ namespace PBL3
         private bool isEditMode = false;
         private string cccdForAddMode = string.Empty;
 
-        // Constructor m?c ?nh
+        // Constructor m?c ƒë?nh
         public Page42()
         {
             InitializeComponent();
         }
 
-        // Constructor test khÙng cÛ Officer
+        // Constructor test kh√¥ng c√≥ Officer
         public Page42(string targetData)
         {
             InitializeComponent();
@@ -34,7 +34,7 @@ namespace PBL3
             this.Loaded += Page42_Loaded;
         }
 
-        // Constructor chÌnh
+        // Constructor ch√≠nh
         public Page42(Officer user, string targetData)
         {
             InitializeComponent();
@@ -43,7 +43,7 @@ namespace PBL3
 
             if (_currentUser != null)
             {
-                txtUserName.Text = $"C·n b?: {_currentUser.OfficerId}";
+                txtUserName.Text = $"C√°n b?: {_currentUser.OfficerId}";
 
                 myBell.LoadData(_currentUser as Officer);
             }
@@ -86,7 +86,7 @@ namespace PBL3
             {
                 using var db = new TrafficSafetyDBContext();
 
-                // Th? t?m ph˝ıng ti?n v?i _targetData l‡m bi?n s?
+                // Th? t?m ph∆∞∆°ng ti?n v?i _targetData l√†m bi?n s?
                 var vehicle = await Task.Run(() => db.Vehicles
                     .Include(v => v.VehicleType)
                     .ThenInclude(vt => vt.Category)
@@ -133,7 +133,7 @@ namespace PBL3
 
         private void btnLuu_Click(object sender, RoutedEventArgs e)
         {
-            new CustomMessageBox("–? l˝u thÙng tin ph˝ıng ti?n th‡nh cÙng!", "ThÙng b·o").ShowDialog();
+            new CustomMessageBox("ƒê? l∆∞u th√¥ng tin ph∆∞∆°ng ti?n th√†nh c√¥ng!", "Th√¥ng b√°o").ShowDialog();
             if (NavigationService.CanGoBack)
             {
                 NavigationService.GoBack();
@@ -170,10 +170,15 @@ namespace PBL3
             }
         }
 
-        private void MenuInfo_Click(object sender, RoutedEventArgs e) {
-            if (_currentUser is Officer officer)
+        private void MenuInfo_Click(object sender, RoutedEventArgs e)
+        {
+            try
             {
-                new OfficerProfileWindow(officer).ShowDialog();
+                new OfficerProfileWindow(_currentUser).ShowDialog();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("L·ªói hi·ªán c·ª≠a s·ªï: " + ex.Message);
             }
         }
 

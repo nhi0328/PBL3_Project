@@ -1,4 +1,4 @@
-using System;
+Ôªøusing System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -22,26 +22,26 @@ namespace PBL3
         private readonly Officer _currentUser;
         private readonly string _targetCccd;
 
-        // Constructor m?c ?nh
+        // Constructor m?c ƒë?nh
         public Page53()
         {
             InitializeComponent();
             this.Loaded += Page53_Loaded;
         }
 
-        // Constructor chÌnh
+        // Constructor ch√≠nh
         public Page53(Officer user, string targetCccd = null) : this()
         {
             _currentUser = user;
             _targetCccd = targetCccd;
             if (_currentUser != null)
             {
-                txtUserName.Text = $"C·n b?: {_currentUser.OfficerId}";
+                txtUserName.Text = $"C√°n b?: {_currentUser.OfficerId}";
                 myBell.LoadData(_currentUser as Officer);
             }
         }
 
-        // T?m th?i thÍm l?i Constructor ph? cho Page47/Page48 ? code khÙng l?i
+        // T?m th?i th√™m l?i Constructor ph? cho Page47/Page48 ƒë? code kh√¥ng l?i
         public Page53(Admin admin, int complaintId) : this()
         {
             // Do nothing, Admin pages should navigate to the correct Admin complaint detail page instead.
@@ -79,7 +79,7 @@ namespace PBL3
 
                     txtPhone.Text = customer.Phone;
                     if (!string.IsNullOrEmpty(txtPhone.Text)) txtPhone.Foreground = Brushes.Black;
-                    else { txtPhone.Text = "Nh?p S–T"; txtPhone.Foreground = Brushes.Gray; }
+                    else { txtPhone.Text = "Nh?p SƒêT"; txtPhone.Foreground = Brushes.Gray; }
 
                     txtEmail.Text = customer.Email;
                     if (!string.IsNullOrEmpty(txtEmail.Text)) txtEmail.Foreground = Brushes.Black;
@@ -110,7 +110,7 @@ namespace PBL3
                         isNew = true;
                     }
 
-                    customer.FullName = txtHoTen.Text.Trim() == "Nh?p h? tÍn" ? string.Empty : txtHoTen.Text.Trim();
+                    customer.FullName = txtHoTen.Text.Trim() == "Nh?p h? t√™n" ? string.Empty : txtHoTen.Text.Trim();
 
                     if (DateTime.TryParseExact(txtNgaySinh.Text.Trim(), "dd/MM/yyyy", null, System.Globalization.DateTimeStyles.None, out DateTime dob))
                     {
@@ -120,22 +120,22 @@ namespace PBL3
                     if (cmbGioiTinh.SelectedIndex == 1) customer.Gender = "Nam";
                     else if (cmbGioiTinh.SelectedIndex == 2) customer.Gender = "N?";
 
-                    customer.Phone = txtPhone.Text.Trim() == "Nh?p S–T" ? null : txtPhone.Text.Trim();
+                    customer.Phone = txtPhone.Text.Trim() == "Nh?p SƒêT" ? null : txtPhone.Text.Trim();
                     customer.Email = txtEmail.Text.Trim() == "Nh?p Email" ? null : txtEmail.Text.Trim();
 
                     if (isNew) db.Customers.Add(customer);
 
                     db.SaveChanges();
 
-                    // --- B?T –?U: GHI LOG & T?O TH‘NG B¡O ---
+                    // --- B?T ƒê?U: GHI LOG & T?O TH√îNG B√ÅO ---
                     int actionType = isNew ? 1 : 2; // 1: T?o m?i, 2: C?p nh?t
 
-                    // L?y ra ID ng˝?i th?c hi?n. ? m‡n n‡y th˝?ng l‡ C·n b? (Officer) ho?c Qu?n tr? viÍn (Admin)
-                    // (Theo Constructor khai b·o th? _currentUser ? ‚y l‡ Officer)
+                    // L?y ra ID ng∆∞?i th?c hi?n. ? m√†n n√†y th∆∞?ng l√† C√°n b? (Officer) ho?c Qu?n tr? vi√™n (Admin)
+                    // (Theo Constructor khai b√°o th? _currentUser ? ƒë√¢y l√† Officer)
                     string actorId = _currentUser != null ? _currentUser.OfficerId : "UNKNOWN";
-                    int roleType = 2; // 2 = C·n b?
+                    int roleType = 2; // 2 = C√°n b?
 
-                    // 1. Ghi v‡o SYSTEMLOGS
+                    // 1. Ghi v√†o SYSTEMLOGS
                     var log = new SystemLog
                     {
                         Action = actionType,
@@ -147,26 +147,26 @@ namespace PBL3
                     };
                     db.SystemLogs.Add(log);
 
-                    // 2. Ghi v‡o NOTIFICATION cho CÙng d‚n
+                    // 2. Ghi v√†o NOTIFICATION cho C√¥ng d√¢n
                     var noti = new Notification
                     {
-                        TargetRole = 3, // 3 = CÙng d‚n
+                        TargetRole = 3, // 3 = C√¥ng d√¢n
                         TargetId = cccd,
                         Content = isNew 
-                            ? "T‡i kho?n c?a b?n ? ˝?c t?o th‡nh cÙng trÍn khÙng gian s?." 
-                            : "ThÙng tin c?a b?n ? ˝?c c?p nh?t b?i cı quan ch?c n„ng.",
+                            ? "T√†i kho?n c?a b?n ƒë? ƒë∆∞?c t?o th√†nh c√¥ng tr√™n kh√¥ng gian s?." 
+                            : "Th√¥ng tin c?a b?n ƒë? ƒë∆∞?c c?p nh?t b?i c∆° quan ch?c nƒÉng.",
                         CreatedAt = DateTime.Now,
                         IsRead = false
                     };
                     db.Notifications.Add(noti);
 
-                    db.SaveChanges(); // L˝u l?i thay ?i (Log & Notification)
-                    // --- K?T TH⁄C: GHI LOG & T?O TH‘NG B¡O ---
+                    db.SaveChanges(); // L∆∞u l?i thay ƒë?i (Log & Notification)
+                    // --- K?T TH√öC: GHI LOG & T?O TH√îNG B√ÅO ---
 
-                    // T?i l?i thÙng b·o cho Header/UserControl
+                    // T?i l?i th√¥ng b√°o cho Header/UserControl
                     myBell.LoadData(_currentUser as Officer);
 
-                    MessageBox.Show(isNew ? "T?o t‡i kho?n th‡nh cÙng!" : "C?p nh?t d? li?u t? b?ng CUSTOMERS th‡nh cÙng!", "ThÙng b·o", MessageBoxButton.OK, MessageBoxImage.Information);
+                    MessageBox.Show(isNew ? "T?o t√†i kho?n th√†nh c√¥ng!" : "C?p nh?t d? li?u t? b?ng CUSTOMERS th√†nh c√¥ng!", "Th√¥ng b√°o", MessageBoxButton.OK, MessageBoxImage.Information);
                 }
             }
             catch (Exception ex)
@@ -182,7 +182,7 @@ namespace PBL3
 
         private void TextBox_GotFocus(object sender, RoutedEventArgs e)
         {
-            if (sender is TextBox tb && (tb.Text == "Nh?p h? tÍn" || tb.Text == "Nh?p CCCD" || tb.Text == "dd/mm/yyyy" || tb.Text == "Nh?p S–T" || tb.Text == "Nh?p Email"))
+            if (sender is TextBox tb && (tb.Text == "Nh?p h? t√™n" || tb.Text == "Nh?p CCCD" || tb.Text == "dd/mm/yyyy" || tb.Text == "Nh?p SƒêT" || tb.Text == "Nh?p Email"))
             {
                 tb.Text = "";
                 tb.Foreground = Brushes.Black;
@@ -194,22 +194,22 @@ namespace PBL3
             if (sender is TextBox tb && string.IsNullOrWhiteSpace(tb.Text))
             {
                 tb.Foreground = Brushes.Gray;
-                if (tb.Name == "txtHoTen") tb.Text = "Nh?p h? tÍn";
+                if (tb.Name == "txtHoTen") tb.Text = "Nh?p h? t√™n";
                 else if (tb.Name == "txtCccd") tb.Text = "Nh?p CCCD";
                 else if (tb.Name == "txtNgaySinh") tb.Text = "dd/mm/yyyy";
-                else if (tb.Name == "txtPhone") tb.Text = "Nh?p S–T";
+                else if (tb.Name == "txtPhone") tb.Text = "Nh?p SƒêT";
                 else if (tb.Name == "txtEmail") tb.Text = "Nh?p Email";
             }
         }
 
-        // X? l? s? ki?n n˙t Chi ti?t
+        // X? l? s? ki?n n√∫t Chi ti?t
         private void BtnDetail_Click(object sender, RoutedEventArgs e)
         {
             if (sender is Button btn && btn.DataContext is ViolationGroupDisplay data)
             {
                 try
                 {
-                    // B?T BU?C PH?I NH…T `data.RecordId` V¿O TRONG NGO?C NH› V?Y:
+                    // B?T BU?C PH?I NH√âT `data.RecordId` V√ÄO TRONG NGO?C NH∆Ø V?Y:
                     NavigationService.Navigate(new Page17(data.RecordId));
                 }
                 catch (Exception ex)
@@ -229,10 +229,15 @@ namespace PBL3
             }
         }
 
-        private void MenuInfo_Click(object sender, RoutedEventArgs e) {
-            if (_currentUser is Officer officer)
+        private void MenuInfo_Click(object sender, RoutedEventArgs e)
+        {
+            try
             {
-                new OfficerProfileWindow(officer).ShowDialog();
+                new OfficerProfileWindow(_currentUser).ShowDialog();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("L·ªói hi·ªán c·ª≠a s·ªï: " + ex.Message);
             }
         }
 

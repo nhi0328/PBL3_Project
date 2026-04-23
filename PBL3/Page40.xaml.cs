@@ -1,4 +1,4 @@
-using Microsoft.Data.SqlClient;
+ï»¿using Microsoft.Data.SqlClient;
 using PBL3.Models;
 using System;
 using System.Threading.Tasks;
@@ -18,7 +18,7 @@ namespace PBL3
         public int Points { get; set; }
         public string IssueDateStr { get; set; }
         public string ExpiryDateStr { get; set; }
-        public string IssuePlace { get; set; } = "Ðà N?ng";
+        public string IssuePlace { get; set; } = "ÄÃ  N?ng";
 
         public string StatusText
         {
@@ -26,7 +26,7 @@ namespace PBL3
             {
                 if (string.IsNullOrWhiteSpace(Status)) return "B? thu h?i";
                 var s = Status.Trim().ToLower();
-                if (s.Contains("ðang ho?t ð?ng") || s.Contains("ho?t ð?ng") || s == "active") return "Ðang ho?t ð?ng";
+                if (s.Contains("Ä‘ang ho?t Ä‘?ng") || s.Contains("ho?t Ä‘?ng") || s == "active") return "Äang ho?t Ä‘?ng";
                 if (s.Contains("h?t h?n") || s == "expired") return "H?t h?n";
                 return "B? thu h?i";
             }
@@ -37,7 +37,7 @@ namespace PBL3
             get
             {
                 string text = StatusText;
-                if (text == "Ðang ho?t ð?ng") return new SolidColorBrush(Color.FromRgb(46, 125, 50));
+                if (text == "Äang ho?t Ä‘?ng") return new SolidColorBrush(Color.FromRgb(46, 125, 50));
                 if (text == "H?t h?n") return new SolidColorBrush(Color.FromRgb(255, 152, 0));
                 return new SolidColorBrush(Color.FromRgb(198, 40, 40));
             }
@@ -48,7 +48,7 @@ namespace PBL3
             get
             {
                 string text = StatusText;
-                if (text == "Ðang ho?t ð?ng")
+                if (text == "Äang ho?t Ä‘?ng")
                     return "M12 2C6.5 2 2 6.5 2 12S6.5 22 12 22 22 17.5 22 12 17.5 2 12 2M10 17L5 12L6.41 10.59L10 14.17L17.59 6.58L19 8L10 17Z";
                 if (text == "H?t h?n")
                     return "M12 2C6.5 2 2 6.5 2 12S6.5 22 12 22 22 17.5 22 12 17.5 2 12 2M11 7H13V13H11V7M11 15H13V17H11V15Z";
@@ -62,13 +62,13 @@ namespace PBL3
         private readonly Officer _currentUser;
         private readonly string _targetCccd;
 
-        // Constructor m?c ð?nh
+        // Constructor m?c Ä‘?nh
         public Page40()
         {
             InitializeComponent();
         }
 
-        // Constructor test không có Officer
+        // Constructor test khÃ´ng cÃ³ Officer
         public Page40(string cccd)
         {
             InitializeComponent();
@@ -76,7 +76,7 @@ namespace PBL3
             this.Loaded += Page40_Loaded;
         }
 
-        // Constructor chính
+        // Constructor chÃ­nh
         public Page40(Officer user, string cccd)
         {
             InitializeComponent();
@@ -85,7 +85,7 @@ namespace PBL3
 
             if (_currentUser != null)
             {
-                txtUserName.Text = $"Cán b?: {_currentUser.OfficerId}";
+                txtUserName.Text = $"CÃ¡n b?: {_currentUser.OfficerId}";
 
                 myBell.LoadData(_currentUser as Officer);
             }
@@ -116,8 +116,8 @@ namespace PBL3
                             var vm = new VehicleViewModel
                             {
                                 LicensePlate = v.LicensePlate,
-                                VehicleName = "Chýa thu?c h?ng nào", // We can't easily get Model directly without Include
-                                DetailsText = "Xe máy",
+                                VehicleName = "ChÆ°a thu?c h?ng nÃ o", // We can't easily get Model directly without Include
+                                DetailsText = "Xe mÃ¡y",
                                 ImagePath = "/Assets/Images/defaultcar.png",
                                 HasViolations = voCount > 0,
                                 ViolationCount = voCount
@@ -215,10 +215,15 @@ namespace PBL3
             }
         }
 
-        private void MenuInfo_Click(object sender, RoutedEventArgs e) {
-            if (_currentUser is Officer officer)
+        private void MenuInfo_Click(object sender, RoutedEventArgs e)
+        {
+            try
             {
-                new OfficerProfileWindow(officer).ShowDialog();
+                new OfficerProfileWindow(_currentUser).ShowDialog();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Lá»—i hiá»‡n cá»­a sá»•: " + ex.Message);
             }
         }
 
