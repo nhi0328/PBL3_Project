@@ -46,7 +46,7 @@ namespace PBL3
             LoadData();
         }
 
-        private void LoadData(string searchText = "", string filter = "T?t c?")
+        private void LoadData(string searchText = "", string filter = "Tất cả")
         {
             try
             {
@@ -56,7 +56,7 @@ namespace PBL3
                     var query = db.Complaints.Include(c => c.Vehicle).ThenInclude(v => v.VehicleType).AsQueryable();
 
                     // T?m ki?m theo t? khóa (Bi?n s? xe, ID ngư?i g?i, Tiêu đ? ho?c N?i dung)
-                    if (!string.IsNullOrEmpty(searchText) && searchText != "T?m ki?m ph?n ánh...")
+                    if (!string.IsNullOrEmpty(searchText) && searchText != "Tìm kiếm phản ánh...")
                     {
                         var searchLower = searchText.ToLower();
                         query = query.Where(c =>
@@ -92,8 +92,8 @@ namespace PBL3
                     {
                         STT = stt++,
                         ComplaintId = c.ComplaintId,
-                        LoaiXe = c.Vehicle != null && c.Vehicle.VehicleType != null ? c.Vehicle.VehicleType.VehicleTypeName : "Không xác đ?nh",
-                        TieuDe = c.Title ?? "Không có tiêu đ?",
+                        LoaiXe = c.Vehicle != null && c.Vehicle.VehicleType != null ? c.Vehicle.VehicleType.VehicleTypeName : "Không xác định",
+                        TieuDe = c.Title ?? "Không có tiêu đề",
                         BienSoXe = c.LicensePlate ?? "Không xác định",
                         SubmittedDate = c.SubmitDate != DateTime.MinValue ? c.SubmitDate.ToString("dd/MM/yyyy HH:mm") : "Chưa cập nhật",
                         Status = (c.Status == 0) ? "Chưa xử lý" : "Đã xử lý",

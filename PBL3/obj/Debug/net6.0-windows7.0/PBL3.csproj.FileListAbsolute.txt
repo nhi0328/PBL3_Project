@@ -177,3 +177,9 @@ D:\OneDrive - The University of Technology\PBL3\PBL3\obj\Debug\net6.0-windows7.0
 D:\OneDrive - The University of Technology\PBL3\PBL3\obj\Debug\net6.0-windows7.0\AdminProfileWindow.g.cs
 D:\OneDrive - The University of Technology\PBL3\PBL3\obj\Debug\net6.0-windows7.0\OfficerProfileWindow.baml
 D:\OneDrive - The University of Technology\PBL3\PBL3\obj\Debug\net6.0-windows7.0\OfficerProfileWindow.g.cs
+D:\OneDrive - The University of Technology\PBL3\PBL3\bin\Debug\net6.0-windows7.0\System.Data.SqlClient.dll
+D:\OneDrive - The University of Technology\PBL3\PBL3\bin\Debug\net6.0-windows7.0\runtimes\win-arm64\native\sni.dll
+D:\OneDrive - The University of Technology\PBL3\PBL3\bin\Debug\net6.0-windows7.0\runtimes\win-x64\native\sni.dll
+D:\OneDrive - The University of Technology\PBL3\PBL3\bin\Debug\net6.0-windows7.0\runtimes\win-x86\native\sni.dll
+D:\OneDrive - The University of Technology\PBL3\PBL3\bin\Debug\net6.0-windows7.0\runtimes\unix\lib\net6.0\System.Data.SqlClient.dll
+D:\OneDrive - The University of Technology\PBL3\PBL3\bin\Debug\net6.0-windows7.0\runtimes\win\lib\net6.0\System.Data.SqlClient.dll

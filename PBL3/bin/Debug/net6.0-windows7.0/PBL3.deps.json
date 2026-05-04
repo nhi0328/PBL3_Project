@@ -9,7 +9,8 @@
       "PBL3/1.0.0": {
         "dependencies": {
           "Microsoft.EntityFrameworkCore.Design": "6.0.36",
-          "Microsoft.EntityFrameworkCore.SqlServer": "6.0.36"
+          "Microsoft.EntityFrameworkCore.SqlServer": "6.0.36",
+          "System.Data.SqlClient": "4.9.1"
         },
         "runtime": {
           "PBL3.dll": {}
@@ -311,11 +312,70 @@
           }
         }
       },
+      "runtime.native.System.Data.SqlClient.sni/4.4.0": {
+        "dependencies": {
+          "runtime.win-arm64.runtime.native.System.Data.SqlClient.sni": "4.4.0",
+          "runtime.win-x64.runtime.native.System.Data.SqlClient.sni": "4.4.0",
+          "runtime.win-x86.runtime.native.System.Data.SqlClient.sni": "4.4.0"
+        }
+      },
+      "runtime.win-arm64.runtime.native.System.Data.SqlClient.sni/4.4.0": {
+        "runtimeTargets": {
+          "runtimes/win-arm64/native/sni.dll": {
+            "rid": "win-arm64",
+            "assetType": "native",
+            "fileVersion": "4.6.25512.1"
+          }
+        }
+      },
+      "runtime.win-x64.runtime.native.System.Data.SqlClient.sni/4.4.0": {
+        "runtimeTargets": {
+          "runtimes/win-x64/native/sni.dll": {
+            "rid": "win-x64",
+            "assetType": "native",
+            "fileVersion": "4.6.25512.1"
+          }
+        }
+      },
+      "runtime.win-x86.runtime.native.System.Data.SqlClient.sni/4.4.0": {
+        "runtimeTargets": {
+          "runtimes/win-x86/native/sni.dll": {
+            "rid": "win-x86",
+            "assetType": "native",
+            "fileVersion": "4.6.25512.1"
+          }
+        }
+      },
       "System.Collections.Immutable/6.0.1": {
         "runtime": {
           "lib/net6.0/System.Collections.Immutable.dll": {
             "assemblyVersion": "6.0.0.0",
             "fileVersion": "6.0.3624.51421"
+          }
+        }
+      },
+      "System.Data.SqlClient/4.9.1": {
+        "dependencies": {
+          "runtime.native.System.Data.SqlClient.sni": "4.4.0"
+        },
+        "runtime": {
+          "lib/net6.0/System.Data.SqlClient.dll": {
+            "assemblyVersion": "4.6.1.6",
+            "fileVersion": "4.900.126.11103"
+          }
+        },
+        "runtimeTargets": {
+          "runtimes/unix/lib/net6.0/System.Data.SqlClient.dll": {
+            "rid": "unix",
+            "assetType": "runtime",
+            "assemblyVersion": "4.6.1.6",
+            "fileVersion": "4.900.126.11103"
+          },
+          "runtimes/win/lib/net6.0/System.Data.SqlClient.dll": {
+            "rid": "win",
+            "assetType": "runtime",
+            "assemblyVersion": "4.6.1.6",
+            "fileVersion": "4.900.126.11103"
           }
         }
       },
@@ -531,12 +591,47 @@
       "path": "microsoft.identitymodel.tokens/6.36.0",
       "hashPath": "microsoft.identitymodel.tokens.6.36.0.nupkg.sha512"
     },
+    "runtime.native.System.Data.SqlClient.sni/4.4.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-A8v6PGmk+UGbfWo5Ixup0lPM4swuSwOiayJExZwKIOjTlFFQIsu3QnDXECosBEyrWSPryxBVrdqtJyhK3BaupQ==",
+      "path": "runtime.native.system.data.sqlclient.sni/4.4.0",
+      "hashPath": "runtime.native.system.data.sqlclient.sni.4.4.0.nupkg.sha512"
+    },
+    "runtime.win-arm64.runtime.native.System.Data.SqlClient.sni/4.4.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-LbrynESTp3bm5O/+jGL8v0Qg5SJlTV08lpIpFesXjF6uGNMWqFnUQbYBJwZTeua6E/Y7FIM1C54Ey1btLWupdg==",
+      "path": "runtime.win-arm64.runtime.native.system.data.sqlclient.sni/4.4.0",
+      "hashPath": "runtime.win-arm64.runtime.native.system.data.sqlclient.sni.4.4.0.nupkg.sha512"
+    },
+    "runtime.win-x64.runtime.native.System.Data.SqlClient.sni/4.4.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-38ugOfkYJqJoX9g6EYRlZB5U2ZJH51UP8ptxZgdpS07FgOEToV+lS11ouNK2PM12Pr6X/PpT5jK82G3DwH/SxQ==",
+      "path": "runtime.win-x64.runtime.native.system.data.sqlclient.sni/4.4.0",
+      "hashPath": "runtime.win-x64.runtime.native.system.data.sqlclient.sni.4.4.0.nupkg.sha512"
+    },
+    "runtime.win-x86.runtime.native.System.Data.SqlClient.sni/4.4.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-YhEdSQUsTx+C8m8Bw7ar5/VesXvCFMItyZF7G1AUY+OM0VPZUOeAVpJ4Wl6fydBGUYZxojTDR3I6Bj/+BPkJNA==",
+      "path": "runtime.win-x86.runtime.native.system.data.sqlclient.sni/4.4.0",
+      "hashPath": "runtime.win-x86.runtime.native.system.data.sqlclient.sni.4.4.0.nupkg.sha512"
+    },
     "System.Collections.Immutable/6.0.1": {
       "type": "package",
       "serviceable": true,
       "sha512": "sha512-Cc+SfP+jyCmA1TnRnDA7cRZy5jbLyWodfuUJKDJ+PJZBwWkv8szz+ztSCHAonqnL01DRaHaS2ptc4bYIEdgvWw==",
       "path": "system.collections.immutable/6.0.1",
       "hashPath": "system.collections.immutable.6.0.1.nupkg.sha512"
+    },
+    "System.Data.SqlClient/4.9.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-A7RK9I4UaVHJ407GTfy37S4ABHt1+lZ+/uoA54zTv0XaaWgHO5BtXSMzMVqB6socIHEeeK5K1YRgaxCEfD79wQ==",
+      "path": "system.data.sqlclient/4.9.1",
+      "hashPath": "system.data.sqlclient.4.9.1.nupkg.sha512"
     },
     "System.Diagnostics.DiagnosticSource/6.0.2": {
       "type": "package",

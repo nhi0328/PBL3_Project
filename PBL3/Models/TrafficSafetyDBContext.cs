@@ -38,14 +38,32 @@ namespace PBL3.Models
         {
             if (!optionsBuilder.IsConfigured)
             {
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-                optionsBuilder.UseSqlServer("Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=TrafficSafetyDB;Integrated Security=True;TrustServerCertificate=True;");
+                // 1. ĐÃ SỬA CHUỖI KẾT NỐI CHUẨN XÁC TRỎ VỀ PBL3
+                optionsBuilder.UseSqlServer(@"Data Source=NHI\SQLEXPRESS;Initial Catalog=PBL3;Integrated Security=True;TrustServerCertificate=True;");
             }
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            // --- CẤU HÌNH KHÓA CHÍNH (PRIMARY KEYS) CŨ ---
+            // 2. ÉP TÊN BẢNG CHUẨN XÁC 100% VỚI CƠ SỞ DỮ LIỆU
+            modelBuilder.Entity<Admin>().ToTable("ADMINS");
+            modelBuilder.Entity<Category>().ToTable("CATEGORIES");
+            modelBuilder.Entity<Complaint>().ToTable("COMPLAINTS");
+            modelBuilder.Entity<Customer>().ToTable("CUSTOMERS");
+            modelBuilder.Entity<DrivingLicense>().ToTable("DRIVING_LICENSES");
+            modelBuilder.Entity<Officer>().ToTable("OFFICERS");
+            modelBuilder.Entity<Province>().ToTable("PROVINCES");
+            modelBuilder.Entity<TrafficLaw>().ToTable("TRAFFIC_LAWS");
+            modelBuilder.Entity<TrafficLawDetail>().ToTable("TRAFFIC_LAW_DETAILS");
+            modelBuilder.Entity<Vehicle>().ToTable("VEHICLES");
+            modelBuilder.Entity<ViolationRecord>().ToTable("VIOLATION_RECORDS");
+            modelBuilder.Entity<VehicleColor>().ToTable("VEHICLE_COLORS");
+            modelBuilder.Entity<VehicleType>().ToTable("VEHICLE_TYPES");
+            modelBuilder.Entity<Ward>().ToTable("WARDS");
+            modelBuilder.Entity<Notification>().ToTable("NOTIFICATIONS");
+            modelBuilder.Entity<SystemLog>().ToTable("SYSTEM_LOGS");
+
+            // --- CẤU HÌNH KHÓA CHÍNH (GIỮ NGUYÊN CODE CŨ CỦA NHI) ---
             modelBuilder.Entity<Customer>().HasKey(c => c.Cccd);
             modelBuilder.Entity<Officer>().HasKey(o => o.OfficerId);
             modelBuilder.Entity<Vehicle>().HasKey(v => v.LicensePlate);
@@ -53,52 +71,29 @@ namespace PBL3.Models
             modelBuilder.Entity<DrivingLicense>().HasKey(dl => dl.LicenseNumber);
             modelBuilder.Entity<ViolationRecord>().HasKey(vr => vr.ViolationRecordId);
             modelBuilder.Entity<Complaint>().HasKey(c => c.ComplaintId);
-
-            // --- CẤU HÌNH KHÓA CHÍNH & TỰ ĐỘNG TĂNG CHO CÁC BẢNG MỚI ---
-
             modelBuilder.Entity<Province>().HasKey(p => p.ProvinceId);
             modelBuilder.Entity<Ward>().HasKey(w => w.WardId);
             modelBuilder.Entity<Category>().HasKey(c => c.CategoryId);
             modelBuilder.Entity<VehicleColor>().HasKey(vc => vc.ColorId);
 
-            // Đảm bảo bật tính năng tự động tăng (Identity) cho LAW_ID
-            modelBuilder.Entity<TrafficLaw>()
-                .HasKey(t => t.LawId);
-            modelBuilder.Entity<TrafficLaw>()
-                .Property(t => t.LawId)
-                .ValueGeneratedOnAdd();
+            // Bật Identity
+            modelBuilder.Entity<TrafficLaw>().HasKey(t => t.LawId);
+            modelBuilder.Entity<TrafficLaw>().Property(t => t.LawId).ValueGeneratedOnAdd();
 
-            // Đảm bảo bật tính năng tự động tăng (Identity) cho DETAIL_ID
-            modelBuilder.Entity<TrafficLawDetail>()
-                .HasKey(td => td.LawDetailId);
-            modelBuilder.Entity<TrafficLawDetail>()
-                .Property(td => td.LawDetailId)
-                .ValueGeneratedOnAdd();
-                
-            // Convert int <-> string cho các cột STATUS là nvarchar trong CSDL
-            modelBuilder.Entity<ViolationRecord>()
-                .Property(v => v.Status)
-                .HasConversion<string>();
+            modelBuilder.Entity<TrafficLawDetail>().HasKey(td => td.LawDetailId);
+            modelBuilder.Entity<TrafficLawDetail>().Property(td => td.LawDetailId).ValueGeneratedOnAdd();
 
-            modelBuilder.Entity<Complaint>()
-                .Property(c => c.Status)
-                .HasConversion<string>();
+            // Convert status
+            modelBuilder.Entity<ViolationRecord>().Property(v => v.Status).HasConversion<string>();
+            modelBuilder.Entity<Complaint>().Property(c => c.Status).HasConversion<string>();
+            modelBuilder.Entity<DrivingLicense>().Property(d => d.Status).HasConversion<string>();
 
-            modelBuilder.Entity<DrivingLicense>()
-                .Property(d => d.Status)
-                .HasConversion<string>();
-
-            // --- CẤU HÌNH LIÊN KẾT (FLUENT API) ĐỂ TRÁNH LỖI XÓA DÂY CHUYỀN ---
-            // (Khi thiết kế DB phức tạp, có nhiều khóa ngoại trỏ về cùng 1 bảng, 
-            // SQL Server rất hay báo lỗi "multiple cascade paths". 
-            // Lệnh dưới đây giúp tắt xóa dây chuyền để Database an toàn)
-
+            // Chặn xóa dây chuyền
             foreach (var relationship in modelBuilder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys()))
             {
                 relationship.DeleteBehavior = DeleteBehavior.Restrict;
             }
         }
-
         partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
     }
 }
