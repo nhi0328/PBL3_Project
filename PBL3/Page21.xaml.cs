@@ -25,6 +25,7 @@ namespace PBL3
         }
 
         // Constructor chính nhận dữ liệu
+        // Constructor chính nhận dữ liệu
         public Page21(Page13LuatItem luat, Officer user = null)
         {
             InitializeComponent();
@@ -36,7 +37,6 @@ namespace PBL3
             if (_currentUser != null)
             {
                 txtUserName.Text = $"Cán bộ: {_currentUser.OfficerId}";
-
                 myBell.LoadData(_currentUser as Officer);
             }
 
@@ -45,19 +45,45 @@ namespace PBL3
             {
                 _isEditMode = true;
                 txtTieuDe.Text = _currentLuat.TenLoi;
-                txtNghiDinh.Text = _currentLuat.CanCu;
 
-                if (DateTime.TryParseExact(_currentLuat.NgayBanHanh, "dd/MM/yyyy", null, System.Globalization.DateTimeStyles.None, out DateTime pIssue))
-                    txtNgayBanHanh.Text = pIssue.ToString("dd/MM/yyyy");
+                // LẤY DỮ LIỆU TỪ ORIGINALLAW THAY VÌ CÁC BIẾN CŨ
+                if (_currentLuat.OriginalLaw != null && _currentLuat.OriginalLaw.Details != null)
+                {
+                    // 1. Lấy Nghị định và Ngày tháng từ dòng chi tiết đầu tiên
+                    var firstDetail = _currentLuat.OriginalLaw.Details.FirstOrDefault();
+                    if (firstDetail != null)
+                    {
+                        txtNghiDinh.Text = firstDetail.Decree;
+                        if (firstDetail.IssueDate.HasValue)
+                            txtNgayBanHanh.Text = firstDetail.IssueDate.Value.ToString("dd/MM/yyyy");
+                        if (firstDetail.EffectiveDate.HasValue)
+                            txtNgayHieuLuc.Text = firstDetail.EffectiveDate.Value.ToString("dd/MM/yyyy");
+                    }
 
-                if (DateTime.TryParseExact(_currentLuat.NgayHieuLuc, "dd/MM/yyyy", null, System.Globalization.DateTimeStyles.None, out DateTime pEffective))
-                    txtNgayHieuLuc.Text = pEffective.ToString("dd/MM/yyyy");
+                    // 2. Kéo danh sách loại xe lên để map CategoryId -> Tên xe
+                    using var db = new Models.TrafficSafetyDBContext();
+                    var danhSachCategory = db.Categories.ToList();
 
-                if (!string.IsNullOrWhiteSpace(_currentLuat.PhatTienXeMay))
-                    Fines.Add(new VehicleFineItem { LoaiXe = "Xe máy", MucPhat = _currentLuat.PhatTienXeMay, TruDiem = _currentLuat.TruDiem });
-                
-                if (!string.IsNullOrWhiteSpace(_currentLuat.PhatTienOto))
-                    Fines.Add(new VehicleFineItem { LoaiXe = "Ô tô", MucPhat = _currentLuat.PhatTienOto, TruDiem = _currentLuat.TruDiem, CanRemove = true });
+                    // 3. Tự động sinh ra các dòng Nhập mức phạt tương ứng với số loại xe có trong DB
+                    foreach (var d in _currentLuat.OriginalLaw.Details)
+                    {
+                        string catName = "Không xác định";
+                        if (d.CategoryId.HasValue)
+                        {
+                            var cat = danhSachCategory.FirstOrDefault(c => c.CategoryId == d.CategoryId.Value);
+                            if (cat != null) catName = cat.CategoryName;
+                        }
+                        else if (d.CategoryId == 0) catName = "Tất cả phương tiện";
+
+                        Fines.Add(new VehicleFineItem
+                        {
+                            LoaiXe = catName,
+                            MucPhat = d.FineAmount,
+                            TruDiem = (d.DemeritPoints.HasValue && d.DemeritPoints > 0) ? d.DemeritPoints.Value.ToString() : "",
+                            CanRemove = true
+                        });
+                    }
+                }
             }
             // NẾU KHÔNG CÓ -> CHẾ ĐỘ THÊM MỚI
             else
@@ -65,10 +91,11 @@ namespace PBL3
                 _isEditMode = false;
             }
 
+            // Nếu danh sách rỗng, tạo sẵn 1 dòng trống để cán bộ dễ nhập liệu
             if (Fines.Count == 0)
                 Fines.Add(new VehicleFineItem());
 
-            // Ensure first item cannot be removed, others can
+            // Đảm bảo dòng đầu tiên không bị xóa
             for (int i = 0; i < Fines.Count; i++)
             {
                 Fines[i].CanRemove = i > 0;
