@@ -52,8 +52,8 @@ namespace PBL3
             // Kiểm tra xem có dữ liệu luật truyền sang không
             if (_currentLuat == null) return;
 
-            // Gán tên lỗi lên tiêu đề
-            txtTenLoi.Text = _currentLuat.TenLoi;
+            // 1. ĐÃ ĐỔI THÀNH txtLawName CHO KHỚP XAML
+            txtLawName.Text = _currentLuat.TenLoi;
 
             string decree = "Chưa có thông tin";
             DateTime? issueDate = null;
@@ -64,17 +64,14 @@ namespace PBL3
             {
                 using var db = new TrafficSafetyDBContext();
 
-                // Kéo bảng Categories lên để lấy tên xe (Ô tô, Xe máy...)
                 var danhSachCategory = db.Categories.ToList();
 
-                // Lấy dữ liệu gốc từ DB để trích xuất Nghị định và Ngày tháng
                 var originalLaw = db.TrafficLaws
                                     .Include(l => l.Details)
                                     .FirstOrDefault(l => l.LawId == _currentLuat.LawId);
 
                 if (originalLaw != null && originalLaw.Details != null)
                 {
-                    // Lấy thông tin nghị định từ dòng đầu tiên của chi tiết
                     var firstDetail = originalLaw.Details.FirstOrDefault();
                     if (firstDetail != null)
                     {
@@ -83,7 +80,6 @@ namespace PBL3
                         effectiveDate = firstDetail.EffectiveDate;
                     }
 
-                    // Phân tích từng dòng phạt và điểm trừ
                     foreach (var d in originalLaw.Details)
                     {
                         string catName = "tất cả phương tiện";
@@ -93,13 +89,11 @@ namespace PBL3
                             if (cat != null) catName = cat.CategoryName.ToLower();
                         }
 
-                        // Thêm dòng Phạt tiền
                         if (!string.IsNullOrEmpty(d.FineAmount))
                         {
                             detailsList.Add($"Phạt tiền từ {d.FineAmount} đối với người điều khiển {catName}");
                         }
 
-                        // Thêm dòng Trừ điểm (Bỏ qua xe đạp ID=3 và loại ID=0)
                         if (d.DemeritPoints.HasValue && d.DemeritPoints.Value > 0 && d.CategoryId != 0 && d.CategoryId != 3)
                         {
                             detailsList.Add($"Trừ {d.DemeritPoints.Value} điểm bằng lái đối với người điều khiển {catName}");
@@ -107,37 +101,32 @@ namespace PBL3
                     }
                 }
 
-                // Quét lịch sử cập nhật lần cuối từ bảng SystemLogs
-                var lastLog = db.SystemLogs
-                                .Where(log => log.TargetPrefix == "L" && log.TargetValue == _currentLuat.LawId.ToString())
-                                .OrderByDescending(log => log.Time)
-                                .FirstOrDefault();
-
-                if (txtLastUpdated != null)
-                {
-                    txtLastUpdated.Text = lastLog != null
-                        ? $"Cập nhật lần cuối: {lastLog.Time:HH:mm dd/MM/yyyy}"
-                        : "Hệ thống chưa ghi nhận lịch sử chỉnh sửa.";
-                }
+                // Tạm thời ẩn phần hiển thị lịch sử vì XAML của Nhi chưa thiết kế thẻ txtLastUpdated
+                /* var lastLog = db.SystemLogs.Where(log => log.TargetPrefix == "L" && log.TargetValue == _currentLuat.LawId.ToString())
+                                           .OrderByDescending(log => log.Time).FirstOrDefault();
+                if (txtLastUpdated != null) { ... } 
+                */
             }
             catch (Exception ex)
             {
                 MessageBox.Show("Lỗi tải dữ liệu: " + ex.Message);
             }
 
-            // Đổ dữ liệu lên các TextBlock trên giao diện
-            txtNghiDinh.Text = decree;
+            // 2. ĐÃ ĐỔI THÀNH txtDecree CHO KHỚP XAML
+            txtDecree.Text = decree;
 
-            if (txtNgayBanHanh != null)
+            // 3. ĐÃ ĐỔI THÀNH txtIssueDate CHO KHỚP XAML
+            if (txtIssueDate != null)
             {
-                txtNgayBanHanh.Text = issueDate.HasValue ? $"Ngày ban hành: {issueDate.Value:dd/MM/yyyy}" : "";
-                txtNgayBanHanh.Visibility = issueDate.HasValue ? Visibility.Visible : Visibility.Collapsed;
+                txtIssueDate.Text = issueDate.HasValue ? $"Ngày ban hành: {issueDate.Value:dd/MM/yyyy}" : "";
+                txtIssueDate.Visibility = issueDate.HasValue ? Visibility.Visible : Visibility.Collapsed;
             }
 
-            if (txtNgayHieuLuc != null)
+            // 4. ĐÃ ĐỔI THÀNH txtEffectiveDate CHO KHỚP XAML
+            if (txtEffectiveDate != null)
             {
-                txtNgayHieuLuc.Text = effectiveDate.HasValue ? $"Ngày có hiệu lực: {effectiveDate.Value:dd/MM/yyyy}" : "";
-                txtNgayHieuLuc.Visibility = effectiveDate.HasValue ? Visibility.Visible : Visibility.Collapsed;
+                txtEffectiveDate.Text = effectiveDate.HasValue ? $"Ngày có hiệu lực: {effectiveDate.Value:dd/MM/yyyy}" : "";
+                txtEffectiveDate.Visibility = effectiveDate.HasValue ? Visibility.Visible : Visibility.Collapsed;
             }
 
             // Đổ danh sách dòng phạt vào ItemsControl

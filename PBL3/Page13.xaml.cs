@@ -168,7 +168,7 @@ namespace PBL3
 
                 var filtered = lstLuat.Where(l =>
                 {
-                    // Quét trên toàn bộ Chuỗi Tìm Kiếm (đã chứa tên luật + mức phạt + loại xe)
+                    // SỬA LẠI: Quét thẳng trên biến ChuoiTimKiem (vì nó đã chứa Tên lỗi + Phạt tiền + Điểm trừ của mọi loại xe rồi)
                     string combinedText = RemoveDiacritics(l.ChuoiTimKiem).ToLower();
                     return searchWords.All(word => combinedText.Contains(word));
                 }).ToList();
@@ -210,10 +210,7 @@ namespace PBL3
 
                 var filtered = lstLuat.Where(l =>
                 {
-                    string combinedText = $"{(l.TenLoi != null ? RemoveDiacritics(l.TenLoi) : "")} " +
-                                          $"{(l.PhatTienOto != null ? RemoveDiacritics(l.PhatTienOto) : "")} " +
-                                          $"{(l.PhatTienXeMay != null ? RemoveDiacritics(l.PhatTienXeMay) : "")} " +
-                                          $"{(l.TruDiem != null ? RemoveDiacritics(l.TruDiem) : "")}";
+                    string combinedText = RemoveDiacritics(l.ChuoiTimKiem).ToLower();
 
                     return searchWords.All(word => combinedText.Contains(word));
                 }).ToList();
@@ -233,19 +230,9 @@ namespace PBL3
             var btn = sender as Button;
             if (btn != null && btn.DataContext is Page13LuatItem selectedLuat)
             {
-                // Truyền LuatItem và _currentUser sang trang Chi tiết (Ví dụ Page20)
-                var luatItem = new Page13LuatItem 
-                {
-                    LawId = selectedLuat.LawId,
-                    TenLoi = selectedLuat.TenLoi,
-                    PhatTienOto = selectedLuat.PhatTienOto,
-                    PhatTienXeMay = selectedLuat.PhatTienXeMay,
-                    TruDiem = selectedLuat.TruDiem,
-                    CanCu = selectedLuat.CanCu,
-                    NgayBanHanh = selectedLuat.NgayBanHanh,
-                    NgayHieuLuc = selectedLuat.NgayHieuLuc
-                };
-                // NavigationService.Navigate(new Page20(luatItem, _currentUser));
+                // Truyền thẳng object selectedLuat và _currentUser sang Page20 luôn, 
+                // không cần phải tạo lại hay gán PhatTienOto gì nữa hết!
+                NavigationService.Navigate(new Page20(selectedLuat, _currentUser));
             }
         }
     }

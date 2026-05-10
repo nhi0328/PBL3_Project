@@ -43,7 +43,7 @@ namespace PBL3
 
             if (_currentUser != null)
             {
-                txtUserName.Text = $"Cán b?: {_currentUser.OfficerId}";
+                txtUserName.Text = $"Cán bộ: {_currentUser.OfficerId}";
 
                 myBell.LoadData(_currentUser as Officer);
             }
@@ -74,7 +74,7 @@ namespace PBL3
             }
             catch (Exception ex)
             {
-                new CustomMessageBox("L?i t?i chi ti?t: " + ex.Message, "L?i k?t n?i").ShowDialog();
+                new CustomMessageBox("Lỗi tải chi tiết: " + ex.Message, "Lỗi kết nối").ShowDialog();
             }
         }
 
@@ -133,7 +133,7 @@ namespace PBL3
 
         private void btnLuu_Click(object sender, RoutedEventArgs e)
         {
-            new CustomMessageBox("Đ? lưu thông tin phương ti?n thành công!", "Thông báo").ShowDialog();
+            new CustomMessageBox("Đã lưu thông tin phương tiện thành công!", "Thông báo").ShowDialog();
             if (NavigationService.CanGoBack)
             {
                 NavigationService.GoBack();
