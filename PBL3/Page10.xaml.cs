@@ -69,6 +69,14 @@ namespace PBL3
             PerformSearch();
         }
 
+        private void txtIdentifier_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                PerformSearch();
+            }
+        }
+
         private void PerformSearch()
         {
             if (txtIdentifier == null || dgViolations == null || txtErrorMessage == null || bdWarning == null || txtWarningMessage == null) return;

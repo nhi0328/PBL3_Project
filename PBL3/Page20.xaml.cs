@@ -22,8 +22,8 @@ namespace PBL3
 {
     public partial class Page20 : Page
     {
-        private readonly LuatItem _currentLuat;
-        private readonly Officer _currentUser; // CHỈ NHẬN OFFICER
+        private readonly Page13LuatItem _currentLuat;
+        private readonly Officer _currentUser;
 
         // Constructor mặc định
         public Page20()
@@ -31,59 +31,119 @@ namespace PBL3
             InitializeComponent();
         }
 
-        // Constructor chính nhận dữ liệu Luật và Cán bộ
-        public Page20(LuatItem luat, Officer user = null) : this()
+        public Page20(Page13LuatItem luat, Officer user) : this()
         {
             _currentLuat = luat;
             _currentUser = user;
 
-            if (_currentUser != null)
+            // Hiển thị tên cán bộ ở góc phải
+            if (_currentUser != null && txtUserName != null)
             {
                 txtUserName.Text = $"Cán bộ: {_currentUser.OfficerId}";
-
-                myBell.LoadData(_currentUser as Officer);
+                myBell.LoadData(_currentUser);
             }
 
+            // Gọi hàm tải dữ liệu chi tiết
             LoadLuatDetails();
         }
 
         private void LoadLuatDetails()
         {
+            // Kiểm tra xem có dữ liệu luật truyền sang không
             if (_currentLuat == null) return;
 
+            // Gán tên lỗi lên tiêu đề
             txtTenLoi.Text = _currentLuat.TenLoi;
-            txtNghiDinh.Text = _currentLuat.CanCu;
-            txtNgayBanHanh.Text = _currentLuat.NgayBanHanh;
-            txtNgayHieuLuc.Text = _currentLuat.NgayHieuLuc;
 
-            if (_currentLuat.HasPhatTienXeMay)
+            string decree = "Chưa có thông tin";
+            DateTime? issueDate = null;
+            DateTime? effectiveDate = null;
+            var detailsList = new List<string>();
+
+            try
             {
-                spPhatXeMay.Visibility = Visibility.Visible;
-                txtPhatXeMay.Text = $"Phạt tiền từ {_currentLuat.PhatTienXeMay} đối với người điều khiển xe mô tô, xe máy";
+                using var db = new TrafficSafetyDBContext();
+
+                // Kéo bảng Categories lên để lấy tên xe (Ô tô, Xe máy...)
+                var danhSachCategory = db.Categories.ToList();
+
+                // Lấy dữ liệu gốc từ DB để trích xuất Nghị định và Ngày tháng
+                var originalLaw = db.TrafficLaws
+                                    .Include(l => l.Details)
+                                    .FirstOrDefault(l => l.LawId == _currentLuat.LawId);
+
+                if (originalLaw != null && originalLaw.Details != null)
+                {
+                    // Lấy thông tin nghị định từ dòng đầu tiên của chi tiết
+                    var firstDetail = originalLaw.Details.FirstOrDefault();
+                    if (firstDetail != null)
+                    {
+                        decree = firstDetail.Decree ?? "Chưa có thông tin";
+                        issueDate = firstDetail.IssueDate;
+                        effectiveDate = firstDetail.EffectiveDate;
+                    }
+
+                    // Phân tích từng dòng phạt và điểm trừ
+                    foreach (var d in originalLaw.Details)
+                    {
+                        string catName = "tất cả phương tiện";
+                        if (d.CategoryId.HasValue)
+                        {
+                            var cat = danhSachCategory.FirstOrDefault(c => c.CategoryId == d.CategoryId.Value);
+                            if (cat != null) catName = cat.CategoryName.ToLower();
+                        }
+
+                        // Thêm dòng Phạt tiền
+                        if (!string.IsNullOrEmpty(d.FineAmount))
+                        {
+                            detailsList.Add($"Phạt tiền từ {d.FineAmount} đối với người điều khiển {catName}");
+                        }
+
+                        // Thêm dòng Trừ điểm (Bỏ qua xe đạp ID=3 và loại ID=0)
+                        if (d.DemeritPoints.HasValue && d.DemeritPoints.Value > 0 && d.CategoryId != 0 && d.CategoryId != 3)
+                        {
+                            detailsList.Add($"Trừ {d.DemeritPoints.Value} điểm bằng lái đối với người điều khiển {catName}");
+                        }
+                    }
+                }
+
+                // Quét lịch sử cập nhật lần cuối từ bảng SystemLogs
+                var lastLog = db.SystemLogs
+                                .Where(log => log.TargetPrefix == "L" && log.TargetValue == _currentLuat.LawId.ToString())
+                                .OrderByDescending(log => log.Time)
+                                .FirstOrDefault();
+
+                if (txtLastUpdated != null)
+                {
+                    txtLastUpdated.Text = lastLog != null
+                        ? $"Cập nhật lần cuối: {lastLog.Time:HH:mm dd/MM/yyyy}"
+                        : "Hệ thống chưa ghi nhận lịch sử chỉnh sửa.";
+                }
             }
-            else
+            catch (Exception ex)
             {
-                spPhatXeMay.Visibility = Visibility.Collapsed;
+                MessageBox.Show("Lỗi tải dữ liệu: " + ex.Message);
             }
 
-            if (_currentLuat.HasPhatTienOto)
+            // Đổ dữ liệu lên các TextBlock trên giao diện
+            txtNghiDinh.Text = decree;
+
+            if (txtNgayBanHanh != null)
             {
-                spPhatOto.Visibility = Visibility.Visible;
-                txtPhatOto.Text = $"Phạt tiền từ {_currentLuat.PhatTienOto} đối với người điều khiển xe Ô tô";
-            }
-            else
-            {
-                spPhatOto.Visibility = Visibility.Collapsed;
+                txtNgayBanHanh.Text = issueDate.HasValue ? $"Ngày ban hành: {issueDate.Value:dd/MM/yyyy}" : "";
+                txtNgayBanHanh.Visibility = issueDate.HasValue ? Visibility.Visible : Visibility.Collapsed;
             }
 
-            if (_currentLuat.HasTruDiem)
+            if (txtNgayHieuLuc != null)
             {
-                spTruDiem.Visibility = Visibility.Visible;
-                txtTruDiem.Text = _currentLuat.TruDiem;
+                txtNgayHieuLuc.Text = effectiveDate.HasValue ? $"Ngày có hiệu lực: {effectiveDate.Value:dd/MM/yyyy}" : "";
+                txtNgayHieuLuc.Visibility = effectiveDate.HasValue ? Visibility.Visible : Visibility.Collapsed;
             }
-            else
+
+            // Đổ danh sách dòng phạt vào ItemsControl
+            if (icPunishments != null)
             {
-                spTruDiem.Visibility = Visibility.Collapsed;
+                icPunishments.ItemsSource = detailsList.Distinct().ToList();
             }
         }
         private void MenuInfo_Click(object sender, RoutedEventArgs e)
@@ -113,25 +173,16 @@ namespace PBL3
                 btn.ContextMenu.IsOpen = true;
             }
         }
-        
+
         private void btnBack_Click(object sender, RoutedEventArgs e)
         {
-            if (NavigationService.CanGoBack)
-            {
-                NavigationService.GoBack();
-            }
-            else
-            {
-                NavigationService.Navigate(_currentUser != null ? new Page13(_currentUser) : new Page13());
-            }
+            if (NavigationService?.CanGoBack == true) NavigationService.GoBack();
         }
 
         private void btnChinhSua_Click(object sender, RoutedEventArgs e)
         {
-            if (_currentLuat != null)
-            {
-                NavigationService.Navigate(new Page21(_currentLuat, _currentUser));
-            }
+            // Chuyển sang Page21 (Trang Sửa luật), truyền kèm thông tin Luật và Cán bộ
+            NavigationService.Navigate(new Page21(_currentLuat, _currentUser));
         }
 
         private void btnXoaLuat_Click(object sender, RoutedEventArgs e)

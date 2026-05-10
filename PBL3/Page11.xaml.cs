@@ -46,24 +46,32 @@ namespace PBL3
 
                 foreach (var d in law.Details)
                 {
-                    string catName = "Tất cả phương tiện";
+                    string catName = "tất cả phương tiện";
                     if (d.CategoryId.HasValue)
                     {
                         var loaiKhop = danhSachCategory.FirstOrDefault(v => v.CategoryId == d.CategoryId.Value);
                         if (loaiKhop != null)
                         {
-                            catName = loaiKhop.CategoryName;
+                            catName = loaiKhop.CategoryName.ToLower();
                         }
                     }
 
                     if (!string.IsNullOrEmpty(d.FineAmount))
                     {
-                        detailsList.Add($"Phạt tiền từ {d.FineAmount} đối với người điều khiển xe {catName.ToLower()}");
+                        if (d.CategoryId == 0)
+                        {
+                            detailsList.Add($"Phạt tiền từ {d.FineAmount} đối với người {catName}");
+                        }
+                        else
+                        {
+                            detailsList.Add($"Phạt tiền từ {d.FineAmount} đối với người điều khiển {catName}");
+                        }
                         searchString += " " + d.FineAmount + " " + catName;
                     }
-                    if (d.DemeritPoints.HasValue && d.DemeritPoints.Value > 0)
+
+                    if (d.DemeritPoints.HasValue && d.CategoryId != 0 && d.CategoryId != 3)
                     {
-                        detailsList.Add($"Trừ {d.DemeritPoints.Value} điểm bằng lái xe");
+                        detailsList.Add($"Trừ {d.DemeritPoints.Value} điểm bằng lái đối với người điều khiển {catName}");
                     }
                 }
 

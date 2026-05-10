@@ -53,6 +53,9 @@ public class Complaint
     [Column("OFFICER_RESPONSE")]
     public string? OfficerResponse { get; set; }
 
+    [NotMapped] // Dặn EF: "Cột này là cột ảo dùng để tính toán, đừng mò xuống DB tìm!"
+    public DateTime? LastUpdate { get; set; }
+
     // --- CÁC MỐI QUAN HỆ LIÊN KẾT (FOREIGN KEYS) ---
     [ForeignKey("SenderCitizenId")]
     public virtual Customer? Sender { get; set; }

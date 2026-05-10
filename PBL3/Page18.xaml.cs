@@ -60,20 +60,12 @@ namespace PBL3
             DateTime? effectiveDate = null;
             var detailsList = new System.Collections.Generic.List<string>();
 
-            foreach(var d in details)
+            foreach (var d in details)
             {
-                if (!string.IsNullOrEmpty(d.Decree) && string.IsNullOrEmpty(decree))
-                {
-                    decree = d.Decree;
-                }
-                if (d.IssueDate.HasValue && !issueDate.HasValue)
-                {
-                    issueDate = d.IssueDate;
-                }
-                if (d.EffectiveDate.HasValue && !effectiveDate.HasValue)
-                {
-                    effectiveDate = d.EffectiveDate;
-                }
+                // Lấy thông tin Nghị định và ngày tháng
+                if (!string.IsNullOrEmpty(d.Decree) && string.IsNullOrEmpty(decree)) decree = d.Decree;
+                if (d.IssueDate.HasValue && !issueDate.HasValue) issueDate = d.IssueDate;
+                if (d.EffectiveDate.HasValue && !effectiveDate.HasValue) effectiveDate = d.EffectiveDate;
 
                 string catName = "tất cả phương tiện";
                 if (d.CategoryId.HasValue)
@@ -84,11 +76,19 @@ namespace PBL3
 
                 if (!string.IsNullOrEmpty(d.FineAmount))
                 {
-                    detailsList.Add($"Phạt tiền từ {d.FineAmount} đối với người điều khiển {catName}");
+                    if (d.CategoryId == 0)
+                    {
+                        detailsList.Add($"Phạt tiền từ {d.FineAmount} đối với người {catName}");
+                    }
+                    else
+                    {
+                        detailsList.Add($"Phạt tiền từ {d.FineAmount} đối với người điều khiển {catName}");
+                    }
                 }
-                if (d.DemeritPoints.HasValue && d.DemeritPoints > 0)
+
+                if (d.DemeritPoints.HasValue && d.CategoryId != 0 && d.CategoryId != 3)
                 {
-                    detailsList.Add($"Trừ {d.DemeritPoints} điểm bằng lái xe");
+                    detailsList.Add($"Trừ {d.DemeritPoints.Value} điểm bằng lái đối với người điều khiển {catName}");
                 }
             }
 

@@ -324,73 +324,38 @@
                             <DropShadowEffect BlurRadius="40" Opacity="0.3" ShadowDepth="0" Direction="570"/>
                         </Border.Effect>
 
-                        <StackPanel Margin="20">
-                            <Grid Height="50" Margin="0,20,0,0">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="150"/>
-                                </Grid.ColumnDefinitions>
+                        <StackPanel Margin="10">
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                                <Button Content="&lt; Quay lại" Background="Transparent" Foreground="#666" BorderThickness="0" FontSize="18" Cursor="Hand" Click="BtnBack_Click"/>
+                            </StackPanel>
 
-                                <Border CornerRadius="8" BorderBrush="#CCC" BorderThickness="1" Background="#FAFAFA">
-                                    <TextBox Grid.Column="1" VerticalContentAlignment="Center" FontSize="20"
-                                        Background="Transparent" BorderThickness="0" Foreground="#333" 
-                                            x:Name="txtIdentifier">
-                                        <TextBox.Resources>
-                                            <Style TargetType="{x:Type TextBox}">
-                                                <Setter Property="Template">
-                                                    <Setter.Value>
-                                                        <ControlTemplate TargetType="{x:Type TextBox}">
-                                                            <Grid Margin="10">
-                                                                <ScrollViewer x:Name="PART_ContentHost"/>
-                                                                <TextBlock Text="Tìm kiếm luật" x:Name="UserPlaceholder" 
-                                                                    Foreground="Gray" VerticalAlignment="Center" 
-                                                                    IsHitTestVisible="False"
-                                                                    Visibility="Collapsed"/>
-                                                            </Grid>
-                                                            <ControlTemplate.Triggers>
-                                                                <Trigger Property="Text" Value="">
-                                                                    <Setter TargetName="UserPlaceholder" Property="Visibility" Value="Visible"/>
-                                                                </Trigger>
-                                                            </ControlTemplate.Triggers>
-                                                        </ControlTemplate>
-                                                    </Setter.Value>
-                                                </Setter>
-                                            </Style>
-                                        </TextBox.Resources>
-                                    </TextBox>
-                                </Border>
+                            <Grid Margin="20,10,20,20">
+                                <StackPanel>
+                                    <Border Background="#FFF3CD" CornerRadius="8" Padding="15">
+                                        <StackPanel Orientation="Horizontal">
+                                            <Path Data="M12 2L2 22H22L12 2ZM11 10H13V15H11V10ZM11 17H13V19H11V17Z" Fill="#C62828" Width="24" Height="24" Stretch="Uniform" Margin="0,0,10,0"/>
+                                            <TextBlock x:Name="txtLawName" Text="Tên lỗi hoặc quy định" FontSize="22" FontWeight="SemiBold" Foreground="#333" VerticalAlignment="Center" TextWrapping="Wrap" MaxWidth="800"/>
+                                        </StackPanel>
+                                    </Border>
 
-                                <Button Grid.Column="1" Margin="15,0,0,0" Background="#C62828" Cursor="Hand" Click="btnSearch_Click">
-                                    <StackPanel Orientation="Horizontal" Width="130" HorizontalAlignment="Center" VerticalAlignment="Center">
-                                        <Viewbox Width="25" Height="25" HorizontalAlignment="Left" Margin="10,0,0,0">
-                                            <Path Fill="White" Data="M9.5,3A6.5,6.5 0 0,1 16,9.5C16,11.11 15.41,12.59 14.44,13.73L14.71,14H15.5L20.5,19L19,20.5L14,15.5V14.71L13.73,14.44C12.59,15.41 11.11,16 9.5,16A6.5,6.5 0 0,1 3,9.5A6.5,6.5 0 0,1 9.5,3M9.5,5C7,5 5,7 5,9.5C5,12 7,14 9.5,14C12,14 14,12 14,9.5C14,7 12,5 9.5,5Z" />
-                                        </Viewbox>
-                                        <TextBlock Text="Tra cứu" FontSize="25" FontFamily="Calibri" VerticalAlignment="Center" Margin="10,0,0,0" Foreground="White" />
+                                    <StackPanel Margin="0,20,0,0">
+                                        <TextBlock Text="Nghị định áp dụng:" FontSize="20" FontWeight="Bold" Foreground="#333" Margin="0,0,0,10"/>
+                                        <TextBlock x:Name="txtDecree" Text="Tên nghị định"  FontSize="18" Foreground="#333" Margin="0,0,0,10"/>
+                                        <TextBlock x:Name="txtIssueDate" Text="Ngày ban hành:" FontSize="18" Foreground="#333" Margin="0,0,0,10"/>
+                                        <TextBlock x:Name="txtEffectiveDate" Text="Ngày có hiệu lực:" FontSize="18" Foreground="#333" Margin="0,0,0,15"/>
+
+                                        <ItemsControl x:Name="icPunishments">
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate>
+                                                    <StackPanel Orientation="Horizontal" Margin="0,5,0,5">
+                                                        <Ellipse Width="6" Height="6" Fill="#C62828" Margin="0,8,10,0" VerticalAlignment="Top"/>
+                                                        <TextBlock Text="{Binding}" FontSize="18" Foreground="#555" TextWrapping="Wrap" MaxWidth="800"/>
+                                                    </StackPanel>
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+                                        </ItemsControl>
                                     </StackPanel>
-
-                                    <Button.Style>
-                                        <Style TargetType="Button">
-                                            <Setter Property="Template">
-                                                <Setter.Value>
-                                                    <ControlTemplate TargetType="Button">
-                                                        <Border x:Name="border" Background="{TemplateBinding Background}" CornerRadius="8">
-                                                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                                        </Border>
-
-                                                        <ControlTemplate.Triggers>
-                                                            <Trigger Property="IsMouseOver" Value="True">
-                                                                <Setter TargetName="border" Property="Background" Value="#B71C1C"/>
-                                                            </Trigger>
-                                                            <Trigger Property="IsPressed" Value="True">
-                                                                <Setter TargetName="border" Property="Background" Value="#800000"/>
-                                                            </Trigger>
-                                                        </ControlTemplate.Triggers>
-                                                    </ControlTemplate>
-                                                </Setter.Value>
-                                            </Setter>
-                                        </Style>
-                                    </Button.Style>
-                                </Button>
+                                </StackPanel>
                             </Grid>
                         </StackPanel>
                     </Border>

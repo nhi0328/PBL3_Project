@@ -125,9 +125,13 @@ namespace PBL3
 
                 if (txtLastUpdated != null)
                 {
-                    txtLastUpdated.Text = record.LastUpdate.HasValue
-                        ? "Cập nhật lần cuối: " + record.LastUpdate.Value.ToString("dd/MM/yyyy HH:mm")
-                        : "Cập nhật lần cuối: Ngay lúc lập biên bản";
+                    var lastLog = db.SystemLogs
+                                    .Where(log => log.TargetPrefix == "B" && log.TargetValue == record.ViolationRecordId.ToString())
+                                    .OrderByDescending(log => log.Time)
+                                    .FirstOrDefault();
+
+                    DateTime lastUpdate = lastLog?.Time ?? record.ViolationDate ?? DateTime.Now;
+                    txtLastUpdated.Text = "Cập nhật lần cuối: " + lastUpdate.ToString("HH:mm - dd/MM/yyyy");
                 }
 
                 if (txtEvidenceCaption != null)

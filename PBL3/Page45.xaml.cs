@@ -20,26 +20,16 @@ namespace PBL3
 {
     public partial class Page45 : Page
     {
-        private ObservableCollection<LuatItem> lstLuat = new ObservableCollection<LuatItem>();
         private readonly Admin _currentUser;
+        private ObservableCollection<Page45LuatItem> lstLuat = new ObservableCollection<Page45LuatItem>();
 
-        // Constructor m?c đ?nh
-        public Page45()
+        public Page45(Admin user)
         {
             InitializeComponent();
-            this.Loaded += Page45_Loaded;
-        }
-
-        // Constructor chính
-        public Page45(Admin user) : this()
-        {
             _currentUser = user;
-            if (_currentUser != null)
-            {
-                txtUserName.Text = _currentUser.FullName; // Ho?c _currentUser.HoTen n?u có
+            if (_currentUser != null) txtUserName.Text = _currentUser.FullName;
 
-                myBell.LoadData(_currentUser as Admin);
-            }
+            this.Loaded += (s, e) => LoadData();
         }
 
         private void Page45_Loaded(object sender, RoutedEventArgs e)
@@ -52,112 +42,109 @@ namespace PBL3
         {
             try
             {
-                Dictionary<int, LuatItem> groupedData = new Dictionary<int, LuatItem>();
+                using var db = new TrafficSafetyDBContext();
+                var categories = db.Categories.ToList();
+                var rawLaws = db.TrafficLaws.Include(l => l.Details).ToList();
 
-                using (var db = new TrafficSafetyDBContext())
+                var results = new List<Page45LuatItem>();
+
+                foreach (var law in rawLaws)
                 {
-                    // L?y Lu?t kèm theo Chi ti?t m?c ph?t c?a nó (Quan h? 1-N)
-                    var trafficLaws = db.TrafficLaws
-                                        .Include(l => l.Details)
-                                            .ThenInclude(d => d.Category)
-                                        .ToList();
+                    var detailsList = new List<string>();
+                    string searchContent = law.LawName ?? "";
 
-                    foreach (var law in trafficLaws)
+                    foreach (var d in law.Details)
                     {
-                        var item = new LuatItem
+                        string catName = "tất cả phương tiện";
+                        if (d.CategoryId.HasValue)
                         {
-                            LawId = law.LawId,
-                            TenLoi = law.LawName ?? string.Empty,
-                        };
-
-                        // Gom nhóm chi ti?t ph?t t? b?ng TRAFFIC_LAW_DETAILS
-                        if (law.Details != null && law.Details.Any())
-                        {
-                            foreach (var detail in law.Details)
-                            {
-                                // L?y căn c? pháp l? và đi?m tr? (ưu tiên l?y cái đ?u tiên t?m th?y)
-                                if (string.IsNullOrEmpty(item.CanCu)) item.CanCu = detail.Decree ?? string.Empty;
-                                if (string.IsNullOrEmpty(item.TruDiem) && detail.DemeritPoints > 0)
-                                    item.TruDiem = $"Trừ {detail.DemeritPoints} điểm";
-
-                                // Phân lo?i m?c ph?t theo lo?i xe (Ki?m tra chu?i)
-                                string vehicleType = detail.Category?.CategoryName?.ToLower() ?? "";
-                                string fineAmount = detail.FineAmount ?? "";
-
-                                if (vehicleType.Contains("ô tô") || vehicleType.Contains("oto"))
-                                {
-                                    item.PhatTienOto = fineAmount;
-                                }
-                                else if (vehicleType.Contains("xe máy") || vehicleType.Contains("mô tô"))
-                                {
-                                    item.PhatTienXeMay = fineAmount;
-                                }
-                            }
+                            var cat = categories.FirstOrDefault(c => c.CategoryId == d.CategoryId.Value);
+                            if (cat != null) catName = cat.CategoryName.ToLower();
                         }
 
-                        groupedData[law.LawId] = item;
+                        if (!string.IsNullOrEmpty(d.FineAmount))
+                        {
+                            detailsList.Add($"Phạt tiền từ {d.FineAmount} đối với {catName}");
+                            searchContent += $" {d.FineAmount} {catName}";
+                        }
+
+                        // Không trừ điểm cho xe đạp (ID=3) hoặc không xác định (ID=0)
+                        if (d.DemeritPoints.HasValue && d.DemeritPoints > 0 && d.CategoryId != 0 && d.CategoryId != 3)
+                        {
+                            detailsList.Add($"Trừ {d.DemeritPoints} điểm bằng lái đối với {catName}");
+                        }
                     }
+
+                    // Lấy log mới nhất
+                    var lastLog = db.SystemLogs
+                                    .Where(log => log.TargetPrefix == "L" && log.TargetValue == law.LawId.ToString())
+                                    .OrderByDescending(log => log.Time).FirstOrDefault();
+
+                    results.Add(new Page45LuatItem
+                    {
+                        LawId = law.LawId,
+                        TenLoi = law.LawName,
+                        Details = detailsList.Distinct().ToList(),
+                        ChuoiTimKiem = searchContent,
+                        OriginalLaw = law
+                    });
                 }
 
-                lstLuat = new ObservableCollection<LuatItem>(groupedData.Values);
+                lstLuat = new ObservableCollection<Page45LuatItem>(results);
                 dgvDanhSachLuat.ItemsSource = lstLuat;
             }
-            catch (Exception ex)
-            {
-                new CustomMessageBox("Lỗi kết nối CSDL: " + ex.Message).ShowDialog();
-            }
+            catch (Exception ex) { MessageBox.Show("Lỗi load: " + ex.Message); }
         }
 
-        // --- CÁC HÀM T?M KI?M & L?C ---
+        // --- CÁC HÀM TÌM KIẾM & LỌC ---
         private void btnSearch_Click(object sender, RoutedEventArgs e) => FilterLaws();
-        private void txtIdentifier_TextChanged(object sender, TextChangedEventArgs e) => FilterLaws();
-
-        private string RemoveDiacritics(string text)
+        private void txtIdentifier_TextChanged(object sender, TextChangedEventArgs e)
         {
-            if (string.IsNullOrWhiteSpace(text)) return text;
-            var normalizedString = text.Normalize(System.Text.NormalizationForm.FormD);
-            var stringBuilder = new StringBuilder();
+            if (lstLuat == null || dgvDanhSachLuat == null) return;
+            string keyword = txtIdentifier.Text.Trim();
 
-            foreach (var c in normalizedString)
+            if (string.IsNullOrEmpty(keyword))
             {
-                var unicodeCategory = System.Globalization.CharUnicodeInfo.GetUnicodeCategory(c);
-                if (unicodeCategory != System.Globalization.UnicodeCategory.NonSpacingMark)
-                {
-                    stringBuilder.Append(c);
-                }
+                dgvDanhSachLuat.ItemsSource = lstLuat;
+                return;
             }
-            return stringBuilder.ToString().Normalize(System.Text.NormalizationForm.FormC).Replace('đ', 'd').Replace('Đ', 'D').ToLower();
+
+            // Dùng SearchEngine để xếp hạng kết quả cho xịn
+            var searchResults = lstLuat
+                .Select(law => new { Law = law, Score = SearchEngine.CalculateScore(law.ChuoiTimKiem, keyword) })
+                .Where(x => x.Score > 0)
+                .OrderByDescending(x => x.Score)
+                .Select(x => x.Law).ToList();
+
+            dgvDanhSachLuat.ItemsSource = searchResults;
         }
 
         private void FilterLaws()
         {
-            if (lstLuat == null) return;
-            string keyword = txtIdentifier.Text ?? "";
+            if (lstLuat == null || dgvDanhSachLuat == null) return;
 
-            if (string.IsNullOrWhiteSpace(keyword))
+            string keyword = txtIdentifier.Text?.Trim() ?? "";
+
+            if (string.IsNullOrEmpty(keyword))
             {
                 dgvDanhSachLuat.ItemsSource = lstLuat;
+                return;
             }
-            else
-            {
-                string searchKey = RemoveDiacritics(keyword).Trim();
-                var searchWords = searchKey.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
 
-                var filtered = lstLuat.Where(l =>
+            var searchResults = lstLuat
+                .Select(law => new
                 {
-                    string combinedText = $"{(l.TenLoi != null ? RemoveDiacritics(l.TenLoi) : "")} " +
-                                          $"{(l.PhatTienOto != null ? RemoveDiacritics(l.PhatTienOto) : "")} " +
-                                          $"{(l.PhatTienXeMay != null ? RemoveDiacritics(l.PhatTienXeMay) : "")} " +
-                                          $"{(l.TruDiem != null ? RemoveDiacritics(l.TruDiem) : "")}";
+                    LawInfo = law,
+                    Score = SearchEngine.CalculateScore(law.ChuoiTimKiem, keyword)
+                })
+                .Where(x => x.Score > 0)
+                .OrderByDescending(x => x.Score)
+                .Select(x => x.LawInfo)
+                .ToList();
 
-                    return searchWords.All(word => combinedText.Contains(word));
-                }).ToList();
-
-                dgvDanhSachLuat.ItemsSource = filtered;
-            }
+            dgvDanhSachLuat.ItemsSource = searchResults;
         }
 
-        // --- CÁC NÚT CH?C NĂNG TRÊN LƯ?I ---
         private void btnThemLuat_Click(object sender, RoutedEventArgs e)
         {
             NavigationService.Navigate(new Page52(null, _currentUser));
@@ -165,10 +152,9 @@ namespace PBL3
 
         private void btnXemChiTiet_Click(object sender, RoutedEventArgs e)
         {
-            var btn = sender as Button;
-            if (btn != null && btn.DataContext is LuatItem selectedLuat)
+            if ((sender as Button)?.DataContext is Page45LuatItem selected)
             {
-                NavigationService.Navigate(new Page51(selectedLuat, _currentUser));
+                NavigationService.Navigate(new Page51(selected, _currentUser));
             }
         }
 
@@ -218,6 +204,16 @@ namespace PBL3
         {
             NavigationService.Navigate(new Page49(_currentUser));
         }
+    }
+
+    public class Page45LuatItem
+    {
+        public int LawId { get; set; }
+        public string TenLoi { get; set; }
+        public List<string> Details { get; set; }
+        public string ChuoiTimKiem { get; set; }
+        public string LastUpdateInfo { get; set; }
+        public TrafficLaw OriginalLaw { get; set; }
     }
 }
 

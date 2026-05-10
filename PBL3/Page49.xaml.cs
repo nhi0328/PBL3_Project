@@ -180,7 +180,8 @@ namespace PBL3
             bool phanLoai = tgPhanLoai.IsChecked == true;
 
             using var db = new TrafficSafetyDBContext();
-            var allRecords = db.ViolationRecords.Where(r => r.ViolationDate != null).ToList();
+            // Using .AsEnumerable() to evaluate the predicate client-side if EF translates it poorly with Nullable dates
+            var allRecords = db.ViolationRecords.AsEnumerable().Where(r => r.ViolationDate.HasValue).ToList();
 
             List<string> xAxisLabels = new List<string>();
             List<ViolationRecord> currentData = new List<ViolationRecord>();

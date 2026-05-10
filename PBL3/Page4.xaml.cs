@@ -19,6 +19,7 @@ namespace PBL3
 {
     public class ViolationQuickDisplay
     {
+        public int RecordId { get; set; }
         public int STT { get; set; }
         public string Loi { get; set; }
         public string ThoiGian { get; set; }
@@ -46,20 +47,21 @@ namespace PBL3
                 myBell.LoadData(_currentUser as Customer);
             }
         }
-        private void MenuLogout_Click(object sender, RoutedEventArgs e) 
+        private void MenuLogout_Click(object sender, RoutedEventArgs e)
         {
             NavigationService.Navigate(new Page1());
         }
 
         private void MenuInfo_Click(object sender, RoutedEventArgs e)
         {
-            NavigationService.Navigate(new Page7(_currentUser as Customer)); 
+            NavigationService.Navigate(new Page7(_currentUser as Customer));
         }
 
         private void UserButton_Click(object sender, RoutedEventArgs e)
         {
             // Mở Menu
-            if (sender is Button btn && btn.ContextMenu != null) {            
+            if (sender is Button btn && btn.ContextMenu != null)
+            {
                 btn.ContextMenu.PlacementTarget = btn;
                 btn.ContextMenu.Placement = System.Windows.Controls.Primitives.PlacementMode.Bottom;
                 btn.ContextMenu.IsOpen = true;
@@ -221,6 +223,7 @@ namespace PBL3
             int stt = 1;
             var listSource = violations.Select(v => new ViolationQuickDisplay
             {
+                RecordId = v.ViolationRecordId,
                 STT = stt++,
                 Loi = v.Law?.LawName ?? v.ViolationDescription ?? "Vi phạm giao thông",
                 ThoiGian = $"{v.ViolationTime?.ToString(@"hh\:mm")} {v.ViolationDate?.ToString("dd/MM/yyyy")}",
@@ -229,6 +232,27 @@ namespace PBL3
             }).ToList();
 
             dgViolations.ItemsSource = listSource;
+        }
+
+        // Nút chi tiết chuyển Page9
+        private void BtnDetails_Click(object sender, RoutedEventArgs e)
+        {
+            // 1. Lấy dòng dữ liệu (ViolationQuickDisplay) mà người dùng vừa click vào
+            var button = sender as Button;
+            var rowData = button?.DataContext as ViolationQuickDisplay;
+
+            if (rowData != null)
+            {
+                // 2. Lấy mã biên bản đang được ẩn trong rowData
+                int maBienBan = rowData.RecordId;
+
+                // 3. Chuyển sang Page9, truyền theo đối tượng User đang đăng nhập và Mã biên bản đó
+                NavigationService.Navigate(new Page9(_currentUser as Customer, maBienBan));
+            }
+            else
+            {
+                MessageBox.Show("Không thể lấy thông tin biên bản!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
     }
 }

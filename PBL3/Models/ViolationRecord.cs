@@ -43,14 +43,14 @@ public class ViolationRecord
     public string? ImagePath { get; set; }
 
     [Column("STATUS")]
-    public int Status { get; set; } = 0;
+    public int? Status { get; set; } = 0;
     [NotMapped]
     public string StatusText
     {
         get { return Status == 1 ? "Đã xử lý / Nộp phạt" : "Chưa xử lý"; }
     }
 
-    [Column("LAST_UPDATE")]
+    [NotMapped] // Dặn EF: "Cột này là cột ảo dùng để tính toán, đừng mò xuống DB tìm!"
     public DateTime? LastUpdate { get; set; }
 
     // 1. Liên kết tới Phương tiện (Để từ đó truy ra Chủ xe)

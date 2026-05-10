@@ -21,7 +21,7 @@ namespace PBL3
     public partial class Page52 : Page
     {
         private readonly Admin _currentUser;
-        private readonly LuatItem _currentLuat;
+        private readonly Page13LuatItem _currentLuat;
         private readonly bool _isEditMode;
 
         public System.Collections.ObjectModel.ObservableCollection<VehicleFineItem> Fines { get; set; } = new System.Collections.ObjectModel.ObservableCollection<VehicleFineItem>();
@@ -35,7 +35,7 @@ namespace PBL3
         }
 
         // Constructor chính
-        public Page52(LuatItem luat, Admin user = null)
+        public Page52(Page13LuatItem luat, Admin user = null)
         {
             InitializeComponent();
             _currentUser = user;

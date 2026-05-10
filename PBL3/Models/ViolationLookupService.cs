@@ -126,8 +126,19 @@ public static class ViolationLookupService
             EvidenceImagePath = baseRecord.ImagePath ?? "", // Thay EvidenceImagePath bằng ImagePath
             EvidenceCaption = string.IsNullOrEmpty(baseRecord.ImagePath) ? "Không có hình ảnh ghi nhận" : "Hình ảnh trích xuất từ camera",
 
-            LastUpdated = baseRecord.LastUpdate?.ToString("HH:mm dd/MM/yyyy") ?? "" // Thay LastUpdated bằng LastUpdate
+            LastUpdated = FetchLastUpdatedFromSystemLogs(db, baseRecord.ViolationRecordId, baseRecord.ViolationDate)
         };
+    }
+
+    private static string FetchLastUpdatedFromSystemLogs(TrafficSafetyDBContext db, int recordId, DateTime? fallbackDate)
+    {
+        var lastLog = db.SystemLogs
+                        .Where(log => log.TargetPrefix == "B" && log.TargetValue == recordId.ToString())
+                        .OrderByDescending(log => log.Time)
+                        .FirstOrDefault();
+
+        DateTime lastUpdate = lastLog?.Time ?? fallbackDate ?? DateTime.Now;
+        return lastUpdate.ToString("HH:mm - dd/MM/yyyy");
     }
 
     // --- 2. Hàm tìm kiếm danh sách vi phạm nhanh (Dùng cho Page10 của Khách) ---
@@ -152,7 +163,7 @@ public static class ViolationLookupService
         return records.Select(r => new ViolationSearchResult
         {
             RecordId = r.ViolationRecordId,
-            Status = r.Status,
+            Status = r.Status ?? 0,
             // Ưu tiên hiện Tên Luật chính thức, nếu không có mới hiện Mô tả
             Loi = r.Law?.LawName ?? r.ViolationDescription ?? "Vi phạm giao thông",
             ThoiGian = r.ViolationDate?.ToString("dd/MM/yyyy") ?? "Không rõ",

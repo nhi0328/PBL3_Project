@@ -71,6 +71,13 @@ namespace PBL3
             PerformSearch();
         }
 
+        private void txtIdentifier_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                PerformSearch();
+            }
+        }
 
         private void PerformSearch()
         {
@@ -88,9 +95,23 @@ namespace PBL3
 
             using var db = new TrafficSafetyDBContext();
 
-            var violations = db.ViolationRecords.Include(r => r.Law).Where(r => r.LicensePlate != null && r.LicensePlate.Contains(keyword)).ToList();
+            // Lấy thông tin Biên bản KÈM THEO thời gian cập nhật mới nhất từ SystemLogs
+            var violationsWithLogs = db.ViolationRecords
+                .Include(r => r.Law)
+                .Where(r => r.LicensePlate != null && r.LicensePlate.Contains(keyword))
+                .Select(r => new
+                {
+                    Record = r,
+                    // Tìm Log mới nhất của biên bản này. Nếu không có thì lấy Null
+                    LastLogTime = db.SystemLogs
+                                    .Where(log => log.TargetPrefix == "B" && log.TargetValue == r.ViolationRecordId.ToString())
+                                    .OrderByDescending(log => log.Time)
+                                    .Select(log => (DateTime?)log.Time)
+                                    .FirstOrDefault()
+                })
+                .ToList();
 
-            if (!violations.Any())
+            if (!violationsWithLogs.Any())
             {
                 var vehicle = db.Vehicles.FirstOrDefault(v => v.LicensePlate.Contains(keyword));
 
@@ -100,7 +121,7 @@ namespace PBL3
                 }
                 else
                 {
-                    txtErrorMessage.Text = $"Không tìm thấy dữ liệu phương tiện hoặcc vi phạm nào cho từ khóa: '{keyword}'.";
+                    txtErrorMessage.Text = $"Không tìm thấy dữ liệu phương tiện hoặc vi phạm nào cho từ khóa: '{keyword}'.";
                 }
 
                 txtErrorMessage.Visibility = Visibility.Visible;
@@ -111,12 +132,10 @@ namespace PBL3
 
             txtErrorMessage.Visibility = Visibility.Collapsed;
 
-            // Nhóm theo th?i gian, ưu tiên nhóm có l?i chưa x? l? (Status = 0) lên đ?u
-            var grouped = violations.GroupBy(v => new { v.LicensePlate, v.ViolationDate, v.ViolationTime })
-                                    .OrderBy(g => g.All(v => v.Status != 0)) // Nhóm có ít nh?t 1 l?i Status == 0 s? lên đ?u (v? All return False, False < True)
-                                    .ThenByDescending(g => g.Key.ViolationDate)
-                                    .ThenByDescending(g => g.Key.ViolationTime)
-                                    .ToList();
+            // Gom nhóm theo Biển số xe. Lưu ý: Lấy từ cái biến Ảo Record vừa tạo ở trên
+            var grouped = violationsWithLogs.GroupBy(v => new { v.Record.LicensePlate })
+                                            .OrderBy(g => g.All(v => v.Record.Status != 0))
+                                            .ToList();
 
             int stt = 1;
             int totalUnprocessed = 0;
@@ -124,8 +143,8 @@ namespace PBL3
 
             foreach (var group in grouped)
             {
-                var first = group.First();
-                int groupUnprocessedCount = group.Count(v => v.Status == 0);
+                var first = group.First().Record;
+                int groupUnprocessedCount = group.Count(v => v.Record.Status == 0);
                 totalUnprocessed += groupUnprocessedCount;
 
                 bool isProcessed = groupUnprocessedCount == 0;
@@ -134,15 +153,21 @@ namespace PBL3
                 int loiCount = 1;
                 int totalInGroup = group.Count();
 
-                foreach (var v in group)
+                foreach (var v in group.OrderByDescending(x => x.Record.ViolationDate).ThenByDescending(x => x.Record.ViolationTime))
                 {
-                    string loiName = v.Law?.LawName ?? v.ViolationDescription ?? "Vi phạm giao thông";
+                    string loiName = v.Record.Law?.LawName ?? v.Record.ViolationDescription ?? "Vi phạm giao thông";
                     string prefix = totalInGroup > 1 ? $"{loiCount}. " : "";
 
-                    string timeStr = v.ViolationTime?.ToString(@"hh\:mm") ?? "";
-                    string dateStr = v.ViolationDate?.ToString("dd/MM/yyyy") ?? "";
+                    string timeStr = v.Record.ViolationTime?.ToString(@"hh\:mm") ?? "";
+                    string dateStr = v.Record.ViolationDate?.ToString("dd/MM/yyyy") ?? "";
+                    string baseTime = $"{dateStr} - {timeStr}";
 
-                    string extraTime = (loiCount == totalInGroup) ? $"{dateStr} - {timeStr}" : "";
+                    // TÍNH TOÁN THỜI GIAN CẬP NHẬT LẦN CUỐI
+                    DateTime thoiGianCuoi = v.LastLogTime ?? v.Record.ViolationDate ?? DateTime.Now;
+                    string lastUpdateStr = $"(Cập nhật: {thoiGianCuoi:dd/MM/yy})";
+
+                    // Nối mô tả phụ: Ví dụ: "12/05/2026 - 14:30 (Cập nhật: 13/05/26)"
+                    string extraTime = $"{baseTime} {lastUpdateStr}";
 
                     listLoi.Add(new ViolationDetailDisplay { MoTaLoi = prefix + loiName, ThoiGian = extraTime });
                     loiCount++;
@@ -153,7 +178,7 @@ namespace PBL3
                     STT = stt++,
                     BienSo = first.LicensePlate,
                     DanhSachLoi = listLoi,
-                    TrangThaiIcon = isProcessed ? "?" : "?",
+                    TrangThaiIcon = isProcessed ? "✓" : "!",
                     TrangThaiText = isProcessed ? "Đã xử lý" : "Chưa xử lý",
                     TrangThaiBg = isProcessed ? "#E8F5E9" : "#C62828",
                     TrangThaiFg = isProcessed ? "#2E7D32" : "White",

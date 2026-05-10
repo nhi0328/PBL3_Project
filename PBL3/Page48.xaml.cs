@@ -59,7 +59,9 @@ namespace PBL3
                 int stt = 1;
                 foreach (var log in logs)
                 {
-                    string actionStr = $"{TrackingHelper.GetActionName(log.Action)} {TrackingHelper.GetDetailedTargetInfo(log.TargetPrefix, log.TargetValue, db)}";
+                    string targetValue = log.TargetValue ?? string.Empty;
+                    string targetPrefix = log.TargetPrefix ?? string.Empty;
+                    string actionStr = $"{TrackingHelper.GetActionName(log.Action)} {TrackingHelper.GetDetailedTargetInfo(targetPrefix, targetValue, db)}";
                     _allLogs.Add(new LogDisplay
                     {
                         STT = stt++,
@@ -124,13 +126,13 @@ namespace PBL3
             if (dgHistory == null || cbFilterRole == null || txtSearch == null) return;
 
             string keyword = txtSearch.Text.Trim();
-            if (keyword == "T?m ki?m l?ch s?...") keyword = "";
+            if (keyword == "T?m ki?m l?ch s?..." || keyword == "T?m ki?m l?ch s?...") keyword = "";
 
             var filtered = _allLogs.AsEnumerable();
 
             // L?c theo vai tr?
             string roleFilter = (cbFilterRole.SelectedItem as ComboBoxItem)?.Content.ToString() ?? "T?t c?";
-            if (roleFilter != "T?t c?")
+            if (roleFilter != "T?t c?" && roleFilter != "T?t c?")
             {
                 filtered = filtered.Where(l => l.RoleName == roleFilter);
             }
@@ -139,13 +141,13 @@ namespace PBL3
             if (!string.IsNullOrEmpty(keyword))
             {
                 filtered = filtered.Where(l => 
-                    SearchEngine.CalculateScore(l.TimeStr, keyword) > 0 ||
-                    SearchEngine.CalculateScore(l.RoleName, keyword) > 0 ||
-                    SearchEngine.CalculateScore(l.ActorId, keyword) > 0 ||
-                    SearchEngine.CalculateScore(l.ActionStr, keyword) > 0
+                    SearchEngine.CalculateScore(l.TimeStr ?? string.Empty, keyword) > 0 ||
+                    SearchEngine.CalculateScore(l.RoleName ?? string.Empty, keyword) > 0 ||
+                    SearchEngine.CalculateScore(l.ActorId ?? string.Empty, keyword) > 0 ||
+                    SearchEngine.CalculateScore(l.ActionStr ?? string.Empty, keyword) > 0
                 ).OrderByDescending(l => Math.Max(
-                    Math.Max(SearchEngine.CalculateScore(l.TimeStr, keyword), SearchEngine.CalculateScore(l.RoleName, keyword)),
-                    Math.Max(SearchEngine.CalculateScore(l.ActorId, keyword), SearchEngine.CalculateScore(l.ActionStr, keyword))
+                    Math.Max(SearchEngine.CalculateScore(l.TimeStr ?? string.Empty, keyword), SearchEngine.CalculateScore(l.RoleName ?? string.Empty, keyword)),
+                    Math.Max(SearchEngine.CalculateScore(l.ActorId ?? string.Empty, keyword), SearchEngine.CalculateScore(l.ActionStr ?? string.Empty, keyword))
                 ));
             }
 

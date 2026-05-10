@@ -20,7 +20,6 @@ namespace PBL3
     public partial class Page5 : Page
     {
         private readonly Customer _currentUser;
-        private ObservableCollection<TrafficLawDto> _lawsList = new ObservableCollection<TrafficLawDto>();
 
         // Constructor mặc định
         public Page5()
@@ -72,48 +71,97 @@ namespace PBL3
             }
         }
 
+        private List<dynamic> _allLaws = new List<dynamic>();
+
         private void LoadData(string keyword = "")
         {
-            using (var _context = new TrafficSafetyDBContext())
+            using (var db = new TrafficSafetyDBContext())
             {
-                var query = _context.TrafficLaws.Include(t => t.Details).ThenInclude(d => d.Category).AsQueryable();
-                
-                if (!string.IsNullOrEmpty(keyword))
+                var danhSachCategory = db.Categories.ToList();
+                var laws = db.TrafficLaws.Select(law => new
                 {
-                    query = query.Where(t => t.LawName.Contains(keyword));
-                }
+                    LawId = law.LawId,
+                    LawName = law.LawName,
+                    Details = law.Details.ToList()
+                }).ToList();
 
-                var laws = query.ToList();
-                _lawsList.Clear();
-
-                foreach (var law in laws)
+                _allLaws = laws.Select(law =>
                 {
-                    var dto = new TrafficLawDto
-                    {
-                        LawName = law.LawName,
-                        DisplayDetails = new List<string>()
-                    };
+                    var detailsList = new List<string>();
+                    string searchString = law.LawName ?? "";
 
-                    foreach (var detail in law.Details)
+                    foreach (var d in law.Details)
                     {
-                        if (!string.IsNullOrEmpty(detail.FineAmount))
+                        string catName = "tất cả phương tiện";
+                        if (d.CategoryId.HasValue)
                         {
-                            string categoryName = detail.Category != null ? detail.Category.CategoryName : "phương tiện";
-                            dto.DisplayDetails.Add($"Phạt tiền {detail.FineAmount} đối với người điều khiển {categoryName}");
+                            var loaiKhop = danhSachCategory.FirstOrDefault(v => v.CategoryId == d.CategoryId.Value);
+                            if (loaiKhop != null) catName = loaiKhop.CategoryName.ToLower();
                         }
-                        if (detail.DemeritPoints.HasValue && detail.DemeritPoints.Value > 0)
+
+                        if (!string.IsNullOrEmpty(d.FineAmount))
                         {
-                            dto.DisplayDetails.Add($"Trừ {detail.DemeritPoints} điểm bằng lái xe");
+                            if (d.CategoryId == 0)
+                            {
+                                detailsList.Add($"Phạt tiền từ {d.FineAmount} đối với người {catName}");
+                            }
+                            else
+                            {
+                                detailsList.Add($"Phạt tiền từ {d.FineAmount} đối với người điều khiển {catName}");
+                            }
+                            searchString += " " + d.FineAmount + " " + catName;
+                        }
+
+                        // Kiểm tra điều kiện trừ điểm
+                        if (d.DemeritPoints.HasValue && d.DemeritPoints.Value > 0 && d.CategoryId != 0 && d.CategoryId != 3)
+                        {
+                            detailsList.Add($"Trừ {d.DemeritPoints.Value} điểm bằng lái đối với người điều khiển {catName}");
                         }
                     }
-                    
-                    if(dto.DisplayDetails.Count == 0)
-                        dto.DisplayDetails.Add("Chưa có thông tin chi tiết mức phạt");
 
-                    _lawsList.Add(dto);
+                    detailsList = detailsList.Distinct().ToList();
+                    if (detailsList.Count == 0) detailsList.Add("Chưa có thông tin chi tiết mức phạt");
+
+                    return new
+                    {
+                        STT = law.LawId,
+                        TenLoi = law.LawName, // Đặt là TenLoi để khớp với Binding của XAML (nếu copy từ Admin sang)
+                        LawName = law.LawName,
+                        Details = detailsList,
+                        ChuoiTimKiem = searchString
+                    };
+                }).Cast<dynamic>().ToList();
+
+                // Lọc nếu có từ khóa
+                if (!string.IsNullOrEmpty(keyword))
+                {
+                    var searchResults = _allLaws
+                        .Select(law => new { LawInfo = law, Score = SearchEngine.CalculateScore(law.ChuoiTimKiem, keyword) })
+                        .Where(x => x.Score > 0)
+                        .OrderByDescending(x => x.Score)
+                        .Select(x => x.LawInfo)
+                        .ToList();
+                    icLaws.ItemsSource = searchResults;
                 }
+                else
+                {
+                    icLaws.ItemsSource = _allLaws;
+                }
+            }
+        }
 
-                icLaws.ItemsSource = _lawsList;
+        // Xử lý sự kiện nút Chi tiết
+        private void btnXemChiTiet_Click(object sender, RoutedEventArgs e)
+        {
+            var btn = sender as Button;
+            if (btn != null && btn.DataContext != null)
+            {
+                // Lấy dữ liệu của dòng hiện tại
+                dynamic law = btn.DataContext;
+                int maLuat = law.STT; // STT chính là LawId mình đã map ở trên
+
+                // Truyền User và Mã Luật sang Page27
+                NavigationService.Navigate(new Page27(_currentUser as Customer, maLuat));
             }
         }
 
@@ -154,15 +202,5 @@ namespace PBL3
             LoadData(keyword);
         }
 
-        private void btnXemChiTiet_Click(object sender, RoutedEventArgs e)
-        {
-            NavigationService.Navigate(new Page27());
-        }
-    }
-
-    public class TrafficLawDto
-    {
-        public string LawName { get; set; }
-        public List<string> DisplayDetails { get; set; }
     }
 }

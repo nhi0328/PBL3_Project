@@ -11,27 +11,18 @@ using PBL3.Models;
 
 namespace PBL3
 {
-    // Class DTO (Data Transfer Object) dùng để hiển thị lên DataGrid
-    public class LuatItem
+    public class Page13LuatItem
     {
         public int LawId { get; set; }
-        public string TenLoi { get; set; } = string.Empty;
-        public string PhatTienOto { get; set; } = string.Empty;
-        public string PhatTienXeMay { get; set; } = string.Empty;
-        public string TruDiem { get; set; } = string.Empty;
-        public string CanCu { get; set; } = string.Empty;
-        public string NgayBanHanh { get; set; } = string.Empty;
-        public string NgayHieuLuc { get; set; } = string.Empty;
-
-        // Các biến UI ẩn hiện (Giữ nguyên logic của Nhi)
-        public bool HasPhatTienOto => !string.IsNullOrEmpty(PhatTienOto);
-        public bool HasPhatTienXeMay => !string.IsNullOrEmpty(PhatTienXeMay);
-        public bool HasTruDiem => !string.IsNullOrEmpty(TruDiem) && !TruDiem.StartsWith("Trừ 0") && !TruDiem.StartsWith("Tr\u1EEB 0");
+        public string TenLoi { get; set; }
+        public List<string> Details { get; set; } // Dùng cho giao diện
+        public string ChuoiTimKiem { get; set; } // Dùng cho thuật toán tìm kiếm
+        public TrafficLaw OriginalLaw { get; set; }
     }
 
     public partial class Page13 : Page
     {
-        private ObservableCollection<LuatItem> lstLuat = new ObservableCollection<LuatItem>();
+        private ObservableCollection<Page13LuatItem> lstLuat = new ObservableCollection<Page13LuatItem>();
 
         // CHỈ NHẬN OFFICER
         private readonly Officer _currentUser;
@@ -91,70 +82,100 @@ namespace PBL3
         private void btnLogOut_Click(object sender, RoutedEventArgs e) => NavigationService.Navigate(new Page1());
 
 
-        // --- LOGIC LOAD DỮ LIỆU LUẬT (CẬP NHẬT THEO DB MỚI) ---
         private void LoadData()
         {
             try
             {
-                Dictionary<int, LuatItem> groupedData = new Dictionary<int, LuatItem>();
+                using var db = new TrafficSafetyDBContext();
+                var danhSachCategory = db.Categories.ToList();
+                var trafficLaws = db.TrafficLaws.Include(l => l.Details).ToList();
+                var danhSachGop = new List<Page13LuatItem>();
 
-                using (var db = new TrafficSafetyDBContext())
+                foreach (var law in trafficLaws)
                 {
-                    // Lấy Luật kèm theo Chi tiết mức phạt của nó (Quan hệ 1-N)
-                    var trafficLaws = db.TrafficLaws
-                                        .Include(l => l.Details)
-                                            .ThenInclude(d => d.Category)
-                                        .ToList();
+                    var detailsList = new List<string>();
+                    string searchString = law.LawName ?? "";
 
-                    foreach (var law in trafficLaws)
+                    if (law.Details != null && law.Details.Any())
                     {
-                        var item = new LuatItem
+                        foreach (var d in law.Details)
                         {
-                            LawId = law.LawId,
-                            TenLoi = law.LawName ?? string.Empty,
-                        };
-
-                        // Gom nhóm chi tiết phạt từ bảng TRAFFIC_LAW_DETAILS
-                        if (law.Details != null && law.Details.Any())
-                        {
-                            foreach (var detail in law.Details)
+                            string catName = "tất cả phương tiện";
+                            if (d.CategoryId.HasValue)
                             {
-                                // Lấy căn cứ pháp lý và điểm trừ (ưu tiên lấy cái đầu tiên tìm thấy)
-                                if (string.IsNullOrEmpty(item.CanCu)) item.CanCu = detail.Decree ?? string.Empty;
-                                if (string.IsNullOrEmpty(item.TruDiem) && detail.DemeritPoints > 0)
-                                    item.TruDiem = $"Trừ {detail.DemeritPoints} điểm";
+                                var loaiKhop = danhSachCategory.FirstOrDefault(v => v.CategoryId == d.CategoryId.Value);
+                                if (loaiKhop != null) catName = loaiKhop.CategoryName.ToLower();
+                            }
 
-                                // Phân loại mức phạt theo loại xe (Kiểm tra chuỗi)
-                                string vehicleType = detail.Category?.CategoryName?.ToLower() ?? "";
-                                string fineAmount = detail.FineAmount ?? "";
+                            if (!string.IsNullOrEmpty(d.FineAmount))
+                            {
+                                if (d.CategoryId == 0)
+                                {
+                                    detailsList.Add($"Phạt tiền từ {d.FineAmount} đối với người {catName}");
+                                }
+                                else
+                                {
+                                    detailsList.Add($"Phạt tiền từ {d.FineAmount} đối với người điều khiển {catName}");
+                                }
+                                searchString += " " + d.FineAmount + " " + catName;
+                            }
 
-                                if (vehicleType.Contains("ô tô") || vehicleType.Contains("oto"))
-                                {
-                                    item.PhatTienOto = fineAmount;
-                                }
-                                else if (vehicleType.Contains("xe máy") || vehicleType.Contains("mô tô"))
-                                {
-                                    item.PhatTienXeMay = fineAmount;
-                                }
+                            // KIỂM TRA CHẶT: Bỏ qua xe thô sơ và xe đạp (ID 0 và 3)
+                            if (d.DemeritPoints.HasValue && d.DemeritPoints.Value > 0 && d.CategoryId != 0 && d.CategoryId != 3)
+                            {
+                                detailsList.Add($"Trừ {d.DemeritPoints.Value} điểm bằng lái đối với người điều khiển {catName}");
                             }
                         }
-
-                        groupedData[law.LawId] = item;
                     }
+
+                    detailsList = detailsList.Distinct().ToList();
+                    if (detailsList.Count == 0) detailsList.Add("Chưa có thông tin chi tiết mức phạt");
+
+                    danhSachGop.Add(new Page13LuatItem
+                    {
+                        LawId = law.LawId,
+                        TenLoi = law.LawName,
+                        Details = detailsList,
+                        ChuoiTimKiem = searchString,
+                        OriginalLaw = law
+                    });
                 }
 
-                lstLuat = new ObservableCollection<LuatItem>(groupedData.Values);
+                lstLuat = new ObservableCollection<Page13LuatItem>(danhSachGop);
                 dgvDanhSachLuat.ItemsSource = lstLuat;
             }
             catch (Exception ex)
             {
-                new CustomMessageBox("Lỗi kết nối CSDL: " + ex.Message).ShowDialog();
+                MessageBox.Show("Lỗi kết nối CSDL: " + ex.Message);
             }
         }
 
         // --- CÁC HÀM TÌM KIẾM & LỌC ---
         private void btnSearch_Click(object sender, RoutedEventArgs e) => FilterLaws();
-        private void txtIdentifier_TextChanged(object sender, TextChangedEventArgs e) => FilterLaws();
+        private void txtIdentifier_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (lstLuat == null || lstLuat.Count == 0 || dgvDanhSachLuat == null) return;
+
+            string keyword = txtIdentifier.Text.Trim();
+
+            if (string.IsNullOrEmpty(keyword))
+            {
+                dgvDanhSachLuat.ItemsSource = lstLuat;
+            }
+            else
+            {
+                string[] searchWords = RemoveDiacritics(keyword).ToLower().Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+
+                var filtered = lstLuat.Where(l =>
+                {
+                    // Quét trên toàn bộ Chuỗi Tìm Kiếm (đã chứa tên luật + mức phạt + loại xe)
+                    string combinedText = RemoveDiacritics(l.ChuoiTimKiem).ToLower();
+                    return searchWords.All(word => combinedText.Contains(word));
+                }).ToList();
+
+                dgvDanhSachLuat.ItemsSource = filtered;
+            }
+        }
 
         private string RemoveDiacritics(string text)
         {
@@ -210,11 +231,21 @@ namespace PBL3
         private void btnXemChiTiet_Click(object sender, RoutedEventArgs e)
         {
             var btn = sender as Button;
-            if (btn != null && btn.DataContext is LuatItem selectedLuat)
+            if (btn != null && btn.DataContext is Page13LuatItem selectedLuat)
             {
                 // Truyền LuatItem và _currentUser sang trang Chi tiết (Ví dụ Page20)
-                // NavigationService.Navigate(new Page20(selectedLuat, _currentUser));
-                new CustomMessageBox($"Xem chi tiết luật: {selectedLuat.TenLoi}").ShowDialog();
+                var luatItem = new Page13LuatItem 
+                {
+                    LawId = selectedLuat.LawId,
+                    TenLoi = selectedLuat.TenLoi,
+                    PhatTienOto = selectedLuat.PhatTienOto,
+                    PhatTienXeMay = selectedLuat.PhatTienXeMay,
+                    TruDiem = selectedLuat.TruDiem,
+                    CanCu = selectedLuat.CanCu,
+                    NgayBanHanh = selectedLuat.NgayBanHanh,
+                    NgayHieuLuc = selectedLuat.NgayHieuLuc
+                };
+                // NavigationService.Navigate(new Page20(luatItem, _currentUser));
             }
         }
     }

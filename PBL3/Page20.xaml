@@ -401,101 +401,50 @@
 
             <Grid Grid.Row="1" Panel.ZIndex="1">
 
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="100"/>
-                        <RowDefinition Height="*"/>
-                    </Grid.RowDefinitions>
+                <StackPanel>
+                    <TextBlock Text="TRA CỨU LUẬT" FontSize="35" FontFamily="Calibri" Foreground="#333" HorizontalAlignment="Center" Padding="0,35,0,20"/>
 
-                    <TextBlock Grid.Row="0" Text="LUẬT" FontSize="35" FontFamily="Calibri" Foreground="#333" HorizontalAlignment="Center" Padding="0,35,0,20"/>
-
-                    <Border Grid.Row="1" Background="White" CornerRadius="20" Padding="0" Margin="30,0,30,30">
+                    <Border Background="White" CornerRadius="20" Padding="0" Margin="50,0,30,10">
                         <Border.Effect>
                             <DropShadowEffect BlurRadius="40" Opacity="0.3" ShadowDepth="0" Direction="570"/>
                         </Border.Effect>
-                        <Grid Margin="30">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="*"/>
-                                <RowDefinition Height="Auto"/>
-                            </Grid.RowDefinitions>
 
-                            <Button x:Name="btnBack" Grid.Row="0" Margin="-5,0,0,0" Padding="0" Content="&lt; Quay lại" Foreground="#999" Background="Transparent" BorderThickness="0" HorizontalAlignment="Left" FontSize="16" FontFamily="Calibri" Cursor="Hand" Click="btnBack_Click"/>
+                        <StackPanel Margin="10">
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                                <Button Content="&lt; Quay lại" Background="Transparent" Foreground="#666" BorderThickness="0" FontSize="18" Cursor="Hand" Click="btnBack_Click"/>
+                            </StackPanel>
 
-                            <Border Grid.Row="1" Background="#FFF5E5" CornerRadius="8" Margin="0,15,0,20" Padding="15">
-                                <StackPanel Orientation="Horizontal">
-                                    <Viewbox Width="24" Height="24" Margin="0,0,10,0">
-                                        <Path Fill="#C62828" Data="M13,14H11V10H13M13,18H11V16H13M1,21H23L12,2L1,21Z" />
-                                    </Viewbox>
-                                    <TextBlock x:Name="txtTenLoi" Text="Không chấp hành tín hiệu giao thông" FontSize="20" FontFamily="Calibri" Foreground="#333" VerticalAlignment="Center" TextWrapping="Wrap" MaxWidth="800"/>
+                            <Grid Margin="20,10,20,20">
+                                <StackPanel>
+                                    <Border Background="#FFF3CD" CornerRadius="8" Padding="15">
+                                        <StackPanel Orientation="Horizontal">
+                                            <Path Data="M12 2L2 22H22L12 2ZM11 10H13V15H11V10ZM11 17H13V19H11V17Z" Fill="#C62828" Width="24" Height="24" Stretch="Uniform" Margin="0,0,10,0"/>
+                                            <TextBlock x:Name="txtLawName" Text="Tên lỗi hoặc quy định" FontSize="22" FontWeight="SemiBold" Foreground="#333" VerticalAlignment="Center" TextWrapping="Wrap" MaxWidth="800"/>
+                                        </StackPanel>
+                                    </Border>
+
+                                    <StackPanel Margin="0,20,0,0">
+                                        <TextBlock Text="Nghị định áp dụng:" FontSize="20" FontWeight="Bold" Foreground="#333" Margin="0,0,0,10"/>
+                                        <TextBlock x:Name="txtDecree" Text="Tên nghị định"  FontSize="18" Foreground="#333" Margin="0,0,0,10"/>
+                                        <TextBlock x:Name="txtIssueDate" Text="Ngày ban hành:" FontSize="18" Foreground="#333" Margin="0,0,0,10"/>
+                                        <TextBlock x:Name="txtEffectiveDate" Text="Ngày có hiệu lực:" FontSize="18" Foreground="#333" Margin="0,0,0,15"/>
+
+                                        <ItemsControl x:Name="icPunishments">
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate>
+                                                    <StackPanel Orientation="Horizontal" Margin="0,5,0,5">
+                                                        <Ellipse Width="6" Height="6" Fill="#C62828" Margin="0,8,10,0" VerticalAlignment="Top"/>
+                                                        <TextBlock Text="{Binding}" FontSize="18" Foreground="#555" TextWrapping="Wrap" MaxWidth="800"/>
+                                                    </StackPanel>
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+                                        </ItemsControl>
+                                    </StackPanel>
                                 </StackPanel>
-                            </Border>
-
-                            <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="0,5,0,5">
-                                <TextBlock Text="Nghị định " FontSize="18" FontFamily="Calibri" Foreground="#333" />
-                                <TextBlock x:Name="txtNghiDinh" Text="100/2019/NĐ - CP" FontSize="18" FontFamily="Calibri" Foreground="#333"/>
-                            </StackPanel>
-
-                            <StackPanel Grid.Row="3" Orientation="Horizontal" Margin="0,5,0,5">
-                                <TextBlock Text="Ngày ban hành: " FontSize="18" FontFamily="Calibri" Foreground="#333" />
-                                <TextBlock x:Name="txtNgayBanHanh" Text="30/12/2019" FontSize="18" FontFamily="Calibri" Foreground="#333"/>
-                            </StackPanel>
-
-                            <StackPanel Grid.Row="4" Orientation="Horizontal" Margin="0,5,0,20">
-                                <TextBlock Text="Ngày có hiệu lực: " FontSize="18" FontFamily="Calibri" Foreground="#333" />
-                                <TextBlock x:Name="txtNgayHieuLuc" Text="01/01/2020" FontSize="18" FontFamily="Calibri" Foreground="#333"/>
-                            </StackPanel>
-
-                            <StackPanel Grid.Row="5" x:Name="spPenalties">
-                                <StackPanel Orientation="Horizontal" Margin="0,5,0,5" x:Name="spPhatXeMay">
-                                    <Ellipse Width="5" Height="5" Fill="#C62828" Margin="0,0,10,0" VerticalAlignment="Center"/>
-                                    <TextBlock x:Name="txtPhatXeMay" Text="Phạt tiền từ 600.000 đồng đến 1.000.000 đồng đối với người điều khiển xe mô tô gắn máy" FontSize="18" FontFamily="Calibri" Foreground="#333" TextWrapping="Wrap" MaxWidth="800"/>
-                                </StackPanel>
-
-                                <StackPanel Orientation="Horizontal" Margin="0,5,0,5" x:Name="spPhatOto">
-                                    <Ellipse Width="5" Height="5" Fill="#C62828" Margin="0,0,10,0" VerticalAlignment="Center"/>
-                                    <TextBlock x:Name="txtPhatOto" Text="Phạt tiền từ 4.000.000 đồng đến 6.000.000 đồng đối với người điều khiển xe ô tô" FontSize="18" FontFamily="Calibri" Foreground="#333" TextWrapping="Wrap" MaxWidth="800"/>
-                                </StackPanel>
-
-                                <StackPanel Orientation="Horizontal" Margin="0,5,0,5" x:Name="spTruDiem">
-                                    <Ellipse Width="5" Height="5" Fill="#C62828" Margin="0,0,10,0" VerticalAlignment="Center"/>
-                                    <TextBlock x:Name="txtTruDiem" Text="Trừ 3 điểm bằng lái xe" FontSize="18" FontFamily="Calibri" Foreground="#333" TextWrapping="Wrap" MaxWidth="800"/>
-                                </StackPanel>
-                            </StackPanel>
-
-                            <StackPanel Grid.Row="6" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,20,0,0">
-                                <Button x:Name="btnChinhSua" Content="Chỉnh sửa" Width="120" Height="40" Background="White" Foreground="Black" BorderBrush="#ccc" BorderThickness="1" FontSize="16" FontFamily="Calibri" Cursor="Hand" Margin="0,0,15,0" Click="btnChinhSua_Click">
-                                    <Button.Template>
-                                        <ControlTemplate TargetType="Button">
-                                            <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="8">
-                                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                            </Border>
-                                        </ControlTemplate>
-                                    </Button.Template>
-                                </Button>
-
-                                <Button x:Name="btnXoaLuat" Content="Xoá luật" Width="120" Height="40" Background="#C62828" Foreground="White" BorderThickness="0" FontSize="16" FontFamily="Calibri" Cursor="Hand" Click="btnXoaLuat_Click">
-                                    <Button.Template>
-                                        <ControlTemplate TargetType="Button">
-                                            <Border x:Name="borderH" Background="{TemplateBinding Background}" CornerRadius="8">
-                                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                            </Border>
-                                            <ControlTemplate.Triggers>
-                                                <Trigger Property="IsMouseOver" Value="True">
-                                                    <Setter TargetName="borderH" Property="Background" Value="#b32424"/>
-                                                </Trigger>
-                                            </ControlTemplate.Triggers>
-                                        </ControlTemplate>
-                                    </Button.Template>
-                                </Button>
-                            </StackPanel>
-                        </Grid>
+                            </Grid>
+                        </StackPanel>
                     </Border>
-                </Grid>
+                </StackPanel>
             </Grid>
         </Grid>
     </Grid>

@@ -11,7 +11,7 @@ namespace PBL3
     {
         // CHỈ NHẬN OFFICER
         private readonly Officer _currentUser;
-        private readonly LuatItem _currentLuat;
+        private readonly Page13LuatItem _currentLuat;
         private readonly bool _isEditMode;
 
         public System.Collections.ObjectModel.ObservableCollection<VehicleFineItem> Fines { get; set; } = new System.Collections.ObjectModel.ObservableCollection<VehicleFineItem>();
@@ -25,7 +25,7 @@ namespace PBL3
         }
 
         // Constructor chính nhận dữ liệu
-        public Page21(LuatItem luat, Officer user = null)
+        public Page21(Page13LuatItem luat, Officer user = null)
         {
             InitializeComponent();
             _currentUser = user;
