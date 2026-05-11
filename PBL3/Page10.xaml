@@ -108,9 +108,41 @@
 
                                 <StackPanel Grid.Column="1" Margin="0,0,15,0">
                                     <TextBlock Text="Biển số xe" FontSize="18" Foreground="Black" Margin="0,0,0,10" />
+
                                     <Border CornerRadius="8" BorderBrush="#CCC" BorderThickness="1" Background="White" Height="40">
-                                        <TextBox x:Name="txtIdentifier" VerticalContentAlignment="Center" FontSize="20" Background="Transparent" BorderThickness="0" Foreground="#333" Padding="10,0" />
+                                        <TextBox x:Name="txtIdentifier" TextChanged="txtIdentifier_TextChanged" VerticalContentAlignment="Center" FontSize="20" Background="Transparent" BorderThickness="0" Foreground="#333" Padding="10,0" />
                                     </Border>
+
+                                    <Popup x:Name="popSuggestions" PlacementTarget="{Binding ElementName=txtIdentifier}" Placement="Bottom" StaysOpen="False" IsOpen="False" AllowsTransparency="True" Width="{Binding ElementName=txtIdentifier, Path=ActualWidth}">
+                                        <Border Background="White" BorderBrush="#c72421" BorderThickness="1" CornerRadius="0,0,8,8" MaxHeight="250">
+                                            <Border.Effect>
+                                                <DropShadowEffect BlurRadius="10" Opacity="0.2" ShadowDepth="3"/>
+                                            </Border.Effect>
+                                            <ListBox x:Name="lstSuggestions" BorderThickness="0" Background="Transparent" SelectionChanged="lstSuggestions_SelectionChanged" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                                                <ListBox.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <TextBlock Text="{Binding}" FontSize="18" FontFamily="Calibri" Foreground="#333" Padding="15,10" Cursor="Hand"/>
+                                                    </DataTemplate>
+                                                </ListBox.ItemTemplate>
+                                                <ListBox.ItemContainerStyle>
+                                                    <Style TargetType="ListBoxItem">
+                                                        <Setter Property="Padding" Value="0"/>
+                                                        <Setter Property="Margin" Value="0"/>
+                                                        <Setter Property="BorderThickness" Value="0"/>
+
+                                                        <Style.Triggers>
+                                                            <Trigger Property="IsMouseOver" Value="True">
+                                                                <Setter Property="Background" Value="#EAEAEA"/>
+                                                                <Setter Property="Foreground" Value="#333333"/>
+                                                            </Trigger>
+                                                        </Style.Triggers>
+
+                                                    </Style>
+                                                </ListBox.ItemContainerStyle>
+                                            </ListBox>
+                                        </Border>
+                                    </Popup>
+
                                     <TextBlock x:Name="txtErrorMessage" Text="Biển số xe 30A-123.45 chưa được đăng ký." Foreground="#c72421" FontSize="14" Margin="5,5,0,0" Visibility="Collapsed" />
                                 </StackPanel>
 

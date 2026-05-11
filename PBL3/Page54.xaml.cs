@@ -1,4 +1,4 @@
-using System;
+Ôªøusing System;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -14,14 +14,14 @@ namespace PBL3
         private readonly Admin _currentUser;
         private readonly int _complaintId;
 
-        // Constructor m?c ?nh (b?t bu?c b?i XAML)
+        // Constructor m?c ƒë?nh (b?t bu?c b?i XAML)
         public Page54()
         {
             InitializeComponent();
             this.Loaded += Page54_Loaded;
         }
 
-        // Constructor chÌnh
+        // Constructor ch√≠nh
         public Page54(Admin user, int complaintId) : this()
         {
             _currentUser = user;
@@ -50,28 +50,27 @@ namespace PBL3
 
                     if (complaint == null)
                     {
-                        MessageBox.Show("KhÙng t?m th?y ph?n ·nh n‡y!", "L?i", MessageBoxButton.OK, MessageBoxImage.Error);
+                        MessageBox.Show("Kh√¥ng t√¨m th·∫•y ph·∫£n √°nh n√†y!", "L·ªói", MessageBoxButton.OK, MessageBoxImage.Error);
                         return;
                     }
 
-                    txtTieuDe.Text = string.IsNullOrEmpty(complaint.Title) ? "KhÙng cÛ tiÍu ?" : complaint.Title;
-                    txtNgayGui.Text = complaint.SubmitDate != DateTime.MinValue ? complaint.SubmitDate.ToString("dd/MM/yyyy HH:mm") : "Ch˝a c?p nh?t";
-                    txtNoiDung.Text = string.IsNullOrEmpty(complaint.Content) ? "KhÙng cÛ n?i dung ph?n ·nh." : complaint.Content;
+                    txtTieuDe.Text = string.IsNullOrEmpty(complaint.Title) ? "Kh√¥ng c√≥ ti√™u ƒë·ªÅ" : complaint.Title;
+                    txtNgayGui.Text = complaint.SubmitDate != DateTime.MinValue ? complaint.SubmitDate.ToString("dd/MM/yyyy HH:mm") : "Ch∆∞a c·∫≠p nh·∫≠t";
+                    txtNoiDung.Text = string.IsNullOrEmpty(complaint.Content) ? "Kh√¥ng c√≥ n·ªôi dung ph·∫£n √°nh." : complaint.Content;
 
                     if (complaint.Status == 0)
                     {
-                        txtStatus.Text = "Ch˝a x? l?";
+                        txtStatus.Text = "Ch∆∞a x·ª≠ l√Ω";
                         borderStatus.Background = new SolidColorBrush(Color.FromRgb(198, 40, 40)); // #C62828
                     }
                     else
                     {
-                        txtStatus.Text = "–? x? l?";
+                        txtStatus.Text = "ƒê√£ x·ª≠ l√Ω";
                         borderStatus.Background = new SolidColorBrush(Color.FromRgb(46, 125, 50)); // #2E7D32
                     }
 
-                    txtPhanHoi.Text = string.IsNullOrEmpty(complaint.OfficerResponse) ? "Cı quan ch?c n„ng ang trong qu· tr?nh xÈt duy?t v‡ ho‡n thi?n." : complaint.OfficerResponse;
-
-                    // H?nh ?nh
+                    txtPhanHoi.Text = string.IsNullOrEmpty(complaint.OfficerResponse) ? "C∆° quan ch·ª©c nƒÉng ƒëang trong qu√° tr√¨nh x√©t duy·ªát v√† ho√†n thi·ªán." : complaint.OfficerResponse;
+                    // H√¨nh ·∫£nh
                     if (!string.IsNullOrEmpty(complaint.ImagePath))
                     {
                         try
@@ -82,19 +81,19 @@ namespace PBL3
                                 imgPhanAnh.Source = new BitmapImage(new Uri(imagePath));
                             }
                         }
-                        catch { /* B? qua l?i load ?nh */ }
+                        catch { /* B·ªè qua l·ªói load ·∫£nh */ }
                     }
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show("L?i t?i chi ti?t ph?n ·nh: " + ex.Message);
+                MessageBox.Show("L·ªói t·∫£i chi ti·∫øt ph·∫£n √°nh: " + ex.Message);
             }
         }
 
         private void btnXoa_Click(object sender, RoutedEventArgs e)
         {
-            if (MessageBox.Show("B?n cÛ ch?c ch?n mu?n xÛa ph?n ·nh n‡y?", "X·c nh?n xÛa", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
+            if (MessageBox.Show("B·∫°n c√≥ ch·∫Øc ch·∫Øn mu·ªën x√≥a ph·∫£n √°nh n√†y?", "X√°c nh·∫≠n x√≥a", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
             {
                 try
                 {
@@ -108,10 +107,10 @@ namespace PBL3
                             // Ghi log
                             var log = new SystemLog
                             {
-                                Action = 3, // 3: XÛa
+                                Action = 3, // 3: X√≥a
                                 Id = _currentUser != null ? _currentUser.Username : "ADMIN",
                                 Role = 1, // 1: Admin
-                                TargetPrefix = "P", // P: Ph?n ·nh
+                                TargetPrefix = "P", // P: Ph?n √°nh
                                 TargetValue = _complaintId.ToString(),
                                 Time = DateTime.Now
                             };
@@ -119,14 +118,14 @@ namespace PBL3
 
                             db.SaveChanges();
 
-                            MessageBox.Show("–? xÛa ph?n ·nh th‡nh cÙng!", "ThÙng b·o", MessageBoxButton.OK, MessageBoxImage.Information);
+                            MessageBox.Show("ƒê√£ x√≥a ph·∫£n √°nh th√†nh c√¥ng!", "Th√¥ng b√°o", MessageBoxButton.OK, MessageBoxImage.Information);
                             NavigationService.GoBack();
                         }
                     }
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("L?i xÛa ph?n ·nh: " + ex.Message, "L?i", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show("L·ªói x√≥a ph·∫£n √°nh: " + ex.Message, "L·ªói", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
         }

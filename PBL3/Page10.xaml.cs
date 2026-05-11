@@ -37,6 +37,9 @@ namespace PBL3
 
     public partial class Page10 : Page
     {
+        // Khai báo biến toàn cục để lưu danh sách gốc
+        private List<ViolationGroupDisplay> _allViolations = new List<ViolationGroupDisplay>();
+
         // Constructor mặc định
         public Page10()
         {
@@ -166,6 +169,7 @@ namespace PBL3
                 });
             }
 
+            _allViolations = listSource;
             dgViolations.ItemsSource = listSource;
             dgViolations.Visibility = Visibility.Visible;
 
@@ -194,6 +198,88 @@ namespace PBL3
                 {
                     new CustomMessageBox("Lỗi khi chuyển trang: " + ex.Message, "Lỗi").ShowDialog();
                 }
+            }
+        }
+
+        // 1. Hàm Vừa nhập vừa sổ gợi ý (Google Style)
+        private void txtIdentifier_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            string keyword = txtIdentifier.Text.Trim();
+
+            // Nếu xóa hết chữ thì đóng cái khung gợi ý lại
+            if (string.IsNullOrEmpty(keyword))
+            {
+                popSuggestions.IsOpen = false;
+                return;
+            }
+
+            try
+            {
+                using var db = new TrafficSafetyDBContext();
+
+                // Quét DB lấy các biển số xe có chứa từ khóa (Lấy lên trước cho lẹ)
+                var matchedPlates = db.Vehicles
+                    .Where(v => v.LicensePlate.Contains(keyword))
+                    .Select(v => v.LicensePlate)
+                    .Distinct()
+                    .ToList();
+
+                if (matchedPlates.Any())
+                {
+                    // Bắt đầu dùng SearchEngine chấm điểm, xếp hạng giảm dần và CHỈ LẤY TOP 5
+                    var top5Suggestions = matchedPlates
+                        .Select(bs => new { BienSo = bs, Score = SearchEngine.CalculateScore(bs, keyword) })
+                        .Where(x => x.Score > 0)
+                        .OrderByDescending(x => x.Score)
+                        .Select(x => x.BienSo)
+                        .Take(5) // Lệnh "chốt sổ" 5 kết quả của Nhi đây!
+                        .ToList();
+
+                    if (top5Suggestions.Any())
+                    {
+                        lstSuggestions.ItemsSource = top5Suggestions;
+                        popSuggestions.IsOpen = true; // Mở khung gợi ý thả xuống
+                    }
+                    else
+                    {
+                        popSuggestions.IsOpen = false;
+                    }
+                }
+                else
+                {
+                    popSuggestions.IsOpen = false;
+                }
+            }
+            catch
+            {
+                // Lỗi mạng hoặc DB thì âm thầm đóng khung gợi ý (không văng app)
+                popSuggestions.IsOpen = false;
+            }
+        }
+
+        // 2. Hàm xử lý khi người dùng BẤM CHỌN 1 biển số trong danh sách gợi ý
+        private void lstSuggestions_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (lstSuggestions.SelectedItem != null)
+            {
+                // Tạm thời tắt sự kiện TextChanged để nó không gọi lại DB lần nữa
+                txtIdentifier.TextChanged -= txtIdentifier_TextChanged;
+
+                // Điền biển số xe vừa chọn vào ô tìm kiếm
+                txtIdentifier.Text = lstSuggestions.SelectedItem.ToString();
+
+                // Đưa con trỏ chuột về cuối dòng
+                txtIdentifier.CaretIndex = txtIdentifier.Text.Length;
+
+                // Đóng Popup gợi ý lại
+                popSuggestions.IsOpen = false;
+                lstSuggestions.SelectedItem = null; // Reset lựa chọn
+
+                // Bật lại sự kiện TextChanged
+                txtIdentifier.TextChanged += txtIdentifier_TextChanged;
+
+                // Bấm chọn xong thì TỰ ĐỘNG CHẠY HÀM TRA CỨU luôn cho xịn! (Giống Google)
+                PerformSearch();
             }
         }
     }
